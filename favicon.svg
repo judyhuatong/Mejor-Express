@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <rect width="32" height="32" fill="#1c2822"/>
+  <g transform="translate(16 16) rotate(45)">
+    <rect x="-9" y="-9" width="18" height="18" fill="#f4ead6" stroke="#efe4cc" stroke-width="1.2"/>
+  </g>
+  <text x="16" y="21" text-anchor="middle" font-family="Georgia, serif" font-size="11" font-weight="700" fill="#1c2822">M</text>
+</svg>

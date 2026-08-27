@@ -1,0 +1,2656 @@
+<!DOCTYPE html>
+<html lang="en" data-title="title.explorer" data-desc="meta.explorer">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Pick likes, see matching majors light on four lines, and open a station to read what it means and which universities teach it." />
+  <meta name="theme-color" content="#1c2822" />
+  <title>Mejor · Line map</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script>
+    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #f3eee6;
+      --bg-2: #e8e1d6;
+      --panel: #fbf8f3;
+      --line: #d7d0c5;
+      --lime: #2f5d50;
+      --cyan: #3d6574;
+      --coral: #8b5a44;
+      --gold: #b8956a;
+      --ink: #1c2430;
+      --muted: #5e6773;
+      --low: #9aa3ad;
+      --radius: 2px;
+      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --shadow: 0 10px 28px rgba(28, 36, 48, 0.08);
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    }
+
+    html[lang="zh-Hans"] body { font-family: "Source Sans 3", "Microsoft YaHei", "PingFang SC", sans-serif; }
+    html[lang="zh-Hans"] .stat,
+    html[lang="zh-Hans"] button.ghost,
+    html[lang="zh-Hans"] button.play,
+    html[lang="zh-Hans"] a.ghost,
+    html[lang="zh-Hans"] .ticket-tools summary {
+      letter-spacing: 0.03em;
+      text-transform: none;
+    }
+
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      background:
+        linear-gradient(90deg, rgba(28, 36, 48, 0.028) 1px, transparent 1px) 0 0 / 40px 40px,
+        linear-gradient(rgba(28, 36, 48, 0.028) 1px, transparent 1px) 0 0 / 40px 40px,
+        var(--bg);
+      overflow-x: hidden;
+    }
+    ::selection { background: #d5e6df; color: var(--ink); }
+
+    .app { position: relative; z-index: 1; max-width: 1180px; margin: 0 auto; padding: 22px 18px 56px; }
+    .skip {
+      position: absolute; left: 16px; top: -48px; z-index: 80;
+      background: var(--panel); color: var(--ink);
+      padding: 8px 12px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid var(--ink);
+    }
+    .skip:focus { top: 12px; }
+    :focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; }
+
+    .hud {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 18px;
+    }
+    .brand { display: flex; gap: 12px; align-items: center; text-decoration: none; color: inherit; }
+    .probe {
+      width: 36px; height: 36px;
+      background: var(--lime);
+      color: #fbf8f3;
+      display: grid; place-items: center;
+      font-weight: 700; letter-spacing: 0.04em;
+      transform: rotate(45deg);
+    }
+    .probe span { transform: rotate(-45deg); display: block; }
+    h1 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.65rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+    }
+    h1 .express {
+      display: inline-block;
+      font-family: var(--sans);
+      font-size: 0.48em;
+      font-weight: 600;
+      letter-spacing: 0.16em;
+      text-transform: lowercase;
+      vertical-align: 0.42em;
+      margin-left: 0.28em;
+      color: var(--muted);
+    }
+    .tagline { margin: 4px 0 0; color: var(--muted); font-size: 0.9rem; }
+    .hud-stats { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+    .stat {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 8px 12px;
+      font-size: 0.75rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--muted);
+    }
+    .stat b { color: var(--ink); font-weight: 700; }
+    .hud-actions { display: flex; gap: 8px; grid-column: 1 / -1; flex-wrap: wrap; align-items: flex-start; }
+    .hud-actions .ghost, .hud-actions .play, .ticket-tools summary { font-size: 0.82rem; }
+    .ticket-tools {
+      position: relative;
+    }
+    .ticket-tools[open] { flex: 1 1 100%; }
+    .ticket-tools summary {
+      appearance: none;
+      list-style: none;
+      cursor: pointer;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 8px 14px;
+      font: inherit;
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+    }
+    .ticket-tools summary::-webkit-details-marker { display: none; }
+    .ticket-tools summary::marker { content: none; }
+    .ticket-tools summary::after { content: "▾"; font-size: 0.7em; opacity: 0.7; }
+    .ticket-tools[open] summary { border-color: var(--ink); background: #fff; }
+    .ticket-tools[open] summary::after { content: "▴"; }
+    .ticket-tools .tools-panel {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 8px;
+    }
+    .uni-line {
+      margin: 10px 0 8px;
+      font-size: 0.95rem;
+      line-height: 1.45;
+      color: var(--ink);
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+      border-left: 6px solid var(--lime);
+    }
+    a.ghost {
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+    }
+    a.ghost:hover { border-color: var(--ink); background: #fff; }
+    button.ghost, button.play {
+      appearance: none;
+      border: 1px solid var(--line);
+      background: var(--panel);
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 8px 14px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+      transition: border-color 0.15s var(--ease), background 0.15s var(--ease), filter 0.15s var(--ease);
+    }
+    button.play { background: var(--lime); color: #fbf8f3; border-color: var(--lime); }
+    button.ghost:hover { border-color: var(--ink); background: #fff; }
+    button.play:hover { filter: brightness(1.08); }
+
+    .likes {
+      background: var(--panel);
+      border: 1.5px solid var(--ink);
+      border-radius: var(--radius);
+      padding: 18px 18px 16px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .likes-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+    .likes-head h2 { margin: 0; font-size: 0.95rem; font-weight: 600; }
+    .likes-head span { color: var(--muted); font-size: 0.85rem; }
+    .hint {
+      margin: 14px 0 0;
+      font-size: 1.08rem;
+      line-height: 1.5;
+      color: var(--ink);
+      font-weight: 600;
+    }
+    .match-key {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      margin: 12px 0 0;
+      font-size: 1.05rem;
+      color: var(--ink);
+      font-weight: 700;
+    }
+    .match-key i {
+      display: inline-block;
+      width: 16px; height: 16px;
+      margin-right: 8px;
+      vertical-align: -2px;
+      transform: rotate(45deg);
+    }
+    .match-key .hot { background: #2f5d50; }
+    .match-key .mid { background: #e0a33a; }
+    .how {
+      margin: 10px 0 0;
+      font-size: 0.98rem;
+      line-height: 1.5;
+      color: var(--ink);
+      padding: 10px 12px;
+      background: #fff;
+      border: 1px solid var(--line);
+    }
+    .like-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .like {
+      min-height: 132px;
+      height: 132px;
+    }
+    .like .flip-face { align-items: center; text-align: center; }
+    .like .ico { font-size: 1.25rem; }
+    .like .lab { font-size: 0.86rem; font-weight: 700; text-align: center; }
+    .like .subhint {
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--muted);
+      text-align: center;
+      line-height: 1.3;
+    }
+    .like.on .flip-face { border-color: var(--lime); background: #e7efe9; }
+    .like.shake { animation: shake 0.4s var(--ease); }
+    @keyframes shake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-6px); }
+      75% { transform: translateX(6px); }
+    }
+
+    .combo {
+      display: none;
+      margin-top: 12px;
+      padding: 10px 12px;
+      border-radius: 2px;
+      background: #f4efe4;
+      border: 1px solid var(--line);
+      font-weight: 600;
+    }
+    .combo.show { display: block; }
+    .combo b { color: var(--ink); }
+    @keyframes pop { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+
+    .journey-stub {
+      background: var(--panel);
+      border: 1.5px solid var(--ink);
+      padding: 14px 16px 12px;
+      margin-bottom: 14px;
+      box-shadow: var(--shadow);
+    }
+    .journey-stub .js-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr auto;
+      gap: 12px;
+      align-items: end;
+    }
+    .journey-stub small {
+      display: block;
+      font-size: 0.68rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    html[lang="zh-Hans"] .journey-stub small { letter-spacing: 0.04em; text-transform: none; }
+    .journey-stub b { font-family: var(--serif); font-size: 1.02rem; font-weight: 600; }
+    .journey-stub .js-note { margin: 10px 0 0; color: var(--muted); font-size: 0.88rem; }
+    .journey-stub .back-note {
+      display: none;
+      margin: 0 0 10px;
+      padding: 8px 10px;
+      background: #e7efe9;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .journey-stub .back-note.show { display: block; }
+    @media (max-width: 860px) {
+      .journey-stub .js-row { grid-template-columns: 1fr 1fr; }
+    }
+
+    .stage {
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      gap: 14px;
+      margin-bottom: 14px;
+    }
+    .radar-wrap {
+      position: relative;
+      min-height: 760px;
+      border-radius: 2px;
+      border: 1.5px solid var(--ink);
+      background: var(--panel);
+      overflow: hidden;
+      display: flex;
+      box-shadow: var(--shadow);
+    }
+    .metro {
+      position: relative;
+      flex: 1;
+      width: 100%;
+      min-width: 0;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: stretch;
+      gap: 14px;
+      padding: 20px 16px 16px;
+      overflow: visible;
+    }
+    .line-row {
+      display: grid;
+      grid-template-columns: minmax(0, 168px) minmax(0, 1fr);
+      gap: 14px;
+      align-items: center;
+      flex: 1;
+      min-height: 0;
+      min-width: 0;
+      padding: 14px 14px 12px;
+      overflow: visible;
+      border: 1px solid var(--line);
+      border-left: 5px solid var(--ink);
+      background: #fff;
+      border-radius: 2px;
+    }
+    .line-row[data-line="logic"] { border-left-color: #2f5d50; }
+    .line-row[data-line="care"] { border-left-color: #2a7a8c; }
+    .line-row[data-line="world"] { border-left-color: #c48a2a; }
+    .line-row[data-line="make"] { border-left-color: #c45c3a; }
+    .line-meta b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.45rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--ink);
+      font-weight: 600;
+      line-height: 1.15;
+    }
+    .line-row[data-line="logic"] .line-meta b { color: #2f5d50; }
+    .line-row[data-line="care"] .line-meta b { color: #2a7a8c; }
+    .line-row[data-line="world"] .line-meta b { color: #c48a2a; }
+    .line-row[data-line="make"] .line-meta b { color: #c45c3a; }
+    .line-meta span {
+      display: block;
+      margin-top: 6px;
+      font-size: 0.92rem;
+      color: var(--muted);
+      line-height: 1.4;
+      font-weight: 500;
+      text-transform: none;
+      letter-spacing: 0;
+    }
+    html[lang="zh-Hans"] .line-meta b {
+      letter-spacing: 0.04em;
+      text-transform: none;
+      font-size: 1.35rem;
+    }
+    .rail {
+      position: relative;
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-evenly;
+      gap: 8px;
+      min-width: 0;
+      min-height: 0;
+      padding: 8px 10px 6px;
+      overflow: visible;
+    }
+    .rail::before {
+      content: "";
+      position: absolute;
+      left: 8px; right: 8px; top: 46px;
+      height: 4px;
+      border-radius: 99px;
+      z-index: 0;
+      background: #d7d0c5;
+    }
+    .line-row[data-line="logic"] .rail::before { background: #b7d0c6; }
+    .line-row[data-line="care"] .rail::before { background: #b5d0d6; }
+    .line-row[data-line="world"] .rail::before { background: #ead7b0; }
+    .line-row[data-line="make"] .rail::before { background: #e8c4b8; }
+    .star {
+      appearance: none;
+      background: none;
+      border: 0;
+      color: inherit;
+      font: inherit;
+      position: relative;
+      z-index: 1;
+      flex: 1 1 0;
+      max-width: none;
+      min-width: 0;
+      margin: 0;
+      padding: 18px 10px 0;
+      transition: opacity 0.35s;
+      cursor: pointer;
+      text-align: center;
+      pointer-events: auto;
+      overflow: visible;
+    }
+    .star .planet {
+      width: 40px; height: 40px; margin: 0 auto;
+      display: grid; place-items: center;
+      background: #fff;
+      border: 2px solid var(--ink);
+      font-size: 0.78rem; font-weight: 700;
+      color: var(--ink);
+      transform: rotate(45deg) scale(var(--s, 1));
+      transform-origin: center;
+      transition: transform 0.35s var(--ease), background 0.35s, color 0.35s, border-color 0.35s;
+    }
+    .star .planet span { transform: rotate(-45deg); display: block; }
+    .star .name {
+      display: block;
+      margin: 14px 0 0;
+      font-size: 0.8rem;
+      line-height: 1.25;
+      color: var(--ink);
+      font-weight: 600;
+      overflow-wrap: anywhere;
+    }
+    .star.hot .planet { background: #2f5d50; color: #fbf8f3; border-color: #2f5d50; }
+    .star.mid .planet { background: #e0a33a; color: #1c2430; border-color: #e0a33a; }
+    .star.lock .planet { box-shadow: 0 0 0 3px #1c2430; }
+    .star.hot .name { color: #2f5d50; }
+    .star.mid .name { color: #9a6c12; }
+    .star.dim { opacity: 0.42; }
+    .star:hover,
+    .star:focus-visible,
+    .star.lock { z-index: 8; }
+    .star:hover .planet,
+    .star:focus-visible .planet { transform: rotate(45deg) scale(calc(var(--s, 1) * 1.08)); }
+    .fare {
+      width: 52px; height: 52px; flex: none;
+      display: grid; place-items: center;
+      border: 1px solid var(--ink);
+      background: #fff;
+      font-family: var(--serif);
+      line-height: 1;
+    }
+    .fare b { font-size: 1.05rem; font-weight: 600; }
+    .fare i { font-style: normal; font-size: 0.65rem; color: var(--muted); }
+    .fare.hot { background: #2f5d50; color: #fbf8f3; }
+    .fare.hot i { color: #d5e6df; }
+    .fare.mid { background: #e0a33a; color: #1c2430; }
+    .fare.low { color: var(--muted); }
+
+    .briefing-shell { min-width: 0; min-height: 0; }
+    .briefing {
+      position: relative;
+      background:
+        radial-gradient(circle at 0 14px, transparent 5px, var(--panel) 6px) 0 0 / 14px 28px;
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      padding: 20px 22px 18px 26px;
+      min-height: 720px;
+      display: flex; flex-direction: column; gap: 10px;
+      box-shadow: var(--shadow);
+      overflow: hidden;
+    }
+    .briefing::after {
+      content: "";
+      position: absolute;
+      top: -1px; right: -1px;
+      border-style: solid;
+      border-width: 0 18px 18px 0;
+      border-color: transparent var(--bg) transparent transparent;
+      filter: drop-shadow(-1.5px 1.5px 0 var(--ink));
+      pointer-events: none;
+    }
+    .briefing h2 {
+      margin: 0;
+      font-family: var(--serif);
+      font-size: 1.2rem;
+      font-weight: 500;
+    }
+    .lock-banner {
+      font-size: 0.72rem; letter-spacing: 0.12em; text-transform: uppercase;
+      color: var(--lime); font-weight: 600;
+    }
+    .match-row { display: flex; align-items: center; gap: 12px; }
+    .blurb { color: var(--muted); margin: 0; }
+    .facts { display: grid; gap: 8px; }
+    .fact {
+      background: #fff;
+      border-radius: 2px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+    }
+    .fact b { display: block; font-size: 0.72rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--lime); margin-bottom: 4px; }
+    .fact.now { border-color: var(--lime); background: #e7efe9; }
+    .uni-notes {
+      display: grid;
+      gap: 8px;
+      margin: 10px 0 12px;
+    }
+    .uni-note {
+      padding: 12px 20px 12px 14px;
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      border-left-width: 8px;
+      font-size: 1.02rem;
+      line-height: 1.45;
+      color: var(--ink);
+      overflow-wrap: anywhere;
+    }
+    .uni-note:nth-child(1) { border-left-color: #2f5d50; }
+    .uni-note:nth-child(2) { border-left-color: #c48a2a; }
+    .uni-note:nth-child(3) { border-left-color: #c45c3a; }
+    .uni-note b {
+      display: block;
+      font-size: 0.88rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      margin-bottom: 4px;
+    }
+    html[lang="zh-Hans"] .uni-note b { letter-spacing: 0.04em; text-transform: none; }
+    html[lang="zh-Hans"] .fact b { letter-spacing: 0.04em; text-transform: none; }
+    .sectors { display: flex; gap: 6px; flex-wrap: wrap; }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; }
+    .sectors button {
+      border: 1px solid var(--line); background: #fff; color: var(--ink);
+      border-radius: 2px; padding: 6px 10px; cursor: pointer; font: inherit; font-size: 0.8rem; font-weight: 600;
+    }
+    .sectors button.on { background: var(--lime); color: #fbf8f3; border-color: var(--lime); }
+    .chip {
+      position: relative;
+      z-index: 2;
+      font-size: 0.75rem;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 7px 9px;
+      background: #fff;
+      line-height: 1.35;
+      max-width: 100%;
+      cursor: pointer;
+      touch-action: manipulation;
+      -webkit-tap-highlight-color: transparent;
+      transition: border-color 0.15s var(--ease), opacity 0.15s var(--ease);
+    }
+    .chip:hover { border-color: var(--ink); }
+    .chip:focus-visible { border-color: var(--ink); }
+    .chip.dim { opacity: 0.28; }
+    .chip.dim:hover, .chip.dim:focus-visible { opacity: 1; }
+    .chip.off {
+      opacity: 0.4;
+      background: #eeeae2;
+      color: var(--muted);
+      border-style: dashed;
+    }
+    .chip.off:hover, .chip.off:focus-visible {
+      opacity: 0.88;
+      color: var(--ink);
+    }
+    .chip.off.dim { opacity: 0.16; }
+    .chip.off.dim:hover, .chip.off.dim:focus-visible { opacity: 0.7; }
+    #uniTip {
+      position: fixed;
+      z-index: 90;
+      box-sizing: border-box;
+      width: min(320px, calc(100vw - 24px));
+      background: #fbf8f3;
+      color: var(--ink);
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      padding: 12px 14px;
+      box-shadow: 0 14px 32px rgba(28, 36, 48, 0.2);
+      pointer-events: none;
+      display: none;
+      overflow-wrap: anywhere;
+    }
+    #uniTip.show { display: block; }
+    #uniTip b { display: block; font-family: var(--serif); font-size: 1.08rem; font-weight: 600; margin-bottom: 6px; }
+    #uniTip p { margin: 0 0 8px; font-size: 0.9rem; line-height: 1.45; }
+    #uniTip .why { margin: 0 0 6px; color: var(--muted); font-size: 0.8rem; }
+    #uniTip .why b { display: inline; font-family: var(--sans); font-size: 0.8rem; color: var(--lime); }
+    #uniTip .why.off b { color: #c45c3a; }
+    .idle { color: var(--ink); margin: auto 0; text-align: left; line-height: 1.5; }
+    .idle b { display: block; font-family: var(--serif); font-size: 1.15rem; margin-bottom: 8px; }
+    .idle p { margin: 0 0 8px; color: var(--muted); }
+    .idle p:last-child { margin-bottom: 0; color: var(--ink); }
+
+    .signals h2 {
+      margin: 0 0 10px;
+      font-size: 0.78rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .signal-list { display: grid; gap: 8px; }
+    .card {
+      display: grid;
+      grid-template-columns: 58px 1fr auto;
+      gap: 10px;
+      align-items: center;
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+    }
+    .card:hover, .card.active { border-color: var(--lime); background: #e7efe9; }
+    .card:focus-visible { outline: 2px solid var(--lime); outline-offset: 2px; border-color: var(--lime); background: #e7efe9; }
+    .card h3 { margin: 0; font-size: 0.98rem; font-weight: 600; }
+    .card p { margin: 2px 0 0; color: var(--muted); font-size: 0.82rem; }
+    .chevron { transition: transform 0.25s; color: var(--muted); }
+    .card.open .chevron { transform: rotate(90deg); color: var(--lime); }
+    .extra {
+      grid-column: 1 / -1;
+      display: none;
+      padding-top: 8px;
+      border-top: 1px solid var(--line);
+    }
+    .card.open .extra { display: block; }
+
+    .note {
+      background: var(--panel);
+      border: 1.5px solid var(--ink);
+      border-left: 8px solid var(--lime);
+      padding: 16px 18px 18px;
+      margin: 0 0 16px;
+      box-shadow: var(--shadow);
+    }
+    .note b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      font-weight: 600;
+      margin: 0 0 8px;
+      color: var(--ink);
+    }
+    .note p {
+      margin: 0;
+      font-size: 1.05rem;
+      line-height: 1.55;
+      color: var(--ink);
+    }
+    .note p + p { margin-top: 8px; }
+    .note a { color: var(--lime); font-weight: 600; }
+
+    .modal {
+      position: fixed; inset: 0; z-index: 40;
+      background: rgba(28, 40, 34, 0.42);
+      display: grid; place-items: center;
+      padding: 16px;
+      backdrop-filter: blur(6px);
+    }
+    .nova-quiz-toggle {
+      position: absolute;
+      top: 16px;
+      right: 16px;
+      z-index: 2;
+      background: var(--panel) !important;
+      border-color: var(--ink) !important;
+    }
+    .modal.hide { display: none; }
+    .modal-card {
+      width: min(640px, 100%);
+      background: var(--panel);
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      padding: 26px 24px 24px;
+      max-height: min(92vh, 760px);
+      overflow: auto;
+      box-shadow: 0 24px 60px rgba(28, 36, 48, 0.22);
+    }
+    .steps { display: grid; gap: 10px; margin: 14px 0 18px; }
+    .steps div {
+      background: #fff;
+      border-radius: 2px;
+      padding: 10px 12px;
+      border: 1px solid var(--line);
+    }
+    .q-meta { color: var(--muted); font-size: 0.82rem; margin: 0 0 8px; }
+    .choices { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .choices:has(> :nth-child(3)) { grid-template-columns: 1fr; }
+    .choice {
+      text-align: left;
+      border: 1.5px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 16px 16px 18px;
+      min-height: 132px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 500;
+      transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
+    }
+    .choice:hover { border-color: var(--ink); background: #fffdf8; }
+    .choice.on { background: #e7efe9; border-color: var(--lime); }
+    .choice.shake { animation: shake 0.4s var(--ease); }
+    .choice b { display: block; color: var(--ink); font-size: 0.78rem; font-weight: 700; margin-bottom: 4px; }
+    .sub-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+    }
+    .sub-grid .choice { min-height: 64px; }
+    .quiz-progress {
+      height: 6px;
+      background: var(--bg-2);
+      border-radius: 2px;
+      overflow: hidden;
+      margin: 10px 0 16px;
+    }
+    .quiz-progress span {
+      display: block;
+      height: 100%;
+      width: 0%;
+      background: var(--lime);
+      transition: width 0.3s var(--ease);
+    }
+    button.play:disabled { opacity: 0.4; cursor: not-allowed; }
+    .rec-majors { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 16px; }
+    .modal-actions { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+    .type-badge {
+      display: inline-block;
+      font-family: var(--serif);
+      font-size: 1.6rem;
+      letter-spacing: 0.14em;
+      color: var(--ink);
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 6px 14px;
+      font-weight: 600;
+      margin: 8px 0;
+    }
+    .rec-majors button {
+      border: 1px solid var(--line);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 2px;
+      padding: 8px 12px;
+      cursor: pointer;
+      font: inherit;
+      font-weight: 600;
+    }
+    .rec-majors button:hover { border-color: var(--lime); }
+    .type-chip {
+      display: none;
+      margin-top: 10px;
+      font-size: 0.88rem;
+      color: var(--muted);
+      font-weight: 500;
+    }
+    .type-chip.show { display: block; }
+
+    .site-foot {
+      margin-top: 28px;
+      color: var(--muted);
+      font-size: 0.82rem;
+    }
+    .site-foot p { margin: 0 0 6px; }
+    .site-foot a { color: var(--lime); font-weight: 600; }
+
+    .nova-row {
+      display: grid;
+      grid-template-columns: 72px 1fr;
+      gap: 12px;
+      align-items: start;
+      margin-bottom: 14px;
+    }
+    .nova-row.no-bot { grid-template-columns: 1fr; }
+    .nova {
+      width: 72px;
+      height: 84px;
+      position: relative;
+    }
+    .nova svg { width: 72px; height: 84px; display: block; }
+    .nova .eye {
+      transform-origin: center;
+      animation: blink 5.5s infinite;
+    }
+    @keyframes blink {
+      0%, 92%, 100% { transform: scaleY(1); }
+      95% { transform: scaleY(0.12); }
+    }
+    .nova-bubble {
+      background: #fff;
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      padding: 12px 14px;
+      position: relative;
+      overflow-wrap: anywhere;
+    }
+    .nova-bubble::before { display: none; }
+    .nova-bubble::before {
+      content: "";
+      position: absolute;
+      left: -7px; top: 16px;
+      border-width: 7px 8px 7px 0;
+      border-style: solid;
+      border-color: transparent var(--line) transparent transparent;
+    }
+    .nova-name {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 700;
+      margin-bottom: 4px;
+      text-transform: uppercase;
+    }
+    .nova-bubble p { margin: 0; color: var(--ink); line-height: 1.5; }
+    .nova-bubble .soft { color: var(--muted); font-size: 0.88rem; margin-top: 6px; }
+
+    @media (max-width: 860px) {
+      .stage { grid-template-columns: 1fr; }
+      .radar-wrap, .briefing, .briefing-shell { min-height: 640px; }
+      .line-row { grid-template-columns: 1fr; padding: 12px; }
+      .rail { overflow: visible; }
+      .like-grid { grid-template-columns: repeat(2, 1fr); }
+      .hud { grid-template-columns: 1fr; }
+      .hud-stats { justify-content: flex-start; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before { animation: none !important; transition: none !important; }
+    }
+    @media print {
+      .skip, .hud-actions, .modal, .note, .likes, .radar-wrap, .signals, #uniTip, .nova-guide, .nova-wake, #novaFlyer, #novaGlowBox { display: none !important; }
+      .app { padding: 0; max-width: none; }
+      .journey-stub, .briefing { box-shadow: none; clip-path: none; min-height: 0; }
+    }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+  <div id="tutorial" class="modal hide">
+    <button class="ghost nova-quiz-toggle" type="button" data-nova-toggle>Turn Nova off</button>
+    <div class="modal-card" id="quizCard"></div>
+  </div>
+
+  <div class="app">
+    <header class="hud">
+      <a class="brand" href="index.html">
+        <div class="probe"><span>M</span></div>
+        <div>
+          <h1>Mejor <span class="express">express</span></h1>
+          <p class="tagline" data-i18n="tagline">Four lines. Fourteen stations.</p>
+        </div>
+      </a>
+      <div class="hud-stats">
+        <div class="stat"><span data-i18n="stat.path">Working style</span> <b id="typeCode">—</b></div>
+        <div class="stat"><span data-i18n="stat.likes">Likes</span> <b id="likeCount">0/4</b></div>
+        <div class="stat"><span data-i18n="stat.strong">Strong matches</span> <b id="strongCount">0</b></div>
+        <div class="stat"><span data-i18n="stat.locked">Open station</span> <b id="lockedName">none</b></div>
+      </div>
+      <div class="hud-actions">
+        <button class="ghost" type="button" data-lang-toggle>中文</button>
+        <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
+        <button class="ghost" id="helpBtn" type="button" data-i18n="help">How it works</button>
+        <button class="ghost" type="button" data-nova-toggle>Turn Nova off</button>
+        <details class="ticket-tools">
+          <summary data-i18n="tools">Ticket tools</summary>
+          <div class="tools-panel">
+            <button class="play" id="scanBtn" type="button" data-i18n="pulse">Light the lines</button>
+            <button class="ghost" id="clearBtn" type="button" data-i18n="clear">Clear likes</button>
+            <button class="ghost" id="retakeBtn" type="button" data-i18n="retake">Retake the questions</button>
+            <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
+          </div>
+        </details>
+      </div>
+    </header>
+
+    <main id="main">
+    <section class="journey-stub" aria-label="Your ticket">
+      <p class="back-note" id="welcomeBack" data-i18n="stub.back">Welcome back. Your last ticket is still here.</p>
+      <div class="js-row">
+        <div><small data-i18n="stub.from">Your likes</small><b id="stubLikes">—</b></div>
+        <div><small data-i18n="stub.look">Worth a closer look</small><b id="stubStrong">—</b></div>
+        <div><small data-i18n="stub.open">Open station</small><b id="stubLocked">—</b></div>
+        <button class="ghost" type="button" id="printStub" data-i18n="stub.print">Print this ticket</button>
+      </div>
+      <p class="js-note" data-i18n="stub.save">Likes and the open station are saved on this computer. Refresh is safe.</p>
+    </section>
+
+    <aside class="note">
+      <b data-i18n="note.kicker">Which schools are these?</b>
+      <p data-i18n="note">These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities.</p>
+      <p><a href="method.html" data-i18n="nav.method">How this was made</a></p>
+    </aside>
+
+    <section class="likes">
+      <div class="likes-head">
+        <h2 data-i18n="likes.h2">Choose what you like</h2>
+        <span data-i18n="likes.span">Select up to 4. A liked card flips to show a hint. A fifth tap will bounce — deselect one first.</span>
+      </div>
+      <p class="hint" data-i18n="hint">Tap a like card to flip it. Matching stations turn green or gold. The line names stay as they are.</p>
+      <p class="match-key">
+        <span><i class="hot"></i><span data-i18n="key.hot">Green = strong match</span></span>
+        <span><i class="mid"></i><span data-i18n="key.mid">Gold = partial match</span></span>
+      </p>
+      <p class="how" id="matchHow" data-i18n="hint.how">The % is simple: how many of YOUR likes this major covers. Example: you pick Logic and Data. Computer Science has both → 100%, green.</p>
+      <div class="like-grid" id="likeGrid"></div>
+      <div class="type-chip" id="typeChip"></div>
+      <div class="combo" id="comboBanner"></div>
+    </section>
+
+    <section class="stage">
+      <div class="radar-wrap" id="radarWrap">
+        <div class="metro" id="radarDisk">
+          <article class="line-row" data-line="logic">
+            <div class="line-meta"><b data-i18n="line.logic">Logic</b><span data-i18n="line.logicDef">Math, code, machines</span></div>
+            <div class="rail" data-rail="logic"></div>
+          </article>
+          <article class="line-row" data-line="care">
+            <div class="line-meta"><b data-i18n="line.care">Care</b><span data-i18n="line.careDef">Health, people, teaching</span></div>
+            <div class="rail" data-rail="care"></div>
+          </article>
+          <article class="line-row" data-line="world">
+            <div class="line-meta"><b data-i18n="line.world">World</b><span data-i18n="line.worldDef">Money, law, society</span></div>
+            <div class="rail" data-rail="world"></div>
+          </article>
+          <article class="line-row" data-line="make">
+            <div class="line-meta"><b data-i18n="line.make">Make</b><span data-i18n="line.makeDef">Buildings, art, design</span></div>
+            <div class="rail" data-rail="make"></div>
+          </article>
+        </div>
+      </div>
+
+      <div class="briefing-shell" id="briefingShell">
+      <aside class="briefing" id="briefing">
+        <div class="idle" id="briefIdle">
+          <b data-i18n="brief.idleT">Open a station to see the useful bit</b>
+          <p data-i18n="brief.idle">Tap a diamond on the lines, or a ticket in the list below.</p>
+          <p data-i18n="brief.idle2">You’ll get: what you can try this year, what the major means, what not to mix it up with, and universities that actually teach it. First look, not a verdict.</p>
+        </div>
+        <div id="briefBody" hidden></div>
+      </aside>
+      </div>
+    </section>
+
+    <section class="signals">
+      <h2 data-i18n="list.h2">Station list</h2>
+      <div class="signal-list" id="signalList"></div>
+    </section>
+    </main>
+
+    <footer class="site-foot">
+      <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
+      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 15 Aug 2026</span></p>
+    </footer>
+  </div>
+
+  <div id="uniTip" role="tooltip"></div>
+
+  <aside id="novaGuide" class="nova-guide" data-nova-dock aria-live="polite" aria-label="Nova guide">
+    <div class="nova-guide-face" id="novaGuideFace" aria-hidden="true"></div>
+    <div class="nova-guide-copy">
+      <div class="nova-name" id="novaGuideName">Nova · guide</div>
+      <p id="novaGuideLine"></p>
+      <p class="soft" id="novaGuideSoft"></p>
+      <p class="where" id="novaGuideWhere"></p>
+      <button class="nova-quiet" type="button" data-nova-toggle>Turn Nova off</button>
+    </div>
+  </aside>
+  <button class="nova-wake" type="button" data-nova-wake hidden>Ask Nova</button>
+
+  <script src="i18n.js"></script>
+  <script>
+    /* Data is separate from the screen: change tags/majors here, the star map updates by itself. */
+
+    const TAGS = [
+      { id: "hands", label: "Making things", ico: "🔧", hint: "Build, fix, draw, DT" },
+      { id: "logic", label: "Logic & numbers", ico: "🧠", hint: "Math, puzzles, clear steps" },
+      { id: "words", label: "Words & speaking", ico: "💬", hint: "Writing, debate, languages" },
+      { id: "art", label: "Art & creating", ico: "🎨", hint: "Draw, music, design, make" },
+      { id: "help", label: "Helping people", ico: "💛", hint: "Care, explain, volunteer" },
+      { id: "nature", label: "Nature & planet", ico: "🌿", hint: "Biology, outdoors, Earth" },
+      { id: "business", label: "Business & money", ico: "📈", hint: "Teams, selling, how money moves" },
+      { id: "data", label: "Data & patterns", ico: "📊", hint: "Charts, stats, hidden patterns" }
+    ];
+
+    const UNIVERSITIES = {
+      ucl: { short: "UCL", name: "University College London", country: "UK", qs: 9, evidence: "#1 Chinese headcount in the UK (HESA)", intro: "In central London. Known for medicine, architecture (The Bartlett), and education (IOE). A very common UK pick for Chinese students." },
+      melbourne: { short: "Melbourne", name: "University of Melbourne", country: "Australia", qs: 19, evidence: "Go8 cluster: 86% of new Chinese students in Australia", intro: "A Group of Eight university in Australia, strong across many subjects. Often on the shortlist for study in Australia." },
+      unsw: { short: "UNSW", name: "UNSW Sydney", country: "Australia", qs: 20, evidence: "Go8 cluster", intro: "In Sydney. Especially known for engineering and business. Also in Australia’s Group of Eight." },
+      sydney: { short: "Sydney", name: "University of Sydney", country: "Australia", qs: 25, evidence: "Go8 cluster", intro: "One of Australia’s oldest universities. Strong in medicine, law, and arts, with a city campus in Sydney." },
+      toronto: { short: "Toronto", name: "University of Toronto", country: "Canada", qs: 29, evidence: "Often named Canada’s top Chinese-student destination", intro: "Canada’s largest research university, downtown Toronto. Often named a top Canadian choice for Chinese students." },
+      edinburgh: { short: "Edinburgh", name: "University of Edinburgh", country: "UK", qs: 34, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "In Scotland’s capital. Historic, with well-known medicine, informatics, and arts." },
+      manchester: { short: "Manchester", name: "University of Manchester", country: "UK", qs: 35, evidence: "~50% of students are mainland Chinese (HESA)", intro: "A large campus in northern England. Big Chinese-student community; strong in science and engineering." },
+      kcl: { short: "King’s", name: "King’s College London", country: "UK", qs: 31, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "In London, by the Thames. Known for health, law, war studies, and humanities, with hospitals nearby." },
+      columbia: { short: "Columbia", name: "Columbia University", country: "USA", qs: 38, evidence: "~5,035 Chinese students; 3rd in the US (SEVIS)", intro: "An Ivy League school in New York City. Competitive; known for journalism, world affairs, and medicine." },
+      ubc: { short: "UBC", name: "University of British Columbia", country: "Canada", qs: 40, evidence: "Often named a top Chinese-student destination in Canada", intro: "In Vancouver, by mountains and ocean. Strong in science, and a frequent Canadian destination for Chinese students." },
+      nyu: { short: "NYU", name: "New York University", country: "USA", qs: 55, evidence: "Highest Chinese concentration among major US schools in this set", intro: "Based in New York City. Known for arts (Tisch) and business (Stern). In this set, it has the highest share of Chinese students among the US schools." },
+      uiuc: { short: "UIUC", name: "University of Illinois Urbana-Champaign", country: "USA", qs: 70, evidence: "Top 5 US by total foreign-student population (DHS)", intro: "A large US public campus in Illinois. Famous for engineering and computer science. It has no medical school in this set." },
+      glasgow: { short: "Glasgow", name: "University of Glasgow", country: "UK", qs: 79, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "A historic Scottish university. Strong in medicine, law, and arts, and among the UK schools with many Chinese students." },
+      southampton: { short: "Southampton", name: "University of Southampton", country: "UK", qs: 87, evidence: "60%+ of students are mainland Chinese (HESA)", intro: "On England’s south coast. Known for engineering and ocean science, with a high share of students from mainland China." },
+      sheffield: { short: "Sheffield", name: "University of Sheffield", country: "UK", qs: 92, evidence: "~58% Chinese concentration (HESA)", intro: "In northern England. Known for engineering, architecture, and journalism, with a high share of Chinese students." }
+    };
+
+    const MAJORS = [
+      {
+        id: "cs", code: "CS", name: "Computer Science",
+        tags: ["logic", "data", "hands"],
+        blurb: "You teach machines to solve puzzles — apps, games, websites, and smart tools.",
+        learn: "Programming, algorithms, computer systems, and how to turn an idea into working software.",
+        need: "Patience with bugs, logic, and the joy of breaking a hard problem into tiny steps.",
+        future: "Software engineer, product builder, game developer, AI intern, cybersecurity starter.",
+        unis: [
+          { id: "ucl", faculty: "Engineering Sciences — Computer Science" },
+          { id: "melbourne", faculty: "Engineering & IT — Computer Science / Software" },
+          { id: "unsw", faculty: "Engineering — Software" },
+          { id: "sydney", faculty: "Engineering" },
+          { id: "toronto", faculty: "Engineering — Computer" },
+          { id: "edinburgh", faculty: "Science & Engineering — Informatics" },
+          { id: "manchester", faculty: "Science & Engineering — Computer Science" },
+          { id: "kcl", faculty: "Natural, Mathematical & Engineering Sciences — Informatics" },
+          { id: "columbia", faculty: "Fu Foundation School of Engineering — Computer Science" },
+          { id: "ubc", faculty: "Science — Computer Science" },
+          { id: "nyu", faculty: "Tandon School of Engineering — Computer Science / Data Science" },
+          { id: "uiuc", faculty: "Grainger College of Engineering — Computer Science" },
+          { id: "glasgow", faculty: "Science & Engineering — Computer Science" },
+          { id: "southampton", faculty: "Engineering & Physical Sciences — Computer Science" },
+          { id: "sheffield", faculty: "Faculty of Science — Computer Science" }
+        ]
+      },
+      {
+        id: "eng", code: "ENG", name: "Engineering",
+        tags: ["hands", "logic", "nature"],
+        blurb: "You design real things that move, stand, fly, or keep cities alive.",
+        learn: "Math + physics plus a special track: civil, mechanical, electrical, biomedical, or aerospace.",
+        need: "Making things with your hands or computer, teamwork, and not giving up when a prototype fails.",
+        future: "Engineer, designer of machines/buildings/energy systems, robotics or space-tech starter.",
+        unis: [
+          { id: "ucl", faculty: "Engineering Sciences" },
+          { id: "melbourne", faculty: "Engineering & IT" },
+          { id: "unsw", faculty: "Engineering" },
+          { id: "sydney", faculty: "Engineering" },
+          { id: "toronto", faculty: "Engineering (Applied Science)" },
+          { id: "edinburgh", faculty: "College of Science & Engineering" },
+          { id: "manchester", faculty: "Faculty of Science & Engineering" },
+          { id: "kcl", faculty: "Natural, Mathematical & Engineering Sciences" },
+          { id: "columbia", faculty: "Fu Foundation School of Engineering" },
+          { id: "ubc", faculty: "Applied Science (Engineering)" },
+          { id: "nyu", faculty: "Tandon School of Engineering" },
+          { id: "uiuc", faculty: "Grainger College of Engineering" },
+          { id: "glasgow", faculty: "College of Science & Engineering" },
+          { id: "southampton", faculty: "Faculty of Engineering & Physical Sciences" },
+          { id: "sheffield", faculty: "Faculty of Engineering" }
+        ]
+      },
+      {
+        id: "arch", code: "ARC", name: "Architecture & Cities",
+        tags: ["art", "hands", "nature"],
+        blurb: "You shape rooms, streets, and skylines so people feel good living in them.",
+        learn: "Drawing, design studio, urban planning, materials, and how cities grow.",
+        need: "Visual imagination, patience with projects, and care for how spaces feel.",
+        future: "Architect, urban planner, interior or landscape designer, city-project intern.",
+        unis: [
+          { id: "ucl", faculty: "The Bartlett (Built Environment)" },
+          { id: "melbourne", faculty: "Architecture, Building & Planning" },
+          { id: "unsw", faculty: "Arts, Design & Architecture" },
+          { id: "sydney", faculty: "Architecture, Design & Planning" },
+          { id: "toronto", faculty: "Architecture, Landscape & Design" },
+          { id: "edinburgh", faculty: "Arts — Architecture & Landscape Architecture" },
+          { id: "ubc", faculty: "Applied Science — Architecture" },
+          { id: "uiuc", faculty: "Fine & Applied Arts — Architecture / Urban Planning" },
+          { id: "sheffield", faculty: "Social Sciences — Architecture, Urban Studies & Planning" }
+        ]
+      },
+      {
+        id: "biz", code: "BIZ", name: "Business & Finance",
+        tags: ["business", "data", "words"],
+        blurb: "You learn how companies, money, and teams actually work.",
+        learn: "Accounting, finance, marketing, management, and how a business stays alive.",
+        need: "Curiosity about money, talking with people, and spotting patterns in numbers.",
+        future: "Analyst, marketer, founder-in-training, banker, or operations intern.",
+        unis: [
+          { id: "melbourne", faculty: "Business & Economics / Melbourne Business School" },
+          { id: "unsw", faculty: "Business School" },
+          { id: "sydney", faculty: "Business School" },
+          { id: "toronto", faculty: "Rotman School of Management" },
+          { id: "edinburgh", faculty: "Business School" },
+          { id: "manchester", faculty: "Alliance Manchester Business School" },
+          { id: "kcl", faculty: "King’s Business School" },
+          { id: "columbia", faculty: "Columbia Business School" },
+          { id: "ubc", faculty: "Sauder School of Business" },
+          { id: "nyu", faculty: "Stern School of Business" },
+          { id: "uiuc", faculty: "Gies College of Business" },
+          { id: "glasgow", faculty: "Adam Smith Business School" },
+          { id: "southampton", faculty: "Southampton Business School" },
+          { id: "sheffield", faculty: "Sheffield University Management School" }
+        ]
+      },
+      {
+        id: "econ", code: "ECN", name: "Economics",
+        tags: ["logic", "data", "business"],
+        blurb: "You study why people, companies, and countries make the choices they make.",
+        learn: "Markets, data, policy, and models that try to explain the real world.",
+        need: "Comfort with graphs, asking “why?”, and explaining a big idea in a short sentence.",
+        future: "Policy intern, research assistant, consultant-in-training, data-minded journalist.",
+        unis: [
+          { id: "ucl", faculty: "Social & Historical Sciences — Economics" },
+          { id: "melbourne", faculty: "Business & Economics" },
+          { id: "unsw", faculty: "Business School — Economics" },
+          { id: "toronto", faculty: "Arts & Science — Economics" },
+          { id: "kcl", faculty: "Social Science & Public Policy — Political Economy" },
+          { id: "ubc", faculty: "Arts — Economics" },
+          { id: "uiuc", faculty: "Liberal Arts & Sciences — Economics" },
+          { id: "glasgow", faculty: "Social Sciences — Economics" },
+          { id: "southampton", faculty: "Social Sciences — Economics" },
+          { id: "sheffield", faculty: "Social Sciences — Economics" }
+        ]
+      },
+      {
+        id: "law", code: "LAW", name: "Law",
+        tags: ["words", "logic", "help"],
+        blurb: "You learn the rules that keep people fair — and how to argue a case with evidence.",
+        learn: "Legal writing, rights, courts, and how a country turns ideas into law.",
+        need: "Careful reading, clear speaking, and staying calm in a disagreement.",
+        future: "Lawyer-in-training, policy helper, compliance intern, human-rights volunteer.",
+        unis: [
+          { id: "ucl", faculty: "Faculty of Laws" },
+          { id: "melbourne", faculty: "Law" },
+          { id: "unsw", faculty: "Law & Justice" },
+          { id: "sydney", faculty: "Law" },
+          { id: "toronto", faculty: "Law" },
+          { id: "edinburgh", faculty: "College of Arts, Humanities & Social Sciences — Law" },
+          { id: "manchester", faculty: "Faculty of Humanities — Law" },
+          { id: "kcl", faculty: "Law" },
+          { id: "columbia", faculty: "Columbia Law School" },
+          { id: "ubc", faculty: "Peter A. Allard School of Law" },
+          { id: "nyu", faculty: "School of Law" },
+          { id: "uiuc", faculty: "Law" },
+          { id: "glasgow", faculty: "College of Social Sciences — Law" },
+          { id: "southampton", faculty: "Faculty of Social Sciences — Law" },
+          { id: "sheffield", faculty: "Faculty of Social Sciences — Law" }
+        ]
+      },
+      {
+        id: "med", code: "MED", name: "Medicine & Biomedicine",
+        tags: ["help", "nature", "logic"],
+        blurb: "You study the human body so you can help people get well — and stay well.",
+        learn: "Biology, anatomy, clinics, and how disease and healing actually work.",
+        need: "Long-term grit, care for people, and a strong stomach for hard science.",
+        future: "Doctor-in-training, biomedical researcher, clinic helper, public-health starter. (This path is long. That’s okay to know now.)",
+        unis: [
+          { id: "ucl", faculty: "Medical Sciences / Biomedical Sciences" },
+          { id: "melbourne", faculty: "Medicine, Dentistry & Health Sciences" },
+          { id: "unsw", faculty: "Medicine & Health" },
+          { id: "sydney", faculty: "Medicine & Health" },
+          { id: "toronto", faculty: "Medicine" },
+          { id: "edinburgh", faculty: "Medicine & Veterinary Medicine" },
+          { id: "manchester", faculty: "Biology, Medicine & Health" },
+          { id: "kcl", faculty: "Life Sciences & Medicine" },
+          { id: "columbia", faculty: "Vagelos College of Physicians & Surgeons" },
+          { id: "ubc", faculty: "Medicine" },
+          { id: "nyu", faculty: "Grossman School of Medicine" },
+          { id: "glasgow", faculty: "Medical, Veterinary & Life Sciences" },
+          { id: "southampton", faculty: "Faculty of Medicine" },
+          { id: "sheffield", faculty: "Faculty of Health" }
+        ]
+      },
+      {
+        id: "psy", code: "PSY", name: "Psychology & Brain Science",
+        tags: ["help", "data", "words"],
+        blurb: "You study why people think, feel, and act the way they do.",
+        learn: "The brain, experiments, mental health, and how to listen without jumping to answers.",
+        need: "Curiosity about people, careful observation, and respect for privacy.",
+        future: "Counseling starter, UX researcher, neuroscience intern, education helper.",
+        unis: [
+          { id: "ucl", faculty: "Brain Sciences — Psychology / Language Sciences" },
+          { id: "unsw", faculty: "Science — Psychology" },
+          { id: "sydney", faculty: "Arts & Social Sciences — Psychology" },
+          { id: "toronto", faculty: "Arts & Science — Psychology" },
+          { id: "manchester", faculty: "Biology, Medicine & Health — Psychology" },
+          { id: "kcl", faculty: "IoPPN — Psychiatry, Psychology & Neuroscience" },
+          { id: "columbia", faculty: "Teachers College — Psychology" },
+          { id: "ubc", faculty: "Arts — Psychology" },
+          { id: "uiuc", faculty: "Liberal Arts & Sciences — Psychology" },
+          { id: "southampton", faculty: "Environmental & Life Sciences — Psychology" }
+        ]
+      },
+      {
+        id: "bio", code: "BIO", name: "Life Sciences",
+        tags: ["nature", "logic", "hands"],
+        blurb: "You zoom into cells, animals, plants, and the chemistry of being alive.",
+        learn: "Biology, lab skills, genetics, and how living systems stay in balance.",
+        need: "Love of the natural world, patience in a lab, and asking tiny precise questions.",
+        future: "Biologist, lab researcher, biotech intern, conservation helper.",
+        unis: [
+          { id: "ucl", faculty: "Life Sciences — Biosciences / Molecular Cell Biology" },
+          { id: "melbourne", faculty: "Science — Biosciences" },
+          { id: "unsw", faculty: "Science — Biology" },
+          { id: "sydney", faculty: "Science — Biology" },
+          { id: "toronto", faculty: "Arts & Science — Life Sciences" },
+          { id: "edinburgh", faculty: "Science & Engineering — Biology" },
+          { id: "manchester", faculty: "Biology, Medicine & Health — Biological Sciences" },
+          { id: "kcl", faculty: "Life Sciences & Medicine — Biomedical Sciences" },
+          { id: "ubc", faculty: "Science — Biology" },
+          { id: "glasgow", faculty: "Medical, Veterinary & Life Sciences — Biological Sciences" },
+          { id: "southampton", faculty: "Environmental & Life Sciences — Biology" },
+          { id: "sheffield", faculty: "Faculty of Science — Biosciences" }
+        ]
+      },
+      {
+        id: "stem", code: "MAP", name: "Math, Physics & Data",
+        tags: ["logic", "data", "nature"],
+        blurb: "You hunt patterns in numbers, stars, particles, and giant data sets.",
+        learn: "Mathematics, physics, statistics, and how to prove an idea instead of just guessing.",
+        need: "Comfort sitting with a hard problem, and the thrill when a pattern finally clicks.",
+        future: "Data analyst, physicist-in-training, quant intern, space or climate researcher.",
+        unis: [
+          { id: "ucl", faculty: "Mathematical & Physical Sciences" },
+          { id: "melbourne", faculty: "Science — Mathematics / Physics" },
+          { id: "unsw", faculty: "Science — Mathematics / Physics" },
+          { id: "sydney", faculty: "Science — Mathematics / Physics" },
+          { id: "toronto", faculty: "Arts & Science; Information — Data Science" },
+          { id: "edinburgh", faculty: "Science & Engineering — Mathematics / Physics" },
+          { id: "manchester", faculty: "Science & Engineering — Mathematics / Physics" },
+          { id: "kcl", faculty: "Natural, Mathematical & Engineering Sciences" },
+          { id: "columbia", faculty: "Columbia College / Engineering — Sciences" },
+          { id: "ubc", faculty: "Science — Mathematics, Physics, Statistics" },
+          { id: "nyu", faculty: "Arts & Science; Tandon — Data Science" },
+          { id: "uiuc", faculty: "LAS + Grainger + iSchool — Math / Physics / Data Science" },
+          { id: "glasgow", faculty: "Science & Engineering — Mathematics / Physics" },
+          { id: "southampton", faculty: "Engineering & Physical Sciences — Mathematical Sciences" },
+          { id: "sheffield", faculty: "Faculty of Science — Mathematics & Statistics / Physics" }
+        ]
+      },
+      {
+        id: "art", code: "ART", name: "Art, Design & Media",
+        tags: ["art", "hands", "words"],
+        blurb: "You make images, films, music, games, or objects that other people can feel.",
+        learn: "Studio practice, storytelling, design tools, and how to finish a piece — not just start it.",
+        need: "Taste, hours of making, and bravery to show unfinished work.",
+        future: "Designer, filmmaker, musician, game artist, journalist-in-training.",
+        unis: [
+          { id: "ucl", faculty: "Arts & Humanities — Slade School of Fine Art" },
+          { id: "melbourne", faculty: "Fine Arts & Music (VCA)" },
+          { id: "unsw", faculty: "Arts, Design & Architecture — Design / Media / Creative Arts" },
+          { id: "sydney", faculty: "Conservatorium of Music; Media & Communications" },
+          { id: "toronto", faculty: "Music; Architecture, Landscape & Design" },
+          { id: "edinburgh", faculty: "Arts — Art / Literature" },
+          { id: "kcl", faculty: "Arts & Humanities — Music / Digital Humanities" },
+          { id: "columbia", faculty: "School of the Arts; Journalism" },
+          { id: "nyu", faculty: "Tisch School of the Arts; Steinhardt" },
+          { id: "uiuc", faculty: "Fine & Applied Arts; College of Media" },
+          { id: "glasgow", faculty: "Arts & Humanities — Music / Creative Writing" },
+          { id: "southampton", faculty: "Winchester School of Art; Film / Music" },
+          { id: "sheffield", faculty: "Arts & Humanities — Music / Journalism" }
+        ]
+      },
+      {
+        id: "ir", code: "IR", name: "World & Public Policy",
+        tags: ["words", "help", "business"],
+        blurb: "You study countries, power, and how public decisions change real lives.",
+        learn: "Politics, global affairs, history of power, and how to write a sharp brief.",
+        need: "Reading the news with questions, debating kindly, and seeing more than one side.",
+        future: "Policy intern, diplomat-in-training, NGO helper, political researcher.",
+        unis: [
+          { id: "ucl", faculty: "Social & Historical Sciences — Political Science" },
+          { id: "sydney", faculty: "Arts & Social Sciences — Government" },
+          { id: "toronto", faculty: "Arts & Science; Munk School — Political Science / Global Affairs" },
+          { id: "edinburgh", faculty: "Social & Political Science" },
+          { id: "manchester", faculty: "Humanities — Social Sciences" },
+          { id: "kcl", faculty: "War Studies; Social Science & Public Policy; Global Affairs" },
+          { id: "columbia", faculty: "SIPA — International Relations / Public Policy" },
+          { id: "nyu", faculty: "Wagner School of Public Service; Global Affairs" },
+          { id: "glasgow", faculty: "Social Sciences — Social & Political Sciences" },
+          { id: "southampton", faculty: "Politics & International Relations" },
+          { id: "sheffield", faculty: "Social Sciences — Politics" }
+        ]
+      },
+      {
+        id: "edu", code: "EDU", name: "Education",
+        tags: ["help", "words", "art"],
+        blurb: "You learn how people learn — so you can teach, design lessons, or build better schools.",
+        learn: "How the brain learns, teaching practice, and education policy.",
+        need: "Patience, clear explaining, and remembering what it felt like to be confused.",
+        future: "Teacher-in-training, education designer, youth-program helper. UCL’s IOE is #1 in the world for Education (QS).",
+        unis: [
+          { id: "ucl", faculty: "Institute of Education (IOE) — #1 QS Education" },
+          { id: "melbourne", faculty: "Education" },
+          { id: "unsw", faculty: "Arts, Design & Architecture — Education" },
+          { id: "manchester", faculty: "Humanities — Education" },
+          { id: "kcl", faculty: "Social Science & Public Policy — Education" },
+          { id: "columbia", faculty: "Teachers College" },
+          { id: "toronto", faculty: "Ontario Institute for Studies in Education (OISE)" },
+          { id: "ubc", faculty: "Education" },
+          { id: "nyu", faculty: "Steinhardt School — Education" },
+          { id: "uiuc", faculty: "College of Education" },
+          { id: "glasgow", faculty: "Social Sciences — Education" },
+          { id: "southampton", faculty: "Social Sciences — Education" },
+          { id: "sheffield", faculty: "Social Sciences — Education" }
+        ]
+      },
+      {
+        id: "ph", code: "PH", name: "Public & Global Health",
+        tags: ["help", "data", "nature"],
+        blurb: "You protect whole communities, not only one patient — from outbreaks to clean water.",
+        learn: "Epidemiology, health data, global health, and how cities keep people well.",
+        need: "Care for strangers, comfort with data, and thinking at city or country scale.",
+        future: "Public-health intern, NGO health worker, health-data starter, policy helper.",
+        unis: [
+          { id: "ucl", faculty: "Population Health Sciences" },
+          { id: "melbourne", faculty: "MDHS — Population & Global Health" },
+          { id: "unsw", faculty: "Medicine & Health — Population Health" },
+          { id: "sydney", faculty: "Medicine & Health — Public Health" },
+          { id: "toronto", faculty: "Medicine — Public Health" },
+          { id: "kcl", faculty: "Social Science & Public Policy — Global Health" },
+          { id: "columbia", faculty: "Mailman School of Public Health" },
+          { id: "ubc", faculty: "Medicine" },
+          { id: "glasgow", faculty: "Medical, Veterinary & Life Sciences" },
+          { id: "southampton", faculty: "Medicine — Health Sciences" },
+          { id: "sheffield", faculty: "Faculty of Health" }
+        ]
+      }
+    ];
+
+    const MAJOR_EXTRA = {
+      cs: {
+        mean: "A university subject about making computers do useful work: apps, websites, games, smart tools.",
+        unlike: "Not Engineering (that builds physical machines) and not Math, Physics & Data (that proves and measures more than it ships software).",
+        now: "Try a coding club, a Scratch or Python hour, or a tiny webpage.",
+        watch: "Later: lots of sitting, debugging, and math. You do not need to be a genius now."
+      },
+      eng: {
+        mean: "Designing and building real-world systems: bridges, robots, circuits, planes, energy.",
+        unlike: "Not Computer Science (software first) and not Architecture (spaces for people to live in).",
+        now: "Join robotics, design & technology, or a science-fair build.",
+        watch: "Heavy math and physics. Tracks split later: civil, mechanical, electrical, and more."
+      },
+      arch: {
+        mean: "Designing buildings and cities that people actually live and walk in.",
+        unlike: "Not Art, Design & Media (images and films) and not Engineering (structures that must not fail). They share drawing, but the job is different.",
+        now: "Sketch rooms, visit a building and notice light and flow, or try a design club.",
+        watch: "Long studio hours. Becoming a licensed architect usually takes extra years after university."
+      },
+      biz: {
+        mean: "How companies make, spend, and grow money — and how teams actually run.",
+        unlike: "Not Economics. Economics asks why markets work. Business asks how we run this company.",
+        now: "A school stall, club accounts, or a simple budget for one event.",
+        watch: "Finance, management, and marketing split later. They are not the same thing."
+      },
+      econ: {
+        mean: "Why people, companies, and countries make money choices — with graphs and models.",
+        unlike: "Not Business. Business runs a firm. Economics asks “what happens if…?”",
+        now: "Read a news chart, ask why a price changed, or keep a “why did they do that?” notebook.",
+        watch: "Looks wordy; there is more math than it first seems. Graphs help."
+      },
+      law: {
+        mean: "The rules a country uses, and how to argue a case with evidence.",
+        unlike: "Not World & Public Policy (countries and governments). Law sits closer to the rulebook and the courtroom.",
+        now: "Debate club, a short news case, practice writing one clear argument.",
+        watch: "Some countries need extra exams. The reading load is high."
+      },
+      med: {
+        mean: "Studying the human body to help people get well — including related lab science.",
+        unlike: "Not Public Health (whole cities) and not Life Sciences (labs more than clinics). UIUC in this set has no medical school.",
+        now: "Biology, first aid, an age-ok volunteer role, or a science olympiad.",
+        watch: "A long path (often 5–8+ years) and competitive. Liking health does not mean you must become a doctor."
+      },
+      psy: {
+        mean: "How minds work: thinking, feeling, behaviour, and the brain.",
+        unlike: "Not Education (how classrooms learn) and not Medicine (the body). A psychology degree is not a therapist licence by itself.",
+        now: "Notice how people decide, practise listening, or try a small project on memory or habits.",
+        watch: "University psychology is often experiments and statistics, not only talking."
+      },
+      bio: {
+        mean: "Living things: cells, genes, animals, plants.",
+        unlike: "Not Medicine (patients) and not Public Health (communities).",
+        now: "Science club, a garden or ecology watch, a safe lab with a teacher.",
+        watch: "Many names to remember, plus patience in a lab."
+      },
+      stem: {
+        mean: "Math, physics, and data as the main subject — proving, measuring, finding patterns.",
+        unlike: "Not Computer Science (shipping software) and not Engineering (building machines).",
+        now: "Contest math, science olympiad, or a spreadsheet of something you count.",
+        watch: "Abstract. If what you really want is “make an app”, Computer Science may fit better."
+      },
+      art: {
+        mean: "Making work people can see, hear, or use: art, design, film, music, media.",
+        unlike: "Not Architecture (buildings people live in). Both draw; the purpose is different.",
+        now: "Finish one small piece a week. School paper, choir, photo, or a game sprite all count.",
+        watch: "Portfolios matter. Taste grows by making, not only by liking art."
+      },
+      ir: {
+        mean: "How countries, governments, and public choices affect real people.",
+        unlike: "Not Law (courts and statutes) and not Business (companies).",
+        now: "Read one news story from two countries, model UN, or debate.",
+        watch: "Writing and languages help. It is not “become a diplomat tomorrow”."
+      },
+      edu: {
+        mean: "How people learn — and how to teach or design better schools.",
+        unlike: "Not Psychology (the mind in general). Education sits closer to classrooms and school systems.",
+        now: "Tutor a younger student, help a club lesson, notice what made a class finally click.",
+        watch: "Teacher training and licences differ by country."
+      },
+      ph: {
+        mean: "Keeping whole communities healthy: water, vaccines, outbreaks, health data.",
+        unlike: "Not Medicine. Medicine treats one patient. Public health treats a city.",
+        now: "Science + geography, track one school health habit, read how a city handles heat or flu.",
+        watch: "A mix of biology and data. Less “hospital hero”, more “how the system runs”."
+      }
+    };
+
+    const COMBOS = [
+      { tags: ["logic", "data"], name: "The Analyst", blurb: "You like finding the hidden pattern." },
+      { tags: ["art", "hands"], name: "The Maker", blurb: "You like building things people can see and touch." },
+      { tags: ["help", "words"], name: "The Guide", blurb: "You like using words to help someone else." },
+      { tags: ["nature", "hands"], name: "The Explorer", blurb: "You like the real world more than a worksheet." },
+      { tags: ["business", "data"], name: "The Strategist", blurb: "You like turning numbers into a plan." },
+      { tags: ["art", "words"], name: "The Storyteller", blurb: "You like making ideas other people can feel." },
+      { tags: ["logic", "hands"], name: "The Builder-Brain", blurb: "You like systems that actually work." },
+      { tags: ["help", "nature"], name: "The Care Path", blurb: "You like looking after people and living things." }
+    ];
+
+    /* 8-question path scan. Same 4 letters as MBTI-style types, but this is a class game, not an official test. */
+    const QUIZ = [
+      {
+        dim: "EI",
+        prompt: "A free Saturday. What actually recharges you?",
+        a: { letter: "E", title: "People fuel", text: "A busy hangout. Talking, laughing, more energy after." },
+        b: { letter: "I", title: "Quiet fuel", text: "One friend, a book, or my room. I need a pause after a crowd." }
+      },
+      {
+        dim: "EI",
+        prompt: "You get a cool idea in class. What do you do first?",
+        a: { letter: "E", title: "Say it", text: "I speak it out loud. Talking helps me think." },
+        b: { letter: "I", title: "Hold it", text: "I turn it over in my head before I share." }
+      },
+      {
+        dim: "SN",
+        prompt: "You visit a new city. What grabs you?",
+        a: { letter: "S", title: "Real details", text: "The food, the streets, what people are actually doing." },
+        b: { letter: "N", title: "What-if pictures", text: "Stories, future ideas, ‘what this place could become.’" }
+      },
+      {
+        dim: "SN",
+        prompt: "A school project starts. What do you want?",
+        a: { letter: "S", title: "Clear steps", text: "Facts, examples, a checklist I can follow." },
+        b: { letter: "N", title: "A big idea", text: "Room to invent. I get bored if every step is already written." }
+      },
+      {
+        dim: "TF",
+        prompt: "A friend is upset. Your first move?",
+        a: { letter: "T", title: "Fix the knot", text: "Find the problem and offer a plan." },
+        b: { letter: "F", title: "Feel it with them", text: "Listen first. How they feel matters more than a quick fix." }
+      },
+      {
+        dim: "TF",
+        prompt: "Group work goes messy. What is more you?",
+        a: { letter: "T", title: "Honest and sharp", text: "Say the true thing, even if it is a little blunt." },
+        b: { letter: "F", title: "Keep the team okay", text: "Protect feelings. A good vibe helps the work." }
+      },
+      {
+        dim: "JP",
+        prompt: "Homework week. Your style?",
+        a: { letter: "J", title: "Plan it", text: "List, calendar, finish early if I can." },
+        b: { letter: "P", title: "Ride the energy", text: "I start when it clicks. I still get it done — just not in a neat line." }
+      },
+      {
+        dim: "JP",
+        prompt: "Saturday morning. What sounds better?",
+        a: { letter: "J", title: "A finished list", text: "I like knowing what the day will look like." },
+        b: { letter: "P", title: "See what happens", text: "Leave space. The fun part is the surprise." }
+      }
+    ];
+
+    const NOVA_LEAD = [
+      "First question. Go with your first instinct — there is no wrong answer.",
+      "Next: how you like to start an idea.",
+      "Imagine you have just arrived in a new city.",
+      "Now a school project.",
+      "A friend is having a difficult day.",
+      "Group work. Answer honestly.",
+      "Almost done with personality. Homework week.",
+      "Last personality question. Saturday morning — then we talk about school."
+    ];
+
+    const SCHOOL_QUIZ = [
+      {
+        prompt: "If tomorrow was only one kind of class, you’d pick…",
+        a: { title: "Numbers & labs", text: "Math, science, computers. A clear method feels good.", tags: ["logic", "data", "nature"], majors: ["cs", "stem", "eng", "bio"] },
+        b: { title: "Words & people", text: "English, history, languages. Talking an idea through feels good.", tags: ["words", "help", "art"], majors: ["ir", "law", "edu", "art"] }
+      },
+      {
+        prompt: "You’re usually stronger when the work looks like…",
+        a: { title: "A problem to solve", text: "Steps, formulas, experiments, code, or building something.", tags: ["logic", "hands"], majors: ["eng", "cs", "stem", "med"] },
+        b: { title: "A thing to say or show", text: "Writing, presenting, drawing, performing, or debating.", tags: ["words", "art"], majors: ["art", "ir", "law", "edu"] }
+      }
+    ];
+
+    const SUBJECTS = [
+      { id: "math", label: "Math", ico: "∑", tags: ["logic", "data"], majors: ["stem", "cs", "econ", "eng"] },
+      { id: "science", label: "Science", ico: "🔬", tags: ["nature", "logic"], majors: ["bio", "stem", "med", "ph"] },
+      { id: "english", label: "English / languages", ico: "📚", tags: ["words", "art"], majors: ["art", "ir", "law", "edu"] },
+      { id: "history", label: "History / society", ico: "🌍", tags: ["words", "help"], majors: ["ir", "law", "econ", "edu"] },
+      { id: "arts", label: "Art / music / drama", ico: "🎨", tags: ["art", "hands"], majors: ["art", "arch", "edu"] },
+      { id: "computers", label: "Computers", ico: "💻", tags: ["data", "logic"], majors: ["cs", "stem", "eng"] },
+      { id: "making", label: "DT / making / PE", ico: "🔧", tags: ["hands", "nature"], majors: ["eng", "arch", "bio"] },
+      { id: "money", label: "Business / money", ico: "📈", tags: ["business", "data"], majors: ["biz", "econ", "ir"] }
+    ];
+
+    const PATHS = {
+      INTJ: { name: "The Quiet Strategist", blurb: "You like deep plans and clean logic. You do not need a crowd to be strong.", tags: ["logic", "data", "hands"], majors: ["cs", "stem", "eng"] },
+      INTP: { name: "The Puzzle Brain", blurb: "You take ideas apart for fun. A hard question is a toy, not a threat.", tags: ["logic", "data", "nature"], majors: ["stem", "cs", "bio"] },
+      ENTJ: { name: "The Captain", blurb: "You like leading a plan and making a messy group actually move.", tags: ["business", "logic", "words"], majors: ["biz", "econ", "ir"] },
+      ENTP: { name: "The Idea Spark", blurb: "You debate, invent, and connect odd dots. Bored is your only enemy.", tags: ["words", "data", "art"], majors: ["ir", "cs", "biz"] },
+      INFJ: { name: "The Quiet Guide", blurb: "You notice how people feel, then look for a meaning underneath.", tags: ["help", "words", "art"], majors: ["psy", "edu", "ir"] },
+      INFP: { name: "The Story Heart", blurb: "You care about what is true for you. Making and helping both feel like home.", tags: ["art", "help", "words"], majors: ["art", "psy", "edu"] },
+      ENFJ: { name: "The Team Light", blurb: "People look to you. You want the group to grow, not just win.", tags: ["help", "words", "art"], majors: ["edu", "ir", "psy"] },
+      ENFP: { name: "The Spark Friend", blurb: "You bring energy and new paths. You hate being boxed in.", tags: ["art", "words", "help"], majors: ["art", "edu", "ir"] },
+      ISTJ: { name: "The Steady Builder", blurb: "You keep promises. Clear rules and real skills feel safe and strong.", tags: ["logic", "hands", "business"], majors: ["eng", "law", "stem"] },
+      ISFJ: { name: "The Care Keeper", blurb: "You remember people. Helping in a practical way is your superpower.", tags: ["help", "hands", "nature"], majors: ["med", "edu", "ph"] },
+      ESTJ: { name: "The Organizer", blurb: "You like order, decisions, and getting the job finished.", tags: ["business", "logic", "words"], majors: ["biz", "law", "econ"] },
+      ESFJ: { name: "The People Host", blurb: "You keep everyone included. Teams work better when you are there.", tags: ["help", "words", "business"], majors: ["edu", "biz", "ph"] },
+      ISTP: { name: "The Fixer", blurb: "You understand how things work by touching them, not only reading about them.", tags: ["hands", "logic", "nature"], majors: ["eng", "arch", "cs"] },
+      ISFP: { name: "The Gentle Maker", blurb: "You make beautiful or useful things, often quietly, with a lot of heart.", tags: ["art", "hands", "nature"], majors: ["art", "arch", "bio"] },
+      ESTP: { name: "The Action Scout", blurb: "You learn by doing. Fast, bold, and awake to what is happening now.", tags: ["hands", "business", "words"], majors: ["biz", "arch", "ir"] },
+      ESFP: { name: "The Stage Energy", blurb: "You make a room feel alive. Performance, people, and fun are real skills.", tags: ["art", "words", "help"], majors: ["art", "edu", "biz"] }
+    };
+
+    const MAX_LIKES = 4;
+    const selected = new Set();
+    const openCards = new Set();
+    let lockedId = null;
+    let novaTour = 0;
+    let novaTourStation = null;
+    const NOVA_OPEN_STEPS = 6;
+    let sector = "ALL";
+    let pathType = null;
+    let quizIndex = 0;
+    let quizAnswers = [];
+    let quizScreen = "intro";
+    let schoolIndex = 0;
+    let schoolAnswers = [];
+    let likedSubjects = [];
+    let strongSubjects = [];
+    let schoolWeight = "both";
+    const SCAN_STEPS = QUIZ.length + SCHOOL_QUIZ.length + 2;
+
+    const LINES = [
+      { id: "logic", stops: ["stem", "cs", "eng"] },
+      { id: "care", stops: ["med", "bio", "ph", "psy", "edu"] },
+      { id: "world", stops: ["biz", "econ", "law", "ir"] },
+      { id: "make", stops: ["arch", "art"] }
+    ];
+
+    const likeGrid = document.getElementById("likeGrid");
+    const signalList = document.getElementById("signalList");
+    const comboBanner = document.getElementById("comboBanner");
+    const typeChip = document.getElementById("typeChip");
+    const radarDisk = document.getElementById("radarDisk");
+    const tutorial = document.getElementById("tutorial");
+    const quizCard = document.getElementById("quizCard");
+    const SESSION_KEY = "mejor-session";
+    let skipHashWrite = false;
+    let restored = false;
+
+    function saveSession() {
+      try {
+        localStorage.setItem(SESSION_KEY, JSON.stringify({
+          likes: Array.from(selected),
+          lockedId: lockedId,
+          sector: sector,
+          pathCode: pathType && pathType.code,
+          pathTags: pathType && pathType.tags,
+          pathMajors: pathType && pathType.majors,
+          likedSubjects: likedSubjects,
+          strongSubjects: strongSubjects,
+          schoolWeight: schoolWeight
+        }));
+      } catch (e) {}
+    }
+    function loadSession() {
+      try {
+        const raw = localStorage.getItem(SESSION_KEY);
+        if (!raw) return null;
+        return JSON.parse(raw);
+      } catch (e) { return null; }
+    }
+    function majorFromHash() {
+      const id = (location.hash || "").replace(/^#/, "");
+      return MAJORS.some((m) => m.id === id) ? id : null;
+    }
+    function syncHash(id) {
+      if (skipHashWrite) return;
+      const next = id ? "#" + id : "";
+      if ((location.hash || "") === next) return;
+      try {
+        if (id) history.replaceState(null, "", "#" + id);
+        else history.replaceState(null, "", location.pathname + location.search);
+      } catch (e) {}
+    }
+    function renderStub(rank) {
+      const empty = t("stub.empty");
+      const likeEl = document.getElementById("stubLikes");
+      if (!likeEl) return;
+      const likeNames = Array.from(selected).map((id) => tagLabel(id)).filter(Boolean);
+      likeEl.textContent = likeNames.length ? likeNames.join(" · ") : empty;
+      const strong = (rank || rankedMajors()).filter((r) => r.match >= 70).slice(0, 3);
+      document.getElementById("stubStrong").textContent = strong.length
+        ? strong.map((r) => majorLoc(r.m).name).join(" · ")
+        : empty;
+      const major = MAJORS.find((m) => m.id === lockedId);
+      document.getElementById("stubLocked").textContent = major ? majorLoc(major).name : empty;
+    }
+
+    function zh() { return MejorI18n.getLang() === "zh"; }
+    function t(key) { return MejorI18n.t(key); }
+    function tagLabel(id) {
+      const tag = typeof id === "string" ? TAGS.find((x) => x.id === id) : id;
+      if (!tag) return "";
+      return zh() ? (MejorI18n.DATA.tags[tag.id] || tag.label) : tag.label;
+    }
+    function subjectLabel(id) {
+      const s = SUBJECTS.find((x) => x.id === id);
+      if (!s) return id;
+      return zh() ? (MejorI18n.DATA.subjects[id] || s.label) : s.label;
+    }
+    function tagHint(id) {
+      if (zh()) return (MejorI18n.DATA.tagHints && MejorI18n.DATA.tagHints[id]) || "";
+      const tag = TAGS.find((x) => x.id === id);
+      return (tag && tag.hint) || "";
+    }
+    function majorLoc(m) {
+      const extra = MAJOR_EXTRA[m.id] || {};
+      const z = MejorI18n.DATA.majors[m.id];
+      const zExtra = (MejorI18n.DATA.extra && MejorI18n.DATA.extra[m.id]) || {};
+      if (zh()) return Object.assign({}, m, extra, z || {}, zExtra);
+      return Object.assign({}, m, extra);
+    }
+    function pathLoc(profile, code) {
+      const z = MejorI18n.DATA.paths[code];
+      if (!zh() || !z) return profile;
+      return Object.assign({}, profile, z);
+    }
+    function setWorkingStyle(rec) {
+      const el = document.getElementById("typeCode");
+      if (!el) return;
+      if (!rec || !rec.code) {
+        el.textContent = "—";
+        el.removeAttribute("title");
+        return;
+      }
+      const raw = rec.profile || PATHS[rec.code];
+      const profile = raw ? pathLoc(raw, rec.code) : null;
+      el.textContent = (profile && profile.name) || rec.code;
+      el.setAttribute("title", rec.code);
+    }
+    function comboLoc(hit) {
+      const z = MejorI18n.DATA.combos[hit.tags.join("+")];
+      if (!zh() || !z) return hit;
+      return Object.assign({}, hit, z);
+    }
+    function quizLoc(i) {
+      const q = QUIZ[i];
+      const z = MejorI18n.DATA.quiz[i];
+      if (!zh() || !z) return q;
+      return { dim: q.dim, prompt: z.prompt, a: Object.assign({}, q.a, z.a), b: Object.assign({}, q.b, z.b) };
+    }
+    function schoolLoc(i) {
+      const q = SCHOOL_QUIZ[i];
+      const z = MejorI18n.DATA.school[i];
+      if (!zh() || !z) return q;
+      return { prompt: z.prompt, a: Object.assign({}, q.a, z.a), b: Object.assign({}, q.b, z.b) };
+    }
+    function novaLead(i) { return zh() ? MejorI18n.DATA.novaLead[i] : NOVA_LEAD[i]; }
+    function uniEvidence(id, fallback) { return zh() ? (MejorI18n.DATA.evidence[id] || fallback) : fallback; }
+    function countryLabel(c) { return t("country." + c); }
+    function uniIntro(id) {
+      const uni = UNIVERSITIES[id];
+      if (!uni) return "";
+      if (zh() && MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id]) return MejorI18n.DATA.uniIntro[id];
+      return uni.intro || "";
+    }
+    function esc(s) {
+      return String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+      );
+    }
+    function chipHtml(m, uniId) {
+      const uni = UNIVERSITIES[uniId];
+      const offer = m.unis.find((u) => u.id === uniId);
+      const off = !offer;
+      const cls = ["chip"];
+      if (off) cls.push("off");
+      if (sector !== "ALL" && uni.country !== sector) cls.push("dim");
+      const taught = offer ? offer.faculty : t("unis.none");
+      return `<span class="${cls.join(" ")}" role="button" data-uni="${uniId}" data-faculty="${esc(offer ? offer.faculty : "")}" data-off="${off ? "1" : "0"}" tabindex="0">${esc(uni.short)} · #${uni.qs} ${countryLabel(uni.country)} — ${esc(taught)}</span>`;
+    }
+    function allChips(m) {
+      return Object.keys(UNIVERSITIES).map((id) => chipHtml(m, id)).join("");
+    }
+    function fillUniTip(el) {
+      const id = el.dataset.uni;
+      const uni = UNIVERSITIES[id];
+      const tip = document.getElementById("uniTip");
+      if (!uni || !tip) return;
+      const off = el.dataset.off === "1";
+      const teachLine = off
+        ? `<p class="why off"><b>${esc(t("uni.teaches"))}.</b> ${esc(t("unis.none.tip"))}</p>`
+        : `<p class="why"><b>${esc(t("uni.teaches"))}.</b> ${esc(el.dataset.faculty || "")}</p>`;
+      tip.innerHTML = `<b>${esc(uni.name)}</b>
+        <p>${esc(uniIntro(id))}</p>
+        <p class="why"><b>${esc(t("uni.why"))}.</b> ${esc(uniEvidence(id, uni.evidence))}</p>
+        ${teachLine}`;
+    }
+    function placeUniTip(el) {
+      const tip = document.getElementById("uniTip");
+      if (!tip) return;
+      tip.classList.add("show");
+      const r = el.getBoundingClientRect();
+      const tw = tip.offsetWidth;
+      const th = tip.offsetHeight;
+      let left = r.left;
+      let top = r.top - th - 10;
+      if (top < 8) top = r.bottom + 10;
+      if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
+      if (left < 8) left = 8;
+      if (top + th > window.innerHeight - 8) top = Math.max(8, window.innerHeight - th - 8);
+      tip.style.left = left + "px";
+      tip.style.top = top + "px";
+    }
+    let uniTipChip = null;
+    let uniTipPinned = false;
+    function hoverPointer(e) {
+      return e.pointerType === "mouse" || e.pointerType === "pen";
+    }
+    function showUniTipFor(el) {
+      if (!el) return;
+      uniTipChip = el;
+      fillUniTip(el);
+      placeUniTip(el);
+    }
+    function hideUniTip() {
+      uniTipChip = null;
+      uniTipPinned = false;
+      const tip = document.getElementById("uniTip");
+      if (tip) tip.classList.remove("show");
+    }
+    function bindUniTips() {
+      if (document.documentElement.hasAttribute("data-uni-tips")) return;
+      document.documentElement.setAttribute("data-uni-tips", "1");
+      document.addEventListener("pointerover", (e) => {
+        const el = e.target.closest && e.target.closest("[data-uni]");
+        if (!el || !hoverPointer(e)) return;
+        uniTipPinned = false;
+        showUniTipFor(el);
+      });
+      document.addEventListener("pointerout", (e) => {
+        if (!hoverPointer(e) || uniTipPinned) return;
+        const from = e.target.closest && e.target.closest("[data-uni]");
+        const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("[data-uni]");
+        if (from && !to) hideUniTip();
+      });
+      document.addEventListener("pointerup", (e) => {
+        const el = e.target.closest && e.target.closest("[data-uni]");
+        if (el && !hoverPointer(e)) {
+          if (uniTipPinned && uniTipChip === el) hideUniTip();
+          else {
+            uniTipPinned = true;
+            showUniTipFor(el);
+          }
+          return;
+        }
+        if (uniTipPinned && !(e.target.closest && e.target.closest("[data-uni], #uniTip"))) {
+          hideUniTip();
+        }
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape") hideUniTip();
+      });
+      document.addEventListener("focusin", (e) => {
+        const el = e.target.closest && e.target.closest("[data-uni]");
+        if (el) showUniTipFor(el);
+      });
+      document.addEventListener("focusout", (e) => {
+        if (uniTipPinned) return;
+        const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("[data-uni]");
+        if (!to) hideUniTip();
+      });
+      window.addEventListener("scroll", () => {
+        if (uniTipChip && uniTipChip.isConnected) placeUniTip(uniTipChip);
+        else if (uniTipChip) hideUniTip();
+      }, { capture: true, passive: true });
+    }
+
+    MejorI18n.apply();
+    MejorI18n.bindToggles();
+
+    TAGS.forEach((tag) => {
+      const card = document.createElement("button");
+      card.type = "button";
+      card.className = "flip like";
+      card.dataset.id = tag.id;
+      card.innerHTML = `<span class="flip-inner">
+        <span class="flip-face front"><span class="ico">${tag.ico}</span><span class="lab">${tagLabel(tag.id)}</span><span class="flip-cue">${t("like.pick")}</span></span>
+        <span class="flip-face back"><span class="lab">${tagLabel(tag.id)}</span><span class="subhint">${tagHint(tag.id)}</span><span class="flip-cue">${t("like.picked")}</span></span>
+      </span>`;
+      card.addEventListener("click", () => toggleLike(tag.id, card));
+      likeGrid.appendChild(card);
+    });
+
+    const snap = loadSession();
+    const hashId = majorFromHash();
+    if (snap) {
+      (snap.likes || []).forEach((id) => {
+        if (!TAGS.some((x) => x.id === id)) return;
+        selected.add(id);
+        const btn = likeGrid.querySelector(`[data-id="${id}"]`);
+        if (btn) btn.classList.add("on", "is-flipped");
+      });
+      if (snap.pathCode && PATHS[snap.pathCode]) {
+        pathType = {
+          code: snap.pathCode,
+          profile: PATHS[snap.pathCode],
+          majors: snap.pathMajors || PATHS[snap.pathCode].majors,
+          tags: snap.pathTags || PATHS[snap.pathCode].tags
+        };
+        setWorkingStyle(pathType);
+      }
+      likedSubjects = Array.isArray(snap.likedSubjects) ? snap.likedSubjects : [];
+      strongSubjects = Array.isArray(snap.strongSubjects) ? snap.strongSubjects : [];
+      if (snap.schoolWeight) schoolWeight = snap.schoolWeight;
+      if (["ALL", "UK", "Australia", "Canada", "USA"].includes(snap.sector)) sector = snap.sector;
+      if (snap.lockedId && MAJORS.some((m) => m.id === snap.lockedId)) {
+        lockedId = snap.lockedId;
+        openCards.add(lockedId);
+      }
+      restored = Boolean((snap.likes && snap.likes.length) || snap.lockedId || snap.pathCode);
+    }
+    if (hashId) {
+      lockedId = hashId;
+      openCards.add(hashId);
+    }
+    const params = new URLSearchParams(location.search);
+    const wantNova = params.get("nova") === "1" || params.get("quiz") === "1";
+    const skipMap = params.get("skip") === "1";
+
+    LINES.forEach((line) => {
+      const rail = document.querySelector('[data-rail="' + line.id + '"]');
+      line.stops.forEach((id) => {
+        const major = MAJORS.find((m) => m.id === id);
+        if (!major || !rail) return;
+        const star = document.createElement("button");
+        star.type = "button";
+        star.className = "star";
+        star.id = "star-" + major.id;
+        star.innerHTML = `<span class="planet"><span>${major.code}</span></span><span class="name">${majorLoc(major).name}</span>`;
+        star.addEventListener("click", () => lockMajor(major.id));
+        rail.appendChild(star);
+      });
+    });
+
+    function placeStop(star, match) {
+      let scale = 1;
+      if (selected.size) {
+        if (match >= 70) scale = 1.12;
+        else if (match >= 40) scale = 1.04;
+        else scale = 0.92;
+      }
+      star.style.setProperty("--s", String(scale));
+    }
+
+    /* Match = how many of YOUR likes this major covers. 2 of 2 likes = 100%. Easy to explain in class. */
+    function matchOf(major) {
+      if (selected.size === 0) return 0;
+      let hit = 0;
+      selected.forEach((t) => { if (major.tags.includes(t)) hit += 1; });
+      return Math.round((100 * hit) / selected.size);
+    }
+
+    function rankedMajors() {
+      return MAJORS
+        .map((m, i) => ({ m, match: matchOf(m), i }))
+        .sort((a, b) => b.match - a.match || a.i - b.i);
+    }
+
+    function toggleLike(id, btn) {
+      if (selected.has(id)) {
+        selected.delete(id);
+        btn.classList.remove("on", "is-flipped");
+      } else if (selected.size >= MAX_LIKES) {
+        btn.classList.remove("shake");
+        void btn.offsetWidth;
+        btn.classList.add("shake");
+        return;
+      } else {
+        selected.add(id);
+        btn.classList.add("on", "is-flipped");
+      }
+      pulse();
+      render();
+    }
+
+    function pulse() {
+      radarDisk.classList.add("scanning");
+      setTimeout(() => radarDisk.classList.remove("scanning"), 1200);
+    }
+
+    function ringSvg(match) {
+      const cls = match >= 70 ? "hot" : match >= 40 ? "mid" : "low";
+      return `<span class="fare ${cls}"><b>${match}</b><i>%</i></span>`;
+    }
+
+    function comboText() {
+      if (selected.size < 2) return "";
+      const hit = COMBOS.find((c) => c.tags.every((t) => selected.has(t)));
+      if (!hit) return "";
+      const c = comboLoc(hit);
+      return `<b>${c.name}</b> — ${c.blurb}`;
+    }
+
+    function novaFace(mood) {
+      return `<div class="nova ${mood}" aria-hidden="true">${MejorNova.faceSvg()}</div>`;
+    }
+
+    function novaTalk(mood, line, soft) {
+      const flying = MejorNova.isOn();
+      return `<div class="nova-row${flying ? " no-bot" : ""}">
+        ${flying ? "" : novaFace(mood)}
+        <div class="nova-bubble">
+          <div class="nova-name">${t("nova.name")}</div>
+          <p>${line}</p>
+          ${soft ? `<p class="soft">${soft}</p>` : ""}
+        </div>
+      </div>`;
+    }
+
+    function hideQuiz() {
+      tutorial.classList.add("hide");
+      tutorial.setAttribute("aria-hidden", "true");
+      document.body.classList.remove("quiz-open");
+      updateNovaGuide();
+    }
+
+    function showQuiz() {
+      tutorial.classList.remove("hide");
+      tutorial.setAttribute("aria-hidden", "false");
+      document.body.classList.add("quiz-open");
+      updateNovaGuide();
+    }
+
+    function pickLetter(a, b, aLetter, bLetter) {
+      if (a > b) return aLetter;
+      if (b > a) return bLetter;
+      return bLetter;
+    }
+
+    function scoreQuiz() {
+      const tally = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+      quizAnswers.forEach((letter) => { tally[letter] += 1; });
+      const code =
+        pickLetter(tally.E, tally.I, "E", "I") +
+        pickLetter(tally.S, tally.N, "S", "N") +
+        pickLetter(tally.T, tally.F, "T", "F") +
+        pickLetter(tally.J, tally.P, "J", "P");
+      return { code, tally, profile: PATHS[code] };
+    }
+
+    function bump(map, ids, w) {
+      ids.forEach((id) => { map[id] = (map[id] || 0) + w; });
+    }
+
+    function topIds(map, n) {
+      return Object.entries(map).sort((a, b) => b[1] - a[1]).slice(0, n).map((row) => row[0]);
+    }
+
+    function buildRecommendation() {
+      const { code, profile } = scoreQuiz();
+      const tagScore = {};
+      const majorScore = {};
+      bump(majorScore, profile.majors, 3);
+      bump(tagScore, profile.tags, 2);
+      schoolAnswers.forEach((ans) => {
+        bump(majorScore, ans.majors, 2);
+        bump(tagScore, ans.tags, 2);
+      });
+      const likeW = schoolWeight === "strong" ? 2 : 5;
+      const strongW = schoolWeight === "like" ? 2 : 5;
+      likedSubjects.forEach((id) => {
+        const s = SUBJECTS.find((x) => x.id === id);
+        bump(majorScore, s.majors, likeW);
+        bump(tagScore, s.tags, likeW);
+      });
+      strongSubjects.forEach((id) => {
+        const s = SUBJECTS.find((x) => x.id === id);
+        bump(majorScore, s.majors, strongW);
+        bump(tagScore, s.tags, strongW);
+      });
+      return { code, profile, majors: topIds(majorScore, 3), tags: topIds(tagScore, 4) };
+    }
+
+    function scanProgress(step) {
+      return Math.round((step / SCAN_STEPS) * 100);
+    }
+
+    function resetScan() {
+      quizIndex = 0;
+      quizAnswers = [];
+      schoolIndex = 0;
+      schoolAnswers = [];
+      likedSubjects = [];
+      strongSubjects = [];
+      schoolWeight = "both";
+    }
+
+    function subjectButtons(selectedIds) {
+      return `<div class="sub-grid">${SUBJECTS.map((s) =>
+        `<button class="choice${selectedIds.includes(s.id) ? " on" : ""}" type="button" data-sub="${s.id}"><b>${s.ico} ${subjectLabel(s.id)}</b></button>`
+      ).join("")}</div>`;
+    }
+
+    function bindSubjectToggles(selectedIds, maxN) {
+      quizCard.querySelectorAll("[data-sub]").forEach((btn) => {
+        btn.onclick = () => {
+          const id = btn.dataset.sub;
+          const at = selectedIds.indexOf(id);
+          if (at >= 0) selectedIds.splice(at, 1);
+          else if (selectedIds.length < maxN) selectedIds.push(id);
+          else {
+            btn.classList.remove("shake");
+            void btn.offsetWidth;
+            btn.classList.add("shake");
+            return;
+          }
+          renderQuiz();
+        };
+      });
+    }
+
+    function renderQuiz() {
+      queueMicrotask(updateNovaGuide);
+      if (quizScreen === "intro") {
+        quizCard.innerHTML = `
+          ${novaTalk("happy", t("quiz.hello"), t("quiz.helloSoft"))}
+          <div class="steps">
+            <div>${t("quiz.step1")}</div>
+            <div>${t("quiz.step2")}</div>
+            <div>${t("quiz.step3")}</div>
+            <div>${t("quiz.step4")}</div>
+          </div>
+          <div class="modal-actions">
+            <button class="play" id="startQuizBtn" type="button">${t("begin")}</button>
+            <button class="ghost" id="skipQuizBtn" type="button">${t("skip.self")}</button>
+          </div>`;
+        document.getElementById("startQuizBtn").onclick = () => {
+          resetScan();
+          quizScreen = "q";
+          renderQuiz();
+        };
+        document.getElementById("skipQuizBtn").onclick = hideQuiz;
+        return;
+      }
+
+      if (quizScreen === "q") {
+        const q = quizLoc(quizIndex);
+        quizCard.innerHTML = `
+          ${novaTalk("think", novaLead(quizIndex), t("quiz.personalityN") + (quizIndex + 1) + t("of") + QUIZ.length + t("quiz.noWrong"))}
+          <div class="quiz-progress"><span style="width:${scanProgress(quizIndex)}%"></span></div>
+          <h2>${q.prompt}</h2>
+          <div class="choices">
+            <button class="choice" id="choiceA" type="button"><b>A · ${q.a.title}</b>${q.a.text}</button>
+            <button class="choice" id="choiceB" type="button"><b>B · ${q.b.title}</b>${q.b.text}</button>
+          </div>
+          <div class="modal-actions">
+            ${quizIndex ? `<button class="ghost" id="backQBtn" type="button">${t("back")}</button>` : ""}
+            <button class="ghost" id="skipQuizBtn" type="button">${t("skip.q")}</button>
+          </div>`;
+        const answer = (letter) => {
+          quizAnswers[quizIndex] = letter;
+          quizIndex += 1;
+          quizScreen = quizIndex >= QUIZ.length ? "schoolq" : "q";
+          renderQuiz();
+        };
+        document.getElementById("choiceA").onclick = () => answer(q.a.letter);
+        document.getElementById("choiceB").onclick = () => answer(q.b.letter);
+        const back = document.getElementById("backQBtn");
+        if (back) back.onclick = () => { quizIndex -= 1; renderQuiz(); };
+        document.getElementById("skipQuizBtn").onclick = hideQuiz;
+        return;
+      }
+
+      if (quizScreen === "schoolq") {
+        const q = schoolLoc(schoolIndex);
+        const step = QUIZ.length + schoolIndex;
+        quizCard.innerHTML = `
+          ${novaTalk("think", schoolIndex === 0 ? t("school.lock") : t("school.more"),
+            t("school.n") + (schoolIndex + 1) + t("of") + SCHOOL_QUIZ.length)}
+          <div class="quiz-progress"><span style="width:${scanProgress(step)}%"></span></div>
+          <h2>${q.prompt}</h2>
+          <div class="choices">
+            <button class="choice" id="choiceA" type="button"><b>A · ${q.a.title}</b>${q.a.text}</button>
+            <button class="choice" id="choiceB" type="button"><b>B · ${q.b.title}</b>${q.b.text}</button>
+          </div>
+          <div class="modal-actions">
+            <button class="ghost" id="backQBtn" type="button">${t("back")}</button>
+            <button class="ghost" id="skipQuizBtn" type="button">${t("skip.q")}</button>
+          </div>`;
+        const answer = (side) => {
+          schoolAnswers[schoolIndex] = side;
+          schoolIndex += 1;
+          quizScreen = schoolIndex >= SCHOOL_QUIZ.length ? "like" : "schoolq";
+          renderQuiz();
+        };
+        document.getElementById("choiceA").onclick = () => answer(q.a);
+        document.getElementById("choiceB").onclick = () => answer(q.b);
+        document.getElementById("backQBtn").onclick = () => {
+          if (schoolIndex === 0) {
+            quizIndex = QUIZ.length - 1;
+            quizScreen = "q";
+          } else schoolIndex -= 1;
+          renderQuiz();
+        };
+        document.getElementById("skipQuizBtn").onclick = hideQuiz;
+        return;
+      }
+
+      if (quizScreen === "like" || quizScreen === "strong") {
+        const isLike = quizScreen === "like";
+        const picked = isLike ? likedSubjects : strongSubjects;
+        const step = QUIZ.length + SCHOOL_QUIZ.length + (isLike ? 0 : 1);
+        quizCard.innerHTML = `
+          ${novaTalk("listen", isLike ? t("like.lead") : t("strong.lead"), isLike ? t("like.meta") : t("strong.meta"))}
+          <div class="quiz-progress"><span style="width:${scanProgress(step)}%"></span></div>
+          <h2>${isLike ? t("like.h2") : t("strong.h2")}</h2>
+          ${subjectButtons(picked)}
+          <div class="modal-actions">
+            <button class="play" id="nextSubBtn" type="button"${picked.length ? "" : " disabled"}>${isLike ? t("next.strong") : t("next.results")}</button>
+            <button class="ghost" id="backQBtn" type="button">${t("back")}</button>
+          </div>`;
+        bindSubjectToggles(picked, 2);
+        document.getElementById("nextSubBtn").onclick = () => {
+          if (!picked.length) return;
+          if (isLike) quizScreen = "strong";
+          else {
+            const overlap = likedSubjects.some((id) => strongSubjects.includes(id));
+            quizScreen = overlap ? "result" : "weight";
+          }
+          renderQuiz();
+        };
+        document.getElementById("backQBtn").onclick = () => {
+          if (isLike) {
+            schoolIndex = SCHOOL_QUIZ.length - 1;
+            quizScreen = "schoolq";
+          } else quizScreen = "like";
+          renderQuiz();
+        };
+        return;
+      }
+
+      if (quizScreen === "weight") {
+        quizCard.innerHTML = `
+          ${novaTalk("think", t("weight.lead"), t("weight.soft"))}
+          <div class="choices">
+            <button class="choice" id="weightLike" type="button"><b>${t("weight.a")}</b>${t("weight.aText")}</button>
+            <button class="choice" id="weightStrong" type="button"><b>${t("weight.b")}</b>${t("weight.bText")}</button>
+            <button class="choice" id="weightBoth" type="button"><b>${t("weight.c")}</b>${t("weight.cText")}</button>
+          </div>
+          <div class="modal-actions">
+            <button class="ghost" id="backQBtn" type="button">${t("back")}</button>
+          </div>`;
+        const finish = (w) => { schoolWeight = w; quizScreen = "result"; renderQuiz(); };
+        document.getElementById("weightLike").onclick = () => finish("like");
+        document.getElementById("weightStrong").onclick = () => finish("strong");
+        document.getElementById("weightBoth").onclick = () => finish("both");
+        document.getElementById("backQBtn").onclick = () => { quizScreen = "strong"; renderQuiz(); };
+        return;
+      }
+
+      const rec = buildRecommendation();
+      const profile = pathLoc(rec.profile, rec.code);
+      const majors = rec.majors.map((id) => MAJORS.find((m) => m.id === id)).filter(Boolean);
+      const tagLabels = rec.tags.map((id) => tagLabel(id)).filter(Boolean).join(" · ");
+      const likeNames = likedSubjects.map((id) => subjectLabel(id)).join(", ") || "—";
+      const strongNames = strongSubjects.map((id) => subjectLabel(id)).join(", ") || "—";
+      quizCard.innerHTML = `
+        ${novaTalk("happy", t("result.done") + " <b>" + rec.code + "</b> — " + profile.name + ".", t("result.soft"))}
+        <div class="type-badge">${rec.code}</div>
+        <h2>${profile.name}</h2>
+        <p class="blurb">${profile.blurb}</p>
+        <div class="fact"><b>${t("result.like")}</b>${likeNames}</div>
+        <div class="fact"><b>${t("result.strong")}</b>${strongNames}</div>
+        <div class="fact"><b>${t("result.novaLikes")}</b>${tagLabels}</div>
+        <p class="blurb" style="margin-top:12px">${t("result.three")}</p>
+        <div class="rec-majors">${majors.map((m, i) =>
+          `<button type="button" data-enter="${m.id}">${i === 0 ? "1 · " : ""}${majorLoc(m).name}</button>`
+        ).join("")}</div>
+        <div class="modal-actions">
+          <button class="play" id="enterMapBtn" type="button">${t("result.open")}</button>
+          <button class="ghost" id="retakeNowBtn" type="button">${t("result.again")}</button>
+        </div>`;
+      const enter = (majorId) => applyPath(rec, majorId);
+      document.getElementById("enterMapBtn").onclick = () => enter(rec.majors[0]);
+      quizCard.querySelectorAll("[data-enter]").forEach((btn) => {
+        btn.onclick = () => enter(btn.dataset.enter);
+      });
+      document.getElementById("retakeNowBtn").onclick = () => {
+        resetScan();
+        quizScreen = "q";
+        renderQuiz();
+      };
+    }
+
+    function applyPath(rec, majorId) {
+      pathType = rec;
+      selected.clear();
+      likeGrid.querySelectorAll(".like").forEach((b) => b.classList.remove("on", "is-flipped"));
+      rec.tags.slice(0, MAX_LIKES).forEach((id) => {
+        selected.add(id);
+        const btn = likeGrid.querySelector(`[data-id="${id}"]`);
+        if (btn) btn.classList.add("on", "is-flipped");
+      });
+      setWorkingStyle(rec);
+      renderTypeChip();
+      lockedId = majorId;
+      openCards.clear();
+      openCards.add(majorId);
+      hideQuiz();
+      pulse();
+      render();
+    }
+
+    function moveStars(rank) {
+      rank.forEach((row) => {
+        const star = document.getElementById("star-" + row.m.id);
+        placeStop(star, row.match);
+        star.classList.toggle("hot", selected.size > 0 && row.match >= 70);
+        star.classList.toggle("mid", selected.size > 0 && row.match >= 40 && row.match < 70);
+        star.classList.toggle("dim", selected.size > 0 && row.match < 40);
+        star.classList.toggle("lock", row.m.id === lockedId);
+      });
+    }
+
+    /* FLIP: remember where each card sat, then let the browser animate it to the new rank. */
+    function renderList(rank) {
+      const prev = new Map();
+      [...signalList.children].forEach((el) => prev.set(el.dataset.id, el.getBoundingClientRect()));
+
+      signalList.innerHTML = rank.map(({ m, match }) => {
+        const open = openCards.has(m.id) ? " open" : "";
+        const active = m.id === lockedId ? " active" : "";
+        return `<article class="card${open}${active}" data-id="${m.id}" tabindex="0">
+          ${ringSvg(match)}
+          <div>
+            <h3>${majorLoc(m).name}</h3>
+            <p>${majorLoc(m).blurb}</p>
+          </div>
+          <span class="chevron">▸</span>
+            <div class="extra">${detailHtml(m)}</div>
+        </article>`;
+      }).join("");
+
+      [...signalList.children].forEach((el) => {
+        const activate = (ev) => {
+          if (ev.target.closest(".sectors") || ev.target.closest(".chip")) return;
+          const id = el.dataset.id;
+          if (openCards.has(id)) openCards.delete(id); else openCards.add(id);
+          lockMajor(id, false);
+          render();
+        };
+        el.addEventListener("click", activate);
+        el.addEventListener("keydown", (ev) => {
+          if (ev.key === "Enter" || ev.key === " ") {
+            ev.preventDefault();
+            activate(ev);
+          }
+        });
+        const first = prev.get(el.dataset.id);
+        if (!first) return;
+        const last = el.getBoundingClientRect();
+        const dy = first.top - last.top;
+        if (!dy) return;
+        el.style.transition = "none";
+        el.style.transform = `translateY(${dy}px)`;
+        requestAnimationFrame(() => {
+          el.style.transition = "";
+          el.style.transform = "";
+        });
+      });
+    }
+
+    function extraFacts(loc) {
+      return `
+        <div class="facts" data-nova-stop="facts" style="margin-top:8px">
+          ${loc.now ? `<div class="fact now" data-nova-stop="now"><b>${t("fact.now")}</b>${loc.now}</div>` : ""}
+          ${loc.mean ? `<div class="fact"><b>${t("fact.mean")}</b>${loc.mean}</div>` : ""}
+          <div class="fact"><b>${t("fact.study")}</b>${loc.learn}</div>
+          <div class="fact"><b>${t("fact.need")}</b>${loc.need}</div>
+          ${loc.unlike ? `<div class="fact"><b>${t("fact.unlike")}</b>${loc.unlike}</div>` : ""}
+          <div class="fact"><b>${t("fact.future")}</b>${loc.future}</div>
+          ${loc.watch ? `<div class="fact warn"><b>${t("fact.watch")}</b>${loc.watch}</div>` : ""}
+        </div>`;
+    }
+
+    function uniNotesHtml() {
+      return `<p class="uni-line" data-nova-stop="schools">${t("unis.line")}</p>`;
+    }
+
+    function detailHtml(m) {
+      const loc = majorLoc(m);
+      const chips = allChips(m);
+      return `
+        ${extraFacts(loc)}
+        ${uniNotesHtml()}
+        ${sectorButtons()}
+        <div class="chips">${chips}</div>`;
+    }
+
+    function sectorButtons() {
+      return `<div class="sectors">${["ALL", "UK", "Australia", "Canada", "USA"].map((s) =>
+        `<button type="button" class="${sector === s ? "on" : ""}" data-sector="${s}">${s === "ALL" ? t("sector.all") : countryLabel(s)}</button>`
+      ).join("")}</div>`;
+    }
+
+    function lockMajor(id, rerender = true) {
+      if (id !== lockedId) {
+        novaTour = 0;
+        novaTourStation = id;
+      }
+      lockedId = id;
+      syncHash(id);
+      saveSession();
+      if (rerender) render();
+      else {
+        renderBriefing();
+        renderStub();
+      }
+    }
+
+    function renderBriefing() {
+      const idle = document.getElementById("briefIdle");
+      const body = document.getElementById("briefBody");
+      const major = MAJORS.find((m) => m.id === lockedId);
+      document.getElementById("lockedName").textContent = major ? majorLoc(major).name : t("none");
+      if (!major) {
+        idle.hidden = false;
+        body.hidden = true;
+        return;
+      }
+      const match = matchOf(major);
+      const loc = majorLoc(major);
+      idle.hidden = true;
+      body.hidden = false;
+      const label = match >= 70 ? t("lock.strong") : selected.size ? t("lock.soft") : t("lock.peek");
+      body.innerHTML = `
+        <div class="lock-banner">${label} · ${t("lock.ticket")}</div>
+        <h2 data-nova-stop="name">${loc.name}</h2>
+        <div class="match-row" data-nova-stop="match">${ringSvg(match)}<p class="blurb">${loc.blurb}</p></div>
+        ${extraFacts(loc)}
+        ${uniNotesHtml()}
+        ${sectorButtons()}
+        <div class="chips">${allChips(major)}</div>`;
+      body.querySelectorAll("[data-sector]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          sector = btn.dataset.sector;
+          render();
+        });
+      });
+    }
+
+    function render() {
+      const rank = rankedMajors();
+      const strong = rank.filter((r) => r.match >= 70).length;
+      document.getElementById("likeCount").textContent = selected.size + "/" + MAX_LIKES;
+      document.getElementById("strongCount").textContent = String(strong);
+      const combo = comboText();
+      comboBanner.classList.toggle("show", Boolean(combo));
+      comboBanner.innerHTML = combo;
+      const how = document.getElementById("matchHow");
+      if (how) how.textContent = selected.size ? t("hint.live").replace("{n}", String(selected.size)) : t("hint.how");
+      moveStars(rank);
+      renderList(rank);
+      renderBriefing();
+      signalList.querySelectorAll("[data-sector]").forEach((btn) => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          sector = btn.dataset.sector;
+          render();
+        });
+      });
+      bindUniTips(document);
+      renderStub(rank);
+      saveSession();
+      syncHash(lockedId);
+      updateNovaGuide();
+    }
+
+    function clearNovaAim() {
+      document.querySelectorAll(".nova-aim").forEach((el) => el.classList.remove("nova-aim"));
+    }
+
+    function pickNovaTarget() {
+      const quizOpen = !tutorial.classList.contains("hide");
+      if (quizOpen) {
+        const nextSub = document.getElementById("nextSubBtn");
+        const subPick = quizCard.querySelector(".sub-grid .choice");
+        if (subPick && nextSub && nextSub.disabled) return subPick;
+        return document.getElementById("startQuizBtn")
+          || document.getElementById("choiceA")
+          || document.getElementById("weightLike")
+          || (nextSub && !nextSub.disabled ? nextSub : subPick)
+          || document.getElementById("enterMapBtn")
+          || quizCard.querySelector("[data-enter], .choice, button.play");
+      }
+      if (selected.size === 0) {
+        return likeGrid.querySelector(".like:not(.on)") || likeGrid.querySelector(".like");
+      }
+      if (lockedId) {
+        const stops = [
+          document.querySelector("#briefing [data-nova-stop='name']"),
+          document.querySelector("#briefing [data-nova-stop='match']"),
+          document.querySelector("#briefing [data-nova-stop='now']") || document.querySelector("#briefing [data-nova-stop='facts']"),
+          document.querySelector("#briefing [data-nova-stop='schools']"),
+          document.querySelector(".star:not(.lock)") || document.querySelector(".star.hot") || document.querySelector(".star")
+        ];
+        const i = Math.max(0, Math.min(novaTour, stops.length - 1));
+        return stops[i] || stops.find(Boolean) || document.getElementById("briefing");
+      }
+      return document.querySelector(".star.hot")
+        || document.querySelector(".star.mid")
+        || document.querySelector(".star");
+    }
+
+    function updateNovaGuide() {
+      const quizOpen = !tutorial.classList.contains("hide");
+      document.body.classList.toggle("quiz-open", quizOpen);
+      clearNovaAim();
+      const dock = document.getElementById("novaGuide");
+      if (dock) dock.hidden = true;
+      if (!MejorNova.isOn()) {
+        MejorNova.park();
+        return;
+      }
+      if (lockedId !== novaTourStation) {
+        novaTourStation = lockedId;
+        novaTour = 0;
+      }
+      let lineKey = "guide.likes0";
+      let whereKey = "guide.where.likes";
+      if (quizOpen) {
+        lineKey = "guide.quiz";
+        whereKey = "guide.where.quiz";
+      } else if (selected.size === 0 && lockedId) {
+        lineKey = "guide.peek";
+        whereKey = "guide.where.likes";
+      } else if (selected.size === 0) {
+        lineKey = "guide.likes0";
+        whereKey = "guide.where.likes";
+      } else if (lockedId) {
+        const openKeys = [
+          ["guide.open", "guide.tap"],
+          ["guide.match", "guide.where.match"],
+          ["guide.facts", "guide.where.facts"],
+          ["guide.schools", "guide.where.schools"],
+          ["guide.nextStation", "guide.where.next"],
+          ["guide.luck", "guide.where.luck"]
+        ];
+        const i = Math.max(0, Math.min(novaTour, openKeys.length - 1));
+        lineKey = openKeys[i][0];
+        whereKey = openKeys[i][1];
+        if (i === openKeys.length - 1) {
+          const major = MAJORS.find((m) => m.id === lockedId);
+          const name = major ? majorLoc(major).name : t("guide.luck.path");
+          MejorNova.point(document.body, t(whereKey), t(lineKey).replace("{name}", name), {
+            cheer: true,
+            key: "luck",
+            scroll: false
+          });
+          return;
+        }
+      } else if (selected.size >= MAX_LIKES) {
+        lineKey = "guide.likesFull";
+        whereKey = "guide.where.lines";
+      } else {
+        lineKey = "guide.likesMore";
+        whereKey = "guide.where.lines";
+      }
+      MejorNova.point(pickNovaTarget(), t(whereKey), t(lineKey), quizOpen ? { glow: false, key: "quiz" } : undefined);
+    }
+
+    document.getElementById("helpBtn").onclick = () => {
+      quizScreen = "intro";
+      renderQuiz();
+      showQuiz();
+    };
+    document.getElementById("retakeBtn").onclick = () => {
+      resetScan();
+      quizScreen = "q";
+      renderQuiz();
+      showQuiz();
+    };
+    document.getElementById("clearBtn").onclick = () => {
+      selected.clear();
+      likeGrid.querySelectorAll(".like").forEach((b) => b.classList.remove("on", "is-flipped"));
+      lockedId = null;
+      novaTour = 0;
+      novaTourStation = null;
+      openCards.clear();
+      render();
+    };
+    document.getElementById("scanBtn").onclick = () => { pulse(); render(); };
+
+    document.getElementById("radarWrap").addEventListener("pointermove", (e) => {
+      const box = e.currentTarget.getBoundingClientRect();
+      const x = ((e.clientX - box.left) / box.width) * 100;
+      const y = ((e.clientY - box.top) / box.height) * 100;
+      e.currentTarget.style.setProperty("--mx", x + "%");
+      e.currentTarget.style.setProperty("--my", y + "%");
+    });
+
+    document.addEventListener("keydown", (e) => {
+      if (e.key === "Escape") {
+        if (!tutorial.classList.contains("hide")) {
+          if (quizScreen === "q" && quizIndex > 0) {
+            quizIndex -= 1;
+            renderQuiz();
+          } else if (quizScreen === "q") {
+            quizScreen = "intro";
+            renderQuiz();
+          } else {
+            hideQuiz();
+          }
+        } else if (lockedId) {
+          openCards.delete(lockedId);
+          lockedId = null;
+          render();
+        }
+      }
+    });
+
+    function renderTypeChip() {
+      if (!pathType) {
+        typeChip.classList.remove("show");
+        typeChip.innerHTML = "";
+        return;
+      }
+      const rec = pathType;
+      const profile = pathLoc(rec.profile, rec.code);
+      typeChip.classList.add("show");
+      typeChip.innerHTML = `<b>${t("type.working")} ${profile.name}.</b> ${t("type.like")} ${
+        likedSubjects.map((id) => subjectLabel(id)).join(", ") || "—"
+      }. ${t("type.strong")} ${
+        strongSubjects.map((id) => subjectLabel(id)).join(", ") || "—"
+      }. ${t("type.change")}`;
+    }
+
+    function refreshLangLabels() {
+      likeGrid.querySelectorAll(".like").forEach((btn) => {
+        const labs = btn.querySelectorAll(".lab");
+        labs.forEach((lab) => { lab.textContent = tagLabel(btn.dataset.id); });
+        const sub = btn.querySelector(".subhint");
+        if (sub) sub.textContent = tagHint(btn.dataset.id);
+        const cues = btn.querySelectorAll(".flip-cue");
+        if (cues[0]) cues[0].textContent = t("like.pick");
+        if (cues[1]) cues[1].textContent = t("like.picked");
+      });
+      MAJORS.forEach((m) => {
+        const star = document.getElementById("star-" + m.id);
+        if (!star) return;
+        const name = star.querySelector(".name");
+        if (name) name.textContent = majorLoc(m).name;
+      });
+      renderTypeChip();
+      setWorkingStyle(pathType);
+    }
+
+    window.addEventListener("resize", () => { hideUniTip(); moveStars(rankedMajors()); });
+    window.addEventListener("scroll", hideUniTip, true);
+    document.addEventListener("mejor-lang", () => {
+      hideUniTip();
+      refreshLangLabels();
+      render();
+      if (!tutorial.classList.contains("hide")) renderQuiz();
+    });
+    const printBtn = document.getElementById("printStub");
+    if (printBtn) printBtn.onclick = () => window.print();
+    window.addEventListener("hashchange", () => {
+      const id = majorFromHash();
+      if (id === lockedId) return;
+      skipHashWrite = true;
+      lockedId = id;
+      if (id) openCards.add(id);
+      render();
+      skipHashWrite = false;
+    });
+    if (wantNova) {
+      quizScreen = "intro";
+      renderQuiz();
+      showQuiz();
+    } else if (skipMap || restored || hashId) {
+      hideQuiz();
+    } else {
+      renderQuiz();
+      showQuiz();
+    }
+    try {
+      if (location.search) history.replaceState(null, "", location.pathname + (location.hash || ""));
+    } catch (e) {}
+    render();
+    renderTypeChip();
+    if (restored) {
+      const back = document.getElementById("welcomeBack");
+      if (back) back.classList.add("show");
+    }
+    MejorNova.bind(function () {
+      if (!tutorial.classList.contains("hide")) renderQuiz();
+      else updateNovaGuide();
+    });
+    document.addEventListener("pointerup", (e) => {
+      if (!MejorNova.isOn()) return;
+      if (!tutorial.classList.contains("hide")) return;
+      if (!lockedId || !selected.size) return;
+      if (e.button != null && e.button !== 0) return;
+      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], #helpBtn, #retakeBtn, #clearBtn, #printStub, #scanBtn, .ticket-tools")) return;
+      if (e.target.closest(".star, .card[data-id], .like")) return;
+      novaTour = Math.min(novaTour + 1, NOVA_OPEN_STEPS - 1);
+      updateNovaGuide();
+    });
+  </script>
+</body>
+</html>

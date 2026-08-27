@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en" data-title="title.method" data-desc="meta.method">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="How Mejor’s match score, university set, and faculty names were made. Honest limits, sources, and privacy." />
+  <meta name="theme-color" content="#1c2822" />
+  <title>Mejor · How this was made</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script>
+    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --desk: #1c2822;
+      --ivory: #f4ead6;
+      --ink: #1a1a18;
+      --red: #b42318;
+      --muted: #5c564c;
+      --logic: #2f5d50;
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
+        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+      min-height: 100vh;
+    }
+    ::selection { background: #d5e6df; color: var(--ink); }
+    html[lang="zh-Hans"] body { font-family: "Source Sans 3", "Microsoft YaHei", "PingFang SC", sans-serif; }
+    html[lang="zh-Hans"] nav a.ghost,
+    html[lang="zh-Hans"] .lang-btn,
+    html[lang="zh-Hans"] .kicker,
+    html[lang="zh-Hans"] footer,
+    html[lang="zh-Hans"] .play {
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+    .skip {
+      position: absolute; left: 16px; top: -48px; z-index: 80;
+      background: var(--ivory); color: var(--ink);
+      padding: 8px 12px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid var(--ink);
+    }
+    .skip:focus { top: 12px; }
+    :focus-visible { outline: 2px solid #efe4cc; outline-offset: 3px; }
+    .wrap { max-width: 760px; margin: 0 auto; padding: 28px 18px 72px; }
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 28px; color: #efe4cc;
+    }
+    .nav-end { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lang-btn {
+      appearance: none; cursor: pointer; font: inherit;
+      color: #efe4cc; background: transparent;
+      border: 1px solid rgba(239, 228, 204, 0.45);
+      padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      transition: background 0.15s ease;
+    }
+    .lang-btn:hover { background: rgba(239, 228, 204, 0.08); }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: #efe4cc;
+      font-weight: 600; letter-spacing: 0.16em; font-size: 0.78rem;
+    }
+    .mark {
+      width: 28px; height: 28px;
+      border: 1.5px solid #efe4cc;
+      transform: rotate(45deg);
+      display: grid; place-items: center;
+    }
+    .mark span { transform: rotate(-45deg); display: block; font-size: 0.72rem; font-weight: 700; }
+    nav a.ghost {
+      color: #efe4cc; text-decoration: none;
+      border: 1px solid rgba(239, 228, 204, 0.45);
+      padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: background 0.15s ease;
+    }
+    nav a.ghost:hover { background: rgba(239, 228, 204, 0.08); }
+    .paper {
+      position: relative;
+      background: var(--ivory);
+      padding: 28px 36px 24px 28px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+      overflow: hidden;
+    }
+    .paper::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      border-style: solid;
+      border-width: 0 22px 22px 0;
+      border-color: transparent var(--desk) transparent transparent;
+      filter: drop-shadow(-1.5px 1.5px 0 #c4b79a);
+      pointer-events: none;
+    }
+    .kicker {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--logic); font-weight: 700; margin: 0 0 8px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(2rem, 5vw, 2.8rem);
+      margin: 0 0 12px; font-weight: 500; line-height: 1.1;
+    }
+    .lead { margin: 0 0 22px; font-size: 1.08rem; line-height: 1.55; }
+    article {
+      border-top: 1px solid #c4b79a;
+      padding: 16px 0;
+    }
+    article b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.15rem;
+      margin-bottom: 8px;
+    }
+    article p { margin: 0; line-height: 1.55; color: var(--ink); }
+    .code {
+      font-family: ui-monospace, Consolas, monospace;
+      font-size: 0.92rem;
+      background: #fff;
+      padding: 10px 12px;
+      border-left: 5px solid var(--logic);
+      margin: 10px 0 0;
+    }
+    .cta { margin-top: 22px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .play, .ghost-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 11px 16px;
+      text-decoration: none; font-weight: 700; font-size: 0.88rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border: 1.5px solid var(--ink); color: var(--ink);
+      border-radius: 2px;
+      transition: filter 0.15s ease, background 0.15s ease;
+    }
+    .play { background: var(--red); color: #f4ead6; border-color: var(--red); }
+    .ghost-btn { background: transparent; }
+    .play:hover { filter: brightness(1.08); }
+    .ghost-btn:hover { background: rgba(26,26,24,0.05); }
+    footer {
+      margin-top: 28px;
+      color: rgba(239, 228, 204, 0.7);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    footer p { margin: 0 0 8px; }
+    footer a { color: #efe4cc; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#main" data-i18n="skip">Skip to content</a>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
+      <div class="nav-end">
+        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
+      </div>
+    </nav>
+
+    <main id="main" class="paper">
+      <p class="kicker" data-i18n="method.kicker">Method</p>
+      <h1 data-i18n="method.h1">How this was made</h1>
+      <p class="lead" data-i18n="method.lead">Mejor is a first look at university majors. It is not a test score, not a career decision, and not a ranking of which school is “best for you”.</p>
+
+      <article>
+        <b data-i18n="method.who.t">Who it is for</b>
+        <p data-i18n="method.who.p">Students aged 14–18 who know what they like — drawing, numbers, helping people — but cannot yet see which university major that points to. Parents and teachers can read along.</p>
+      </article>
+      <article>
+        <b data-i18n="method.leave.t">What you should leave with</b>
+        <p data-i18n="method.leave.p">Two or three major names worth a closer look, a plain reason they matched your likes, one thing you can try this year, and universities that actually teach those majors in this set.</p>
+      </article>
+      <article>
+        <b data-i18n="method.match.t">How the match % works</b>
+        <p data-i18n="method.match.p">match% = round(100 × hits / number of likes you picked). Hits = how many of YOUR likes this major covers. Example: you pick Logic and Data. Computer Science has both → 100%, green. 70%+ is green. 40–69% is gold. It is not a score of how good you are.</p>
+        <p class="code">match% = round(100 × hits / likes you picked)</p>
+      </article>
+      <article>
+        <b data-i18n="method.schools.t">Where the schools come from</b>
+        <p data-i18n="method.schools.p">Fifteen universities from the QS World University Rankings 2026 Top 100, plus notes on Chinese-student presence (HESA / SEVIS / Go8). Faculty names come from each university’s official structure. We do not invent a faculty. If a school does not officially teach a major here, it still appears, faded. Example: UIUC has no medical school in this set.</p>
+      </article>
+      <article>
+        <b data-i18n="method.abroad.t">Overseas schools, not “best for you”</b>
+        <p data-i18n="method.abroad.p">The 15 universities are overseas schools in the QS 2026 Top 100 that many Chinese students actually attend (UK, Australia, Canada, USA). This is not a ranking of which school is best for you, and it is not a list of universities in mainland China.</p>
+      </article>
+      <article>
+        <b data-i18n="method.next.t">What to do after Mejor</b>
+        <p data-i18n="method.next.p">Keep two or three major names. Tell a parent or teacher. Open a university page from the school names if you want a closer look. Then try one small thing this year. Mejor is a first look, not a decision.</p>
+      </article>
+      <article>
+        <b data-i18n="method.nova.t">What Nova is</b>
+        <p data-i18n="method.nova.p">Nova asks an MBTI-style set of questions, then school likes vs strengths. It is not an official MBTI test and not a final label. You can skip it and choose likes yourself. You can change likes on the map at any time.</p>
+      </article>
+      <article>
+        <b data-i18n="method.not.t">What this is not</b>
+        <p data-i18n="method.not.p">Not a job title. Not a forever plan. Not “best university”. QS numbers are world rank, not a personal fit. One major can lead to many jobs. Jobs also change.</p>
+      </article>
+      <article>
+        <b data-i18n="method.privacy.t">Privacy</b>
+        <p data-i18n="method.privacy.p">No account. No server. Language, likes, and the open station are saved in this browser only (localStorage). Clearing the site data clears your ticket.</p>
+      </article>
+
+      <div class="cta">
+        <a class="play" href="explorer.html?skip=1" data-i18n="method.cta">Open the line map</a>
+        <a class="ghost-btn" href="index.html" data-i18n="nav.home">Home</a>
+      </div>
+    </main>
+
+    <footer>
+      <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
+      <p data-i18n="updated">Updated 15 Aug 2026</p>
+    </footer>
+  </div>
+  <script src="i18n.js"></script>
+  <script>
+    MejorI18n.apply();
+    MejorI18n.bindToggles();
+  </script>
+</body>
+</html>
