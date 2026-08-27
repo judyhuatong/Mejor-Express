@@ -6,8 +6,9 @@
 
 ## 怎么打开
 
-- 本机：用浏览器打开 [`index.html`](index.html)。
-- 上线后：用 GitHub Pages 地址（仓库 Settings → Pages → main / root）。
+- 本机（有后端）：在项目文件夹运行 `python backend/server.py`，然后打开 http://127.0.0.1:3000 。JSON：http://127.0.0.1:3000/api/stats
+- 本机（仅网页）：`python -m http.server 3000`，或直接打开 [`index.html`](index.html)。
+- 上线后：用 GitHub Pages 地址（仓库 Settings → Pages → main / root）。Pages 没有 Python 后端。
 
 ## 怎么使用
 
@@ -49,6 +50,7 @@ match% = round(100 × 命中数 / 你选中的兴趣个数)
 | `explorer.html` | Nova + 线路图 |
 | `method.html` | 匹配公式、学校来源、隐私 |
 | `i18n.js` | 中英文文案 |
+| `backend/server.py` | 小后端：提供网页 + JSON（stats / majors / search / quiz） |
 | `catalog.js` | 15 所大学的全部官方学院（2026年8月） |
 | `favicon.svg` | 图标 |
 | `产品定义单.md` | 第一周定义表 |

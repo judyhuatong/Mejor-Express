@@ -225,6 +225,11 @@
         <p class="code">match% = round(100 × hits / likes you picked)</p>
       </article>
       <article>
+        <b data-i18n="method.backend.t">Where the backend is</b>
+        <p data-i18n="method.backend.p">A small Python server (backend/server.py) reads the same catalog files and answers JSON: /api/stats, /api/majors, /api/search, /api/quiz/draw. There is no login database. Your likes still stay only in this browser.</p>
+        <p class="code">GET /api/stats  ·  GET /api/majors  ·  GET /api/search?q=  ·  GET /api/quiz/draw</p>
+      </article>
+      <article>
         <b data-i18n="method.schools.t">Where the schools come from</b>
         <p data-i18n="method.schools.p">The same 15 universities (QS 2026 Top 100, plus Chinese-student notes). Tap a school to see official faculty names, then official major / subject names under each one, with a one-line meaning for age 14. We do not invent a faculty. We do not copy every course variant (UCL has 400+ titles, including Year Abroad twins). If a school does not teach a subject, it stays faded. Example: UIUC has no medical school.</p>
       </article>
