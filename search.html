@@ -12,7 +12,7 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
   <style>
     :root {
       --desk: #1c2822;
@@ -22,10 +22,11 @@
       --muted: #5c564c;
       --logic: #2f5d50;
       --line: #c4b79a;
-      --serif: "Fraunces", Georgia, "Times New Roman", serif;
-      --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+      --serif: "Manrope", "PingFang SC", "Microsoft YaHei", sans-serif;
+      --sans: "Manrope", "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
     }
     * { box-sizing: border-box; }
+    html, body, button, input, select, textarea { font-family: var(--sans); }
     html, body { margin: 0; min-height: 100%; }
     html { -webkit-text-size-adjust: 100%; }
     body {
@@ -38,7 +39,7 @@
       min-height: 100vh;
     }
     ::selection { background: #d5e6df; color: var(--ink); }
-    html[lang="zh-Hans"] body { font-family: "Source Sans 3", "Microsoft YaHei", "PingFang SC", sans-serif; }
+    html[lang="zh-Hans"] body { font-family: "Manrope", "Microsoft YaHei", "PingFang SC", sans-serif; }
     html[lang="zh-Hans"] nav a.ghost,
     html[lang="zh-Hans"] .lang-btn,
     html[lang="zh-Hans"] .kicker,
@@ -97,7 +98,7 @@
       background: var(--ivory);
       padding: 28px 32px 28px 28px;
       box-shadow: 0 18px 40px rgba(0,0,0,0.28);
-      overflow: hidden;
+      overflow: visible;
     }
     .paper::after {
       content: "";
@@ -110,9 +111,24 @@
       pointer-events: none;
     }
     .kicker {
-      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-      color: var(--logic); font-weight: 700; margin: 0 0 8px;
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--logic);
+      font-weight: 700;
+      margin: 0 0 8px;
+      line-height: 1.5;
+      overflow: visible;
     }
+    .field {
+      display: flex;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 8px;
+      margin: 0 0 4px;
+    }
+    .field .kicker { margin: 0; }
     h1 {
       font-family: var(--serif);
       font-size: clamp(1.8rem, 4vw, 2.5rem);
@@ -120,6 +136,7 @@
     }
     .lead { margin: 0 0 18px; font-size: 1.05rem; line-height: 1.55; color: var(--muted); }
     #q {
+      display: block;
       width: 100%;
       font: inherit;
       font-size: 1.12rem;
@@ -128,6 +145,8 @@
       background: #fff;
       color: var(--ink);
       border-radius: 2px;
+      appearance: none;
+      -webkit-appearance: none;
     }
     .hint { margin: 8px 0 0; font-size: 0.86rem; color: var(--muted); }
     .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
@@ -247,8 +266,10 @@
       <h1 data-i18n="search.h1">Don’t know the name? Look it up.</h1>
       <p class="lead" data-i18n="search.lead">Type a major even if you misspell it. Example: “chanical engineering” still finds Mechanical Engineering. You get a longer meaning, clear examples, what not to mix it up with, and which of these 15 schools teach it.</p>
 
-      <label class="kicker" for="q" data-i18n="search.label">Search</label>
-      <input id="q" type="search" autocomplete="off" spellcheck="false" />
+      <div class="field">
+        <label class="kicker" for="q" data-i18n="search.label">Search</label>
+        <input id="q" type="search" autocomplete="off" spellcheck="false" />
+      </div>
       <p class="hint" data-i18n="search.hint">Typos are OK. Short names work: AI, mech eng, 心理学.</p>
       <div class="chips" id="examples"></div>
 

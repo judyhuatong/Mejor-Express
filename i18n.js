@@ -253,6 +253,8 @@
       "guide.where.next": "Press here: another diamond",
       "guide.where.luck": "That’s the full tour. Tell someone, then explore.",
       "guide.where.quiz": "Press here: A or B",
+      "guide.skip": "Want to pick likes yourself? Press “Skip to the line map”. Press Nova or empty space if you want to hear a step again.",
+      "guide.where.skip": "Press here: Skip to the line map",
       "guide.where.search": "Press here: Search for a major",
       "guide.where.home": "Press here: Start with Nova or Skip"
     },
@@ -503,6 +505,8 @@
       "guide.where.next": "请按这里：另一个菱形",
       "guide.where.luck": "全程讲完了。先告诉别人，再自己逛。",
       "guide.where.quiz": "请按这里：A 或 B",
+      "guide.skip": "想自己选兴趣？请按“跳过，直接看线路图”。点 Nova 或空白处，可以再听上一步。",
+      "guide.where.skip": "请按这里：跳过，直接看线路图",
       "guide.where.search": "请按这里：搜索专业",
       "guide.where.home": "请按这里：开始或跳过",
       "country.UK": "英国",
@@ -1047,18 +1051,46 @@
   }
   function novaFaceSvg() {
     return [
-      '<svg viewBox="0 0 72 84" fill="none">',
-      '<g class="antenna">',
-      '<line x1="36" y1="16" x2="36" y2="5" stroke="#1c2430" stroke-width="1.7"/>',
-      '<rect class="glow" x="33.2" y="2" width="5.6" height="5.6" transform="rotate(45 36 4.8)" fill="#2f5d50"/>',
+      '<svg class="nova-svg-3d" viewBox="0 0 72 84" fill="none">',
+      "<defs>",
+      '<linearGradient id="n3dHead" x1="16" y1="16" x2="52" y2="58" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#fffdf8"/><stop offset="1" stop-color="#d4cdc2"/>',
+      "</linearGradient>",
+      '<linearGradient id="n3dSide" x1="50" y1="16" x2="66" y2="58" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#c5bdb0"/><stop offset="1" stop-color="#8f877c"/>',
+      "</linearGradient>",
+      '<linearGradient id="n3dTop" x1="18" y1="10" x2="62" y2="22" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#fff"/><stop offset="1" stop-color="#e4ddd3"/>',
+      "</linearGradient>",
+      '<linearGradient id="n3dBody" x1="24" y1="58" x2="54" y2="78" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#f6f1e8"/><stop offset="1" stop-color="#c9c2b6"/>',
+      "</linearGradient>",
+      '<linearGradient id="n3dScreen" x1="20" y1="22" x2="48" y2="38" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#eef7f3"/><stop offset="1" stop-color="#b7d4c8"/>',
+      "</linearGradient>",
+      '<radialGradient id="n3dTip" cx="40" cy="5" r="7" gradientUnits="userSpaceOnUse">',
+      '<stop stop-color="#6dbea6"/><stop offset="1" stop-color="#2f5d50"/>',
+      "</radialGradient>",
+      "</defs>",
+      '<ellipse class="nova-floor" cx="38" cy="79.5" rx="15" ry="3" fill="#1c2430" opacity=".18"/>',
+      '<g class="nova-rig">',
+      '<line x1="36" y1="18" x2="40" y2="7" stroke="#1c2430" stroke-width="1.7" stroke-linecap="round"/>',
+      '<rect class="glow" x="36.4" y="1.4" width="6.4" height="6.4" transform="rotate(45 39.6 4.6)" fill="url(#n3dTip)" stroke="#1c2430" stroke-width=".85"/>',
+      '<path d="M50 21 L63 16.5 L63 54 L50 58.5 Z" fill="url(#n3dSide)" stroke="#1c2430" stroke-width="1.3" stroke-linejoin="round"/>',
+      '<path d="M18 21 L31 12.5 L63 16.5 L50 21 Z" fill="url(#n3dTop)" stroke="#1c2430" stroke-width="1.3" stroke-linejoin="round"/>',
+      '<rect x="16" y="18" width="34" height="40" rx="6" fill="url(#n3dHead)" stroke="#1c2430" stroke-width="1.5"/>',
+      '<rect x="20" y="23" width="26" height="15" rx="3.5" fill="url(#n3dScreen)" stroke="#1c2430" stroke-width="1.1"/>',
+      '<rect x="21.4" y="24.4" width="11" height="4" rx="1.2" fill="#fff" opacity=".5"/>',
+      '<circle class="eye" cx="28" cy="30.6" r="2.55" fill="#1c2430"/>',
+      '<circle class="eye" cx="40" cy="30.6" r="2.55" fill="#1c2430"/>',
+      '<circle cx="27.2" cy="29.8" r=".7" fill="#fff"/>',
+      '<circle cx="39.2" cy="29.8" r=".7" fill="#fff"/>',
+      '<path d="M27 43h14" stroke="#1c2430" stroke-width="1.6" stroke-linecap="round"/>',
+      '<rect x="24" y="59.5" width="22" height="12.5" rx="3.5" fill="url(#n3dBody)" stroke="#1c2430" stroke-width="1.4"/>',
+      '<path d="M46 61.5 L54 58 L54 70.5 L46 73 Z" fill="url(#n3dSide)" stroke="#1c2430" stroke-width="1.2" stroke-linejoin="round"/>',
+      '<path d="M24 66.2 L13 66.2" stroke="#1c2430" stroke-width="2.1" stroke-linecap="round"/>',
+      '<path d="M52 63.8 L63 60.5" stroke="#1c2430" stroke-width="2.1" stroke-linecap="round"/>',
       "</g>",
-      '<rect x="14" y="16" width="44" height="42" rx="2" fill="#fbf8f3" stroke="#1c2430" stroke-width="1.7"/>',
-      '<rect x="18" y="20" width="36" height="16" rx="1" fill="#fff" stroke="#1c2430" stroke-width="1.1"/>',
-      '<circle class="eye" cx="29" cy="28" r="2.4" fill="#1c2430"/>',
-      '<circle class="eye" cx="43" cy="28" r="2.4" fill="#1c2430"/>',
-      '<path d="M28 41h16" stroke="#1c2430" stroke-width="1.5" stroke-linecap="square"/>',
-      '<rect x="26" y="60" width="20" height="9" rx="1" fill="#fbf8f3" stroke="#1c2430" stroke-width="1.5"/>',
-      '<path d="M22 64.5h-5M50 64.5h5" stroke="#1c2430" stroke-width="1.4"/>',
       "</svg>"
     ].join("");
   }
@@ -1280,6 +1312,14 @@
           novaSet(true);
         }
       }, true);
+      document.addEventListener("pointerup", function (e) {
+        if (!novaIsOn()) return;
+        if (e.button != null && e.button !== 0) return;
+        if (!e.target.closest || !e.target.closest("#novaFlyer")) return;
+        if (e.target.closest("[data-nova-toggle]")) return;
+        e.stopPropagation();
+        document.dispatchEvent(new CustomEvent("mejor-nova-next"));
+      }, true);
       window.addEventListener("resize", novaReposition);
       window.addEventListener("scroll", novaOnScroll, { capture: true, passive: true });
       if (window.visualViewport) {
@@ -1324,6 +1364,7 @@
     var css = document.createElement("style");
     css.id = "mejor-flip-css";
     css.textContent = [
+      "html,body,button,input,select,textarea,.nova-wake,#novaFlyer,.nova-guide{font-family:Manrope,'PingFang SC','Microsoft YaHei',sans-serif;}",
       ".like.flip{display:block;width:100%;padding:0;border:0;background:transparent;cursor:pointer;perspective:1200px;-webkit-perspective:1200px;text-align:center;font:inherit;color:inherit;transform-style:preserve-3d;}",
       ".like .flip-inner{display:grid;width:100%;height:100%;transform-style:preserve-3d;-webkit-transform-style:preserve-3d;transition:transform .72s cubic-bezier(.2,.7,.2,1),box-shadow .72s cubic-bezier(.2,.7,.2,1);border-radius:2px;box-shadow:0 8px 18px rgba(28,36,48,.08);will-change:transform;}",
       ".like:hover .flip-inner,.like:focus-visible .flip-inner{box-shadow:0 12px 24px rgba(28,36,48,.12);}",
@@ -1347,11 +1388,12 @@
       ".nova-wake[hidden],#novaFlyer[hidden],#novaGlowBox[hidden]{display:none!important;}",
       ".nova-wake{position:fixed;left:16px;bottom:16px;z-index:80;appearance:none;cursor:pointer;font:inherit;font-weight:700;font-size:.85rem;border:1.5px solid #1c2430;background:#2f5d50;color:#fbf8f3;padding:10px 14px;box-shadow:0 10px 28px rgba(28,36,48,.14);}",
       ".nova-wake:hover{background:#264a40;}",
-      "#novaFlyer{position:fixed;z-index:70;width:72px;height:84px;overflow:visible;pointer-events:none;}",
-      "#novaFlyer .nova-bot{position:relative;width:72px;height:84px;overflow:visible;pointer-events:none;}",
-      "#novaFlyer .nova-bot > svg{width:72px;height:84px;display:block;}",
+      "#novaFlyer{position:fixed;z-index:70;width:72px;height:84px;overflow:visible;pointer-events:none;perspective:460px;}",
+      "#novaFlyer .nova-bot{position:relative;width:72px;height:84px;overflow:visible;pointer-events:auto;cursor:pointer;transform-style:preserve-3d;transform:rotateY(-18deg) rotateX(8deg) translateZ(8px);transform-origin:50% 72%;animation:mejorNova3d 4.6s ease-in-out infinite;filter:drop-shadow(8px 14px 10px rgba(28,36,48,.28));}",
+      "#novaFlyer .nova-bot > svg{width:72px;height:84px;display:block;overflow:visible;}",
       "#novaFlyer .eye{transform-origin:center;animation:mejorNovaBlink 5.5s infinite;}",
-      "#novaFlyer .nova-say{pointer-events:none;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(240px,calc(100vw - 24px));box-sizing:border-box;background:#fbf8f3;color:#1c2430;border:1.5px solid #1c2430;border-radius:2px;padding:10px 12px;overflow-wrap:anywhere;box-shadow:0 8px 20px rgba(28,36,48,.12);}",
+      "@keyframes mejorNova3d{0%,100%{transform:rotateY(-20deg) rotateX(9deg) translateY(0) translateZ(8px)}50%{transform:rotateY(16deg) rotateX(6deg) translateY(-7px) translateZ(12px)}}",
+      "#novaFlyer .nova-say{pointer-events:auto;cursor:pointer;position:absolute;bottom:calc(100% + 8px);left:50%;transform:translateX(-50%);width:max-content;max-width:min(240px,calc(100vw - 24px));box-sizing:border-box;background:#fbf8f3;color:#1c2430;border:1.5px solid #1c2430;border-radius:2px;padding:10px 12px;overflow-wrap:anywhere;box-shadow:0 8px 20px rgba(28,36,48,.12);}",
       "#novaFlyer.say-below .nova-say{bottom:auto;top:calc(100% + 8px);}",
       "#novaFlyer.say-left .nova-say{left:auto;right:0;transform:none;}",
       "#novaFlyer .nova-say b{display:block;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:#5e6773;margin-bottom:3px;}",
@@ -1371,7 +1413,7 @@
       ".star.nova-glow .planet{box-shadow:0 0 0 3px #fbf8f3,0 0 0 7px #e0a33a;}",
       "@keyframes mejorNovaBlink{0%,92%,100%{transform:scaleY(1)}95%{transform:scaleY(.12)}}",
       "@keyframes mejorNovaGlow{0%,100%{box-shadow:0 0 0 3px #2f5d50,0 0 0 6px rgba(224,163,58,.7),0 0 12px rgba(47,93,80,.35)}50%{box-shadow:0 0 0 3px #2f5d50,0 0 0 8px #e0a33a,0 0 22px rgba(224,163,58,.75)}}",
-      "@media (prefers-reduced-motion:reduce){#novaFlyer .eye,#novaGlowBox{animation:none!important}}",
+      "@media (prefers-reduced-motion:reduce){#novaFlyer .eye,#novaGlowBox{animation:none!important}#novaFlyer .nova-bot,.nova.nova-3d{animation:none!important;transform:rotateY(-14deg) rotateX(7deg)}}",
       "@media print{#novaFlyer,#novaGlowBox,.nova-wake,.nova-guide{display:none!important;}}"
     ].join("");
     document.head.appendChild(novaCss);
