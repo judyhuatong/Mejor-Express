@@ -3,9 +3,9 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Mejor maps what you like to 14 university majors and real faculties. A first look for students aged 14–18 — not a verdict." />
+  <meta name="description" content="Mejor maps what you like to 25 simple stations, then shows official major names at 15 universities with a meaning a 14-year-old can read. A first look — not a verdict." />
   <meta name="theme-color" content="#1c2822" />
-  <title>Mejor · The lines</title>
+  <title>Mejor express</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
     try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
@@ -17,15 +17,10 @@
     :root {
       --desk: #1c2822;
       --ivory: #f4ead6;
-      --stub: #efe4cc;
       --ink: #1a1a18;
       --red: #b42318;
       --muted: #5c564c;
-      --rule: #c4b79a;
       --logic: #2f5d50;
-      --care: #2a7a8c;
-      --world: #c48a2a;
-      --make: #c45c3a;
       --serif: "Fraunces", Georgia, "Times New Roman", serif;
       --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
     }
@@ -34,15 +29,25 @@
     html { -webkit-text-size-adjust: 100%; }
     body {
       font-family: var(--sans);
-      color: var(--ink);
+      color: var(--ivory);
       -webkit-font-smoothing: antialiased;
       background:
         repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
-        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+        radial-gradient(ellipse at 50% 42%, #2a3a32, var(--desk) 62%);
       min-height: 100vh;
+      display: flex;
+      flex-direction: column;
     }
     ::selection { background: #d5e6df; color: var(--ink); }
-    .wrap { max-width: 1600px; width: 100%; margin: 0 auto; padding: 24px 28px 48px; }
+    .wrap {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      max-width: 960px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 24px 28px 40px;
+    }
     .skip {
       position: absolute; left: 16px; top: -48px; z-index: 80;
       background: var(--ivory); color: var(--ink);
@@ -51,37 +56,33 @@
     }
     .skip:focus { top: 12px; }
     :focus-visible { outline: 2px solid #efe4cc; outline-offset: 3px; }
-    .lang-btn:focus-visible, nav a.ghost:focus-visible, .play:focus-visible, .ghost-btn:focus-visible {
+    .lang-btn:focus-visible, nav a.ghost:focus-visible, nav a.search-btn:focus-visible,
+    .play:focus-visible, .ghost-btn:focus-visible, .search-btn:focus-visible {
       outline: 2px solid var(--red); outline-offset: 3px;
     }
 
     html[lang="zh-Hans"] body { font-family: "Source Sans 3", "Microsoft YaHei", "PingFang SC", sans-serif; }
-    html[lang="zh-Hans"] .band strong,
-    html[lang="zh-Hans"] .meta,
-    html[lang="zh-Hans"] .journey small,
-    html[lang="zh-Hans"] .routes b,
     html[lang="zh-Hans"] .play,
     html[lang="zh-Hans"] .ghost-btn,
+    html[lang="zh-Hans"] .search-btn,
     html[lang="zh-Hans"] nav a.ghost,
     html[lang="zh-Hans"] .lang-btn,
-    html[lang="zh-Hans"] .card b,
-    html[lang="zh-Hans"] .fine,
+    html[lang="zh-Hans"] h1 .express,
     html[lang="zh-Hans"] footer {
       letter-spacing: 0.04em;
       text-transform: none;
     }
+
     nav {
       display: flex; justify-content: space-between; align-items: center;
-      gap: 12px; margin-bottom: 28px; color: #efe4cc;
+      gap: 12px; color: #efe4cc;
     }
-    .nav-end { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .nav-end { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
     .lang-btn {
       appearance: none; cursor: pointer; font: inherit;
       color: #efe4cc; background: transparent;
       border: 1px solid rgba(239, 228, 204, 0.45);
       padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
-      letter-spacing: 0.06em;
-      transition: background 0.15s ease;
     }
     .lang-btn:hover { background: rgba(239, 228, 204, 0.08); }
     .logo {
@@ -101,355 +102,111 @@
       border: 1px solid rgba(239, 228, 204, 0.45);
       padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
       letter-spacing: 0.06em; text-transform: uppercase;
-      transition: background 0.15s ease;
     }
     nav a.ghost:hover { background: rgba(239, 228, 204, 0.08); }
-
-    .board {
-      display: grid;
-      grid-template-columns: minmax(0, 1.5fr) minmax(260px, 0.85fr);
-      grid-template-areas:
-        "ticket gloss"
-        "steps  gloss"
-        "note   note";
-      gap: 12px;
-      align-items: stretch;
-    }
-    .ticket-wrap { grid-area: ticket; align-self: start; }
-    .gloss { grid-area: gloss; }
-    .grid { grid-area: steps; }
-    .note { grid-area: note; }
-
-    .ticket-wrap {
-      filter: drop-shadow(0 28px 50px rgba(0,0,0,0.4));
-    }
-    .ticket {
-      display: grid;
-      grid-template-columns: 132px 1fr;
-      background: var(--ivory);
-      position: relative;
-      overflow: visible;
-      clip-path: polygon(
-        0 18px,
-        18px 0,
-        38% 0,
-        42% 12px,
-        58% 12px,
-        62% 0,
-        calc(100% - 44px) 0,
-        100% 44px,
-        100% calc(100% - 18px),
-        calc(100% - 18px) 100%,
-        62% 100%,
-        58% calc(100% - 12px),
-        42% calc(100% - 12px),
-        38% 100%,
-        18px 100%,
-        0 calc(100% - 18px)
-      );
-    }
-    .ticket::after {
-      content: "";
-      position: absolute; inset: 0;
-      pointer-events: none;
-      opacity: 0.18;
-      background:
-        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.55'/%3E%3C/svg%3E");
-    }
-    .stub {
-      background: var(--stub);
-      padding: 18px 12px 16px;
-      display: flex; flex-direction: column; align-items: center;
-      text-align: center;
-      position: relative;
-      border-right: 1.5px dashed #9a8d72;
-    }
-    .stub::before, .stub::after {
-      content: "";
-      position: absolute;
-      right: -7px;
-      width: 14px; height: 14px;
-      background: var(--desk);
-      border-radius: 50%;
-    }
-    .stub::before { top: -7px; }
-    .stub::after { bottom: -7px; }
-    .holes {
-      position: absolute; left: -1px; top: 22px; bottom: 22px; width: 12px;
-      background: radial-gradient(circle, var(--desk) 3.2px, transparent 3.4px) 0 0 / 12px 16px;
-    }
-    .company {
-      writing-mode: vertical-rl;
-      transform: rotate(180deg);
-      font-family: var(--serif);
+    nav a.search-btn {
+      color: var(--desk);
+      background: #efe4cc;
+      border: 1.5px solid #efe4cc;
+      padding: 10px 16px;
+      min-height: 44px;
+      font-weight: 800;
       font-size: 0.92rem;
-      letter-spacing: 0.22em;
-      font-weight: 600;
-      margin: auto 0;
-    }
-    .serial {
-      font-size: 0.68rem;
-      color: var(--red);
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      margin-top: 12px;
-    }
-
-    .face { padding: 28px 30px 22px; position: relative; z-index: 1; }
-    .band {
-      display: flex; justify-content: space-between; align-items: center;
-      gap: 10px; flex-wrap: wrap;
-      border-bottom: 2px solid var(--ink);
-      padding-bottom: 10px; margin-bottom: 14px;
-    }
-    .band strong {
-      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
-    }
-    .train { width: 118px; height: 36px; display: block; }
-    .meta {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 10px 16px;
-      font-size: 0.72rem;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 8px;
+      text-decoration: none;
+      border-radius: 2px;
     }
-    .meta b { display: block; color: var(--ink); font-size: 0.92rem; letter-spacing: 0.02em; text-transform: none; margin-top: 3px; font-weight: 600; }
+
+    main {
+      flex: 1;
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 48px 0 32px;
+    }
+    .hero { max-width: 28rem; }
     h1 {
       font-family: var(--serif);
-      font-size: clamp(2.6rem, 7vw, 4.2rem);
-      margin: 6px 0 4px;
+      font-size: clamp(2.8rem, 9vw, 4.6rem);
+      margin: 0 0 12px;
       line-height: 0.95;
       font-weight: 500;
+      color: var(--ivory);
     }
     h1 .express {
       display: inline-block;
       font-family: var(--sans);
       font-size: 0.32em;
       font-weight: 600;
-      letter-spacing: 0.18em;
+      letter-spacing: 0.2em;
       text-transform: lowercase;
       vertical-align: 0.62em;
       margin-left: 0.28em;
-      color: var(--muted);
+      color: #c4b79a;
     }
     .catch {
       font-family: var(--serif);
-      font-size: 1.15rem;
-      margin: 0 0 12px;
-      color: var(--ink);
+      font-size: clamp(1.15rem, 3vw, 1.45rem);
+      margin: 0 0 28px;
+      color: var(--ivory);
+      line-height: 1.35;
     }
-    .sub { margin: 0 0 10px; color: var(--muted); font-size: 0.98rem; line-height: 1.55; max-width: 54ch; }
-    .purpose {
-      margin: 0 0 16px;
-      font-size: 1.02rem;
-      line-height: 1.5;
-      max-width: 58ch;
-      padding: 10px 12px;
-      background: rgba(255,255,255,0.45);
-      border-left: 5px solid var(--logic);
-    }
-
-    .journey {
-      display: grid;
-      grid-template-columns: 1fr auto 1fr;
-      gap: 10px;
-      align-items: center;
-      border-top: 1px solid var(--rule);
-      border-bottom: 1px solid var(--rule);
-      padding: 12px 0;
-      margin-bottom: 16px;
-    }
-    .journey small { display: block; font-size: 0.68rem; letter-spacing: 0.14em; text-transform: uppercase; color: var(--muted); }
-    .journey b { font-family: var(--serif); font-size: 1.15rem; font-weight: 600; }
-    .arrow { color: var(--red); font-size: 1.4rem; line-height: 1; }
-
-    .routes {
-      display: grid;
-      grid-template-columns: repeat(4, minmax(0, 1fr));
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-    .routes > div {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      min-height: 108px;
-      padding: 12px 12px 14px;
-      border: 1px solid var(--rule);
-      background: rgba(255,255,255,0.35);
-      border-radius: 2px;
-    }
-    .routes i { width: 100%; height: 5px; margin: 0 0 4px; }
-    .routes .logic { background: var(--logic); }
-    .routes .care { background: var(--care); }
-    .routes .world { background: var(--world); }
-    .routes .make { background: var(--make); }
-    .routes b { display: block; font-family: var(--serif); font-size: 1rem; letter-spacing: 0.04em; text-transform: uppercase; }
-    .routes span { color: var(--muted); font-size: 0.84rem; line-height: 1.35; }
-
-    .cta { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; }
-    .play, .ghost-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      padding: 11px 16px;
-      text-decoration: none; font-weight: 700; font-size: 0.88rem;
-      letter-spacing: 0.08em; text-transform: uppercase;
-      border: 1.5px solid var(--ink); color: var(--ink);
-      border-radius: 2px;
-      transition: filter 0.15s ease, background 0.15s ease;
-    }
-    .play { background: var(--red); color: #f4ead6; border-color: var(--red); }
-    .ghost-btn { background: transparent; }
-    .play:hover { filter: brightness(1.08); }
-    .ghost-btn:hover { background: rgba(26,26,24,0.05); }
-
-    .foot-row {
-      display: flex; justify-content: space-between; align-items: flex-end;
-      gap: 12px; margin-top: 16px; flex-wrap: wrap;
-    }
-    .barcode { height: 38px; width: min(220px, 100%); display: block; }
-    .fine {
-      font-size: 0.62rem; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--muted); max-width: 36ch; line-height: 1.4;
-    }
-
-    .mag {
-      height: 10px; margin: 16px -30px 0;
-      background: repeating-linear-gradient(90deg, #1a1a18 0 3px, #2c2c28 3px 5px);
-    }
-
-    .gloss {
-      display: grid;
-      grid-template-columns: 1fr;
-      grid-template-rows: 1fr 1fr 1fr;
-      gap: 12px;
-      margin-top: 0;
-      align-items: stretch;
-      min-height: 100%;
-    }
-    .gloss article {
-      background: var(--ivory);
-      padding: 14px 14px 12px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-    .gloss b {
-      display: block;
-      font-family: var(--serif);
-      font-size: 1.4rem;
-      margin-bottom: 6px;
-      line-height: 1.2;
-      min-height: 1.2em;
-    }
-    .gloss p { margin: 0; line-height: 1.45; color: var(--ink); font-size: 1.08rem; }
-    .gloss p + p { margin-top: 8px; }
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 12px;
-      margin-top: 0;
-      align-items: stretch;
-    }
-    .card {
-      background: var(--ivory);
-      padding: 16px 14px 12px;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.22);
-      position: relative;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-    }
-    .card::before {
-      content: "";
-      position: absolute; left: 0; right: 0; top: 0; height: 6px;
-    }
-    .card:nth-child(1)::before { background: var(--logic); }
-    .card:nth-child(2)::before { background: var(--world); }
-    .card:nth-child(3)::before { background: var(--make); }
-    .card b {
-      display: block;
-      font-size: 0.88rem;
-      margin: 6px 0 6px;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      line-height: 1.3;
-      min-height: 2.6em;
-    }
-    .card p { margin: 0; line-height: 1.4; color: var(--muted); font-size: 1.08rem; }
-    footer {
-      margin-top: 28px;
-      color: rgba(239, 228, 204, 0.7);
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-    }
-    footer p { margin: 0 0 8px; }
-    footer a { color: #efe4cc; }
-
-    .note {
-      background: var(--ivory);
-      border-left: 8px solid var(--world);
-      padding: 12px 16px;
-      margin: 0;
-      box-shadow: 0 12px 24px rgba(0,0,0,0.22);
+    .cta {
       display: flex;
       flex-wrap: wrap;
-      align-items: baseline;
-      gap: 6px 18px;
-      height: fit-content;
+      gap: 10px;
+      justify-content: center;
+      align-items: center;
     }
-    .note b {
-      font-family: var(--serif);
-      font-size: 1.28rem;
-      font-weight: 600;
-      margin: 0;
-      letter-spacing: 0;
-      text-transform: none;
-      flex: 0 0 auto;
+    .play, .ghost-btn, .cta .search-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 2px;
+      min-height: 52px;
+      padding: 12px 22px;
+      font: inherit;
+      font-weight: 800;
     }
-    .note p {
-      margin: 0;
-      font-size: 1.12rem;
-      line-height: 1.4;
-      color: var(--ink);
-      flex: 1 1 28ch;
+    .play {
+      background: var(--logic);
+      color: #fbf8f3;
+      border: 1.5px solid #1c2430;
+      box-shadow: 0 3px 0 #1a1a18;
     }
-    .note p + p { margin-top: 0; flex: 0 0 auto; }
-    .note a { color: var(--logic); font-weight: 700; }
-    @media (prefers-reduced-motion: reduce) {
-      .play, .ghost-btn { transition: none; }
+    .play:hover { background: #264a40; }
+    .cta .search-btn {
+      background: #efe4cc;
+      color: var(--desk);
+      border: 1.5px solid #efe4cc;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      box-shadow: 0 3px 0 #c4b79a;
     }
+    .ghost-btn {
+      background: transparent;
+      color: var(--ivory);
+      border: 1.5px solid rgba(239, 228, 204, 0.55);
+      font-weight: 700;
+    }
+    .ghost-btn:hover { background: rgba(239, 228, 204, 0.08); }
 
-    @media (max-width: 980px) {
-      .board {
-        display: flex;
-        flex-direction: column;
-      }
-      .gloss {
-        grid-template-columns: repeat(3, 1fr);
-        grid-template-rows: auto;
-        min-height: 0;
-      }
+    footer {
+      text-align: center;
+      color: rgba(239, 228, 204, 0.72);
+      font-size: 0.82rem;
+      line-height: 1.5;
     }
-    @media (max-width: 760px) {
-      .ticket { grid-template-columns: 1fr; clip-path: polygon(0 12px, 12px 0, calc(100% - 28px) 0, 100% 28px, 100% calc(100% - 12px), calc(100% - 12px) 100%, 12px 100%, 0 calc(100% - 12px)); }
-      .stub {
-        flex-direction: row; justify-content: space-between;
-        border-right: 0; border-bottom: 1.5px dashed #9a8d72;
-        writing-mode: horizontal-tb;
-      }
-      .company { writing-mode: horizontal-tb; transform: none; letter-spacing: 0.16em; }
-      .holes { display: none; }
-      .stub::before, .stub::after { display: none; }
-      .meta, .journey { grid-template-columns: 1fr; }
-      .routes { grid-template-columns: 1fr 1fr; }
-      .arrow { display: none; }
-      .gloss, .grid { grid-template-columns: 1fr; }
-      .mag { margin: 16px -30px 0; }
+    footer p { margin: 0 0 6px; }
+    footer a { color: #efe4cc; }
+
+    @media (max-width: 640px) {
+      .wrap { padding: 16px 16px 28px; }
+      nav { flex-direction: column; align-items: flex-start; }
+      .cta { flex-direction: column; }
+      .play, .ghost-btn, .cta .search-btn { width: 100%; }
     }
   </style>
 </head>
@@ -461,141 +218,27 @@
       <div class="nav-end">
         <button class="lang-btn" type="button" data-lang-toggle>中文</button>
         <button class="lang-btn" type="button" data-nova-toggle>Turn Nova off</button>
+        <a class="search-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
         <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
       </div>
     </nav>
 
-    <main id="main" class="board">
-
-    <div class="ticket-wrap">
-    <article class="ticket" data-i18n-aria="ticket.aria" aria-label="Mejor express rail ticket">
-      <aside class="stub">
-        <div class="holes" aria-hidden="true"></div>
-        <div class="company">MEJOR EXPRESS</div>
-        <div class="serial">MJ 14 0003</div>
-      </aside>
-
-      <div class="face">
-        <div class="band">
-          <strong data-i18n="ticket.band">Railway of majors · not transferable</strong>
-          <svg class="train" viewBox="0 0 118 36" fill="none" aria-hidden="true">
-            <path d="M8 26h102" stroke="#1a1a18" stroke-width="1.4"/>
-            <rect x="18" y="10" width="62" height="16" rx="1.2" stroke="#1a1a18" stroke-width="1.5"/>
-            <path d="M80 14h16l8 12H80V14Z" stroke="#1a1a18" stroke-width="1.5"/>
-            <rect x="24" y="14" width="10" height="7" stroke="#1a1a18" stroke-width="1.2"/>
-            <rect x="38" y="14" width="10" height="7" stroke="#1a1a18" stroke-width="1.2"/>
-            <rect x="52" y="14" width="10" height="7" stroke="#1a1a18" stroke-width="1.2"/>
-            <circle cx="30" cy="28" r="4.2" stroke="#1a1a18" stroke-width="1.5"/>
-            <circle cx="58" cy="28" r="4.2" stroke="#1a1a18" stroke-width="1.5"/>
-            <circle cx="86" cy="28" r="4.2" stroke="#1a1a18" stroke-width="1.5"/>
-            <path d="M22 10V6h6" stroke="#1a1a18" stroke-width="1.4" stroke-linecap="square"/>
-          </svg>
-        </div>
-
-        <div class="meta">
-          <div><span data-i18n="meta.class">Class</span><b data-i18n="meta.classVal">First look</b></div>
-          <div><span data-i18n="meta.stations">Stations</span><b data-i18n="meta.stationsVal">14 majors</b></div>
-          <div><span data-i18n="meta.valid">Valid</span><b data-i18n="meta.validVal">Until you choose</b></div>
-        </div>
-
+    <main id="main">
+      <div class="hero">
         <h1>Mejor <span class="express">express</span></h1>
         <p class="catch" data-i18n="catch">Mejor, your major explorer.</p>
-        <p class="sub" data-i18n="sub">You know what you like. You don’t yet know which university major that points to. This site maps your likes to 14 majors, then shows real universities that actually teach them.</p>
-        <p class="purpose" data-i18n="purpose">You will leave with 2–3 majors worth a closer look — not a job, not a forever plan, and not a score of how ‘good’ you are.</p>
-
-        <div class="journey">
-          <div><small data-i18n="from.label">From</small><b data-i18n="from.val">What you like</b></div>
-          <div class="arrow" aria-hidden="true">→</div>
-          <div><small data-i18n="to.label">To</small><b data-i18n="to.val">A university major</b></div>
-        </div>
-
-        <div class="routes">
-          <div><i class="logic"></i><b data-i18n="line.logic">Logic</b><span data-i18n="line.logicDef">Math, code, machines</span></div>
-          <div><i class="care"></i><b data-i18n="line.care">Care</b><span data-i18n="line.careDef">Health, people, teaching</span></div>
-          <div><i class="world"></i><b data-i18n="line.world">World</b><span data-i18n="line.worldDef">Money, law, society</span></div>
-          <div><i class="make"></i><b data-i18n="line.make">Make</b><span data-i18n="line.makeDef">Buildings, art, design</span></div>
-        </div>
-
         <div class="cta">
           <a class="play" id="startNova" href="explorer.html?nova=1" data-i18n="cta.play">Start with Nova</a>
+          <a class="search-btn" id="searchMajor" href="search.html" data-i18n="nav.search">Search for a major</a>
           <a class="ghost-btn" href="explorer.html?skip=1" data-i18n="cta.skip">Skip to the line map</a>
         </div>
-
-        <div class="foot-row">
-          <svg class="barcode" viewBox="0 0 220 38" preserveAspectRatio="none" aria-hidden="true">
-            <rect width="220" height="38" fill="none"/>
-            <g fill="#1a1a18">
-              <rect x="0" y="0" width="3" height="38"/><rect x="6" y="0" width="1.5" height="38"/>
-              <rect x="11" y="0" width="4" height="38"/><rect x="18" y="0" width="1.5" height="38"/>
-              <rect x="23" y="0" width="2" height="38"/><rect x="29" y="0" width="5" height="38"/>
-              <rect x="37" y="0" width="1.5" height="38"/><rect x="42" y="0" width="3" height="38"/>
-              <rect x="48" y="0" width="1" height="38"/><rect x="53" y="0" width="4" height="38"/>
-              <rect x="60" y="0" width="2" height="38"/><rect x="66" y="0" width="1.5" height="38"/>
-              <rect x="72" y="0" width="6" height="38"/><rect x="81" y="0" width="1.5" height="38"/>
-              <rect x="86" y="0" width="3" height="38"/><rect x="93" y="0" width="2" height="38"/>
-              <rect x="99" y="0" width="5" height="38"/><rect x="108" y="0" width="1" height="38"/>
-              <rect x="113" y="0" width="3" height="38"/><rect x="120" y="0" width="1.5" height="38"/>
-              <rect x="126" y="0" width="4" height="38"/><rect x="134" y="0" width="2" height="38"/>
-              <rect x="140" y="0" width="1.5" height="38"/><rect x="146" y="0" width="6" height="38"/>
-              <rect x="156" y="0" width="2" height="38"/><rect x="162" y="0" width="4" height="38"/>
-              <rect x="170" y="0" width="1.5" height="38"/><rect x="176" y="0" width="3" height="38"/>
-              <rect x="183" y="0" width="5" height="38"/><rect x="192" y="0" width="1.5" height="38"/>
-              <rect x="198" y="0" width="2" height="38"/><rect x="204" y="0" width="4" height="38"/>
-              <rect x="212" y="0" width="8" height="38"/>
-            </g>
-          </svg>
-          <p class="fine" data-i18n="fine">Keep this ticket. 14 stations. Not a forever job.</p>
-        </div>
-        <div class="mag" aria-hidden="true"></div>
       </div>
-    </article>
-    </div>
-
-    <section class="gloss">
-      <article>
-        <b data-i18n="gloss.major.t">Major</b>
-        <p data-i18n="gloss.major.p">What you study at university — a subject path such as Computer Science, Psychology, or Architecture. It is not a job title, and it is not a forever label.</p>
-        <p data-i18n="gloss.major.p2">This map has 14 majors. Open a station to see what the path actually contains, what people mix it up with, and what you can try this year — before you treat a name as a plan.</p>
-      </article>
-      <article>
-        <b data-i18n="gloss.job.t">Job</b>
-        <p data-i18n="gloss.job.p">What you might do later, such as software engineer, researcher, or designer. One major can lead to many jobs. Job names also change as industries change.</p>
-        <p data-i18n="gloss.job.p2">Do not pick a major only because you like one job title. A first look here is meant to show range, not to lock you into a career.</p>
-      </article>
-      <article>
-        <b data-i18n="gloss.faculty.t">Faculty</b>
-        <p data-i18n="gloss.faculty.p">The school inside a university that teaches the major — Engineering, a Business School, Arts and Sciences, and so on. The same major can sit in different faculties at different universities.</p>
-        <p data-i18n="gloss.faculty.p2">Names here come from official pages, so you can see where that major actually lives. Faculty is a door on campus, not a ranking, and not a job.</p>
-      </article>
-    </section>
-
-    <section class="grid">
-      <article class="card">
-        <b data-i18n="card1.t">01 · Answer a few questions</b>
-        <p data-i18n="card1.p">Nova asks how you work, which subjects you like, and where you already feel strong. Not an official test. Not a final stop.</p>
-      </article>
-      <article class="card">
-        <b data-i18n="card2.t">02 · Read the lines</b>
-        <p data-i18n="card2.p">Matching majors light on four labeled lines. Each line has a colour and a meaning. Station names sit under the diamonds.</p>
-      </article>
-      <article class="card">
-        <b data-i18n="card3.t">03 · Open a station</b>
-        <p data-i18n="card3.p">See what the major means, what not to mix it up with, what you can try this year, and which Top 15 universities actually teach it.</p>
-      </article>
-    </section>
-
-    <aside class="note">
-      <b data-i18n="note.kicker">Which schools are these?</b>
-      <p data-i18n="note">These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities.</p>
-      <p><a href="method.html" data-i18n="nav.method">How this was made</a></p>
-    </aside>
-
     </main>
 
     <footer>
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 15 Aug 2026</span></p>
+      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
     </footer>
   </div>
 
@@ -617,7 +260,7 @@
     </div>
     <div class="nova-guide-copy">
       <div class="nova-name" data-i18n="nova.name">Nova · guide</div>
-      <p data-i18n="guide.home">Press “Start with Nova” on the ticket. Or press “Skip to the line map” if you want to pick likes yourself.</p>
+      <p data-i18n="guide.home">Press “Start with Nova”. Or press “Skip to the line map” if you want to pick likes yourself.</p>
       <p class="soft" data-i18n="guide.homeSoft">I can keep helping on the map. Turn me off anytime — I will stay quiet.</p>
       <p class="where" data-i18n="guide.where.home">Press here: Start with Nova or Skip</p>
       <button class="nova-quiet" type="button" data-nova-toggle>Turn Nova off</button>
@@ -627,17 +270,32 @@
 
   <script src="i18n.js"></script>
   <script>
+    var homeTour = 0;
     function updateHomeGuide() {
       if (!MejorNova.isOn()) {
         MejorNova.park();
         return;
       }
       var play = document.getElementById("startNova") || document.querySelector(".cta .play");
+      var search = document.getElementById("searchMajor") || document.querySelector(".cta .search-btn");
+      if (homeTour >= 1 && search) {
+        MejorNova.point(search, MejorI18n.t("guide.where.search"), MejorI18n.t("guide.search"));
+        return;
+      }
       MejorNova.point(play, MejorI18n.t("guide.where.home"), MejorI18n.t("guide.home"));
     }
     MejorI18n.apply();
     MejorI18n.bindToggles();
     MejorNova.bind(updateHomeGuide);
+    document.addEventListener("pointerup", function (e) {
+      if (!MejorNova.isOn()) return;
+      if (e.button != null && e.button !== 0) return;
+      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle]")) return;
+      if (e.target.closest("#startNova, #searchMajor, .cta a, nav a")) return;
+      if (homeTour >= 1) return;
+      homeTour = 1;
+      updateHomeGuide();
+    });
   </script>
 </body>
 </html>

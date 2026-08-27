@@ -38,6 +38,7 @@
     html[lang="zh-Hans"] button.ghost,
     html[lang="zh-Hans"] button.play,
     html[lang="zh-Hans"] a.ghost,
+    html[lang="zh-Hans"] a.search-btn,
     html[lang="zh-Hans"] .ticket-tools summary {
       letter-spacing: 0.03em;
       text-transform: none;
@@ -116,8 +117,9 @@
       color: var(--muted);
     }
     .stat b { color: var(--ink); font-weight: 700; }
-    .hud-actions { display: flex; gap: 8px; grid-column: 1 / -1; flex-wrap: wrap; align-items: flex-start; }
+    .hud-actions { display: flex; gap: 8px; grid-column: 1 / -1; flex-wrap: wrap; align-items: center; }
     .hud-actions .ghost, .hud-actions .play, .ticket-tools summary { font-size: 0.82rem; }
+    .hud-actions a.search-btn { font-size: 1.05rem; min-height: 48px; }
     .ticket-tools {
       position: relative;
     }
@@ -174,6 +176,26 @@
       transition: border-color 0.15s var(--ease), background 0.15s var(--ease);
     }
     a.ghost:hover { border-color: var(--ink); background: #fff; }
+    a.search-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--lime);
+      color: #fbf8f3;
+      border: 1.5px solid var(--lime);
+      border-radius: 2px;
+      padding: 13px 22px;
+      min-height: 48px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1.05rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      box-shadow: 0 3px 0 #1e3f36, 0 8px 18px rgba(47, 93, 80, 0.28);
+    }
+    a.search-btn:hover { filter: brightness(1.08); }
     button.ghost, button.play {
       appearance: none;
       border: 1px solid var(--line);
@@ -393,13 +415,17 @@
     .rail {
       position: relative;
       display: flex;
+      flex-wrap: nowrap;
       align-items: flex-start;
       justify-content: space-evenly;
-      gap: 8px;
+      gap: 4px 6px;
       min-width: 0;
       min-height: 0;
       padding: 8px 10px 6px;
-      overflow: visible;
+      overflow-x: auto;
+      overflow-y: visible;
+      overscroll-behavior-x: contain;
+      scrollbar-width: thin;
     }
     .rail::before {
       content: "";
@@ -422,11 +448,12 @@
       font: inherit;
       position: relative;
       z-index: 1;
-      flex: 1 1 0;
-      max-width: none;
-      min-width: 0;
+      flex: 0 0 auto;
+      width: 84px;
+      max-width: 96px;
+      min-width: 72px;
       margin: 0;
-      padding: 18px 10px 0;
+      padding: 18px 6px 0;
       transition: opacity 0.35s;
       cursor: pointer;
       text-align: center;
@@ -448,7 +475,7 @@
     .star .name {
       display: block;
       margin: 14px 0 0;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       line-height: 1.25;
       color: var(--ink);
       font-weight: 600;
@@ -593,20 +620,54 @@
       position: fixed;
       z-index: 90;
       box-sizing: border-box;
-      width: min(320px, calc(100vw - 24px));
+      width: min(340px, calc(100vw - 24px));
+      max-height: min(48vh, 340px);
+      overflow: auto;
       background: #fbf8f3;
       color: var(--ink);
       border: 1.5px solid var(--ink);
       border-radius: 2px;
-      padding: 12px 14px;
+      padding: 10px 12px;
       box-shadow: 0 14px 32px rgba(28, 36, 48, 0.2);
       pointer-events: none;
       display: none;
-      overflow-wrap: anywhere;
+      overflow-wrap: break-word;
+      word-break: normal;
+    }
+    #uniTip .maj-list,
+    .fact .maj-list {
+      margin: 6px 0 0;
+      padding: 0;
+      list-style: none;
+    }
+    #uniTip .maj-list li,
+    .fact .maj-list li {
+      margin: 0 0 8px;
+      font-size: 0.8rem;
+      line-height: 1.35;
+    }
+    #uniTip .maj-list li:last-child,
+    .fact .maj-list li:last-child { margin-bottom: 0; }
+    #uniTip .maj-list b,
+    .fact .maj-list b {
+      display: block;
+      font-family: var(--sans);
+      font-size: 0.78rem;
+      margin: 0 0 1px;
+      color: var(--ink);
+      letter-spacing: 0;
+      text-transform: none;
+    }
+    #uniTip .maj-list span,
+    .fact .maj-list span { color: var(--muted); font-size: 0.78rem; }
+    .fact.specific p.specific-note {
+      margin: 0 0 6px;
+      color: var(--muted);
+      font-size: 0.8rem;
     }
     #uniTip.show { display: block; }
     #uniTip b { display: block; font-family: var(--serif); font-size: 1.08rem; font-weight: 600; margin-bottom: 6px; }
-    #uniTip p { margin: 0 0 8px; font-size: 0.9rem; line-height: 1.45; }
+    #uniTip p { margin: 0 0 6px; font-size: 0.88rem; line-height: 1.4; }
     #uniTip .why { margin: 0 0 6px; color: var(--muted); font-size: 0.8rem; }
     #uniTip .why b { display: inline; font-family: var(--sans); font-size: 0.8rem; color: var(--lime); }
     #uniTip .why.off b { color: #c45c3a; }
@@ -846,7 +907,7 @@
       .stage { grid-template-columns: 1fr; }
       .radar-wrap, .briefing, .briefing-shell { min-height: 640px; }
       .line-row { grid-template-columns: 1fr; padding: 12px; }
-      .rail { overflow: visible; }
+      .rail { overflow-x: auto; overflow-y: visible; }
       .like-grid { grid-template-columns: repeat(2, 1fr); }
       .hud { grid-template-columns: 1fr; }
       .hud-stats { justify-content: flex-start; }
@@ -875,7 +936,7 @@
         <div class="probe"><span>M</span></div>
         <div>
           <h1>Mejor <span class="express">express</span></h1>
-          <p class="tagline" data-i18n="tagline">Four lines. Fourteen stations.</p>
+          <p class="tagline" data-i18n="tagline">Four lines. Twenty-five stations.</p>
         </div>
       </a>
       <div class="hud-stats">
@@ -886,6 +947,7 @@
       </div>
       <div class="hud-actions">
         <button class="ghost" type="button" data-lang-toggle>中文</button>
+        <a class="search-btn" id="searchMajor" href="search.html" data-i18n="nav.search" data-nova-stop="search">Search for a major</a>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <button class="ghost" id="helpBtn" type="button" data-i18n="help">How it works</button>
         <button class="ghost" type="button" data-nova-toggle>Turn Nova off</button>
@@ -916,7 +978,7 @@
     <aside class="note">
       <b data-i18n="note.kicker">Which schools are these?</b>
       <p data-i18n="note">These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities.</p>
-      <p><a href="method.html" data-i18n="nav.method">How this was made</a></p>
+      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="method.html" data-i18n="nav.method">How this was made</a></p>
     </aside>
 
     <section class="likes">
@@ -977,7 +1039,7 @@
 
     <footer class="site-foot">
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 15 Aug 2026</span></p>
+      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
     </footer>
   </div>
 
@@ -996,6 +1058,9 @@
   <button class="nova-wake" type="button" data-nova-wake hidden>Ask Nova</button>
 
   <script src="i18n.js"></script>
+  <script src="catalog.js"></script>
+  <script src="catalog-majors.js"></script>
+  <script src="quiz-bank.js"></script>
   <script>
     /* Data is separate from the screen: change tags/majors here, the star map updates by itself. */
 
@@ -1032,7 +1097,7 @@
       {
         id: "cs", code: "CS", name: "Computer Science",
         tags: ["logic", "data", "hands"],
-        blurb: "You teach machines to solve puzzles — apps, games, websites, and smart tools.",
+        blurb: "You learn how computers follow instructions: apps, games, websites.",
         learn: "Programming, algorithms, computer systems, and how to turn an idea into working software.",
         need: "Patience with bugs, logic, and the joy of breaking a hard problem into tiny steps.",
         future: "Software engineer, product builder, game developer, AI intern, cybersecurity starter.",
@@ -1057,7 +1122,7 @@
       {
         id: "eng", code: "ENG", name: "Engineering",
         tags: ["hands", "logic", "nature"],
-        blurb: "You design real things that move, stand, fly, or keep cities alive.",
+        blurb: "You learn to design real things: bridges, robots, planes, power.",
         learn: "Math + physics plus a special track: civil, mechanical, electrical, biomedical, or aerospace.",
         need: "Making things with your hands or computer, teamwork, and not giving up when a prototype fails.",
         future: "Engineer, designer of machines/buildings/energy systems, robotics or space-tech starter.",
@@ -1170,7 +1235,7 @@
       {
         id: "med", code: "MED", name: "Medicine & Biomedicine",
         tags: ["help", "nature", "logic"],
-        blurb: "You study the human body so you can help people get well — and stay well.",
+        blurb: "You study the human body so you can help people get well. This path is long.",
         learn: "Biology, anatomy, clinics, and how disease and healing actually work.",
         need: "Long-term grit, care for people, and a strong stomach for hard science.",
         future: "Doctor-in-training, biomedical researcher, clinic helper, public-health starter. (This path is long. That’s okay to know now.)",
@@ -1434,6 +1499,10 @@
         watch: "A mix of biology and data. Less “hospital hero”, more “how the system runs”."
       }
     };
+    if (window.MejorCatalog) {
+      Object.assign(MAJOR_EXTRA, MejorCatalog.extraFacts);
+      MejorCatalog.apply(MAJORS);
+    }
 
     const COMBOS = [
       { tags: ["logic", "data"], name: "The Analyst", blurb: "You like finding the hidden pattern." },
@@ -1446,80 +1515,30 @@
       { tags: ["help", "nature"], name: "The Care Path", blurb: "You like looking after people and living things." }
     ];
 
-    /* 8-question path scan. Same 4 letters as MBTI-style types, but this is a class game, not an official test. */
-    const QUIZ = [
-      {
-        dim: "EI",
-        prompt: "A free Saturday. What actually recharges you?",
-        a: { letter: "E", title: "People fuel", text: "A busy hangout. Talking, laughing, more energy after." },
-        b: { letter: "I", title: "Quiet fuel", text: "One friend, a book, or my room. I need a pause after a crowd." }
-      },
-      {
-        dim: "EI",
-        prompt: "You get a cool idea in class. What do you do first?",
-        a: { letter: "E", title: "Say it", text: "I speak it out loud. Talking helps me think." },
-        b: { letter: "I", title: "Hold it", text: "I turn it over in my head before I share." }
-      },
-      {
-        dim: "SN",
-        prompt: "You visit a new city. What grabs you?",
-        a: { letter: "S", title: "Real details", text: "The food, the streets, what people are actually doing." },
-        b: { letter: "N", title: "What-if pictures", text: "Stories, future ideas, ‘what this place could become.’" }
-      },
-      {
-        dim: "SN",
-        prompt: "A school project starts. What do you want?",
-        a: { letter: "S", title: "Clear steps", text: "Facts, examples, a checklist I can follow." },
-        b: { letter: "N", title: "A big idea", text: "Room to invent. I get bored if every step is already written." }
-      },
-      {
-        dim: "TF",
-        prompt: "A friend is upset. Your first move?",
-        a: { letter: "T", title: "Fix the knot", text: "Find the problem and offer a plan." },
-        b: { letter: "F", title: "Feel it with them", text: "Listen first. How they feel matters more than a quick fix." }
-      },
-      {
-        dim: "TF",
-        prompt: "Group work goes messy. What is more you?",
-        a: { letter: "T", title: "Honest and sharp", text: "Say the true thing, even if it is a little blunt." },
-        b: { letter: "F", title: "Keep the team okay", text: "Protect feelings. A good vibe helps the work." }
-      },
-      {
-        dim: "JP",
-        prompt: "Homework week. Your style?",
-        a: { letter: "J", title: "Plan it", text: "List, calendar, finish early if I can." },
-        b: { letter: "P", title: "Ride the energy", text: "I start when it clicks. I still get it done — just not in a neat line." }
-      },
-      {
-        dim: "JP",
-        prompt: "Saturday morning. What sounds better?",
-        a: { letter: "J", title: "A finished list", text: "I like knowing what the day will look like." },
-        b: { letter: "P", title: "See what happens", text: "Leave space. The fun part is the surprise." }
-      }
-    ];
-
+    /* 20 school questions drawn from MejorQuiz (200-item bank). Four study axes, not personality. */
+    const QUIZ_N = 20;
+    let QUIZ = [];
     const NOVA_LEAD = [
-      "First question. Go with your first instinct — there is no wrong answer.",
-      "Next: how you like to start an idea.",
-      "Imagine you have just arrived in a new city.",
-      "Now a school project.",
-      "A friend is having a difficult day.",
-      "Group work. Answer honestly.",
-      "Almost done with personality. Homework week.",
-      "Last personality question. Saturday morning — then we talk about school."
-    ];
-
-    const SCHOOL_QUIZ = [
-      {
-        prompt: "If tomorrow was only one kind of class, you’d pick…",
-        a: { title: "Numbers & labs", text: "Math, science, computers. A clear method feels good.", tags: ["logic", "data", "nature"], majors: ["cs", "stem", "eng", "bio"] },
-        b: { title: "Words & people", text: "English, history, languages. Talking an idea through feels good.", tags: ["words", "help", "art"], majors: ["ir", "law", "edu", "art"] }
-      },
-      {
-        prompt: "You’re usually stronger when the work looks like…",
-        a: { title: "A problem to solve", text: "Steps, formulas, experiments, code, or building something.", tags: ["logic", "hands"], majors: ["eng", "cs", "stem", "med"] },
-        b: { title: "A thing to say or show", text: "Writing, presenting, drawing, performing, or debating.", tags: ["words", "art"], majors: ["art", "ir", "law", "edu"] }
-      }
+      "First class question. Go with your first instinct — there is no wrong answer.",
+      "Still about school: how you actually work in class.",
+      "Another school situation. Pick the closer one.",
+      "Homework and class habits — not who you are as a person.",
+      "Keep going. Answer as a student, not as a ‘type’.",
+      "What kind of schoolwork you trust.",
+      "Labs, essays, numbers — still class, not personality.",
+      "How you judge a school answer.",
+      "A few more like this.",
+      "Halfway. Ten down, ten to go.",
+      "Second half. Same rule: no wrong answers.",
+      "Class, homework, group work — pick the closer one.",
+      "How you run a long project.",
+      "Deadlines and drafts. Still school.",
+      "Almost into the last stretch.",
+      "How you pack, plan, or leave space.",
+      "Three to go after this.",
+      "Two more after this. Class, not personality.",
+      "Nearly done. How you finish schoolwork.",
+      "Last of the twenty. Then you pick subjects you like."
     ];
 
     const SUBJECTS = [
@@ -1558,7 +1577,7 @@
     let lockedId = null;
     let novaTour = 0;
     let novaTourStation = null;
-    const NOVA_OPEN_STEPS = 6;
+    const NOVA_OPEN_STEPS = 7;
     let sector = "ALL";
     let pathType = null;
     let quizIndex = 0;
@@ -1569,13 +1588,13 @@
     let likedSubjects = [];
     let strongSubjects = [];
     let schoolWeight = "both";
-    const SCAN_STEPS = QUIZ.length + SCHOOL_QUIZ.length + 2;
+    const SCAN_STEPS = QUIZ_N + 2;
 
     const LINES = [
-      { id: "logic", stops: ["stem", "cs", "eng"] },
-      { id: "care", stops: ["med", "bio", "ph", "psy", "edu"] },
-      { id: "world", stops: ["biz", "econ", "law", "ir"] },
-      { id: "make", stops: ["arch", "art"] }
+      { id: "logic", stops: ["stem", "cs", "eng", "chem", "env"] },
+      { id: "care", stops: ["med", "nurse", "dent", "vet", "pharm", "bio", "ph", "psy", "edu"] },
+      { id: "world", stops: ["biz", "econ", "law", "ir", "lang", "hist", "social"] },
+      { id: "make", stops: ["arch", "art", "music", "sport"] }
     ];
 
     const likeGrid = document.getElementById("likeGrid");
@@ -1687,17 +1706,19 @@
     }
     function quizLoc(i) {
       const q = QUIZ[i];
-      const z = MejorI18n.DATA.quiz[i];
-      if (!zh() || !z) return q;
-      return { dim: q.dim, prompt: z.prompt, a: Object.assign({}, q.a, z.a), b: Object.assign({}, q.b, z.b) };
+      if (!q) return { prompt: "", a: { title: "", text: "" }, b: { title: "", text: "" } };
+      if (!zh()) return q;
+      return {
+        dim: q.dim,
+        prompt: q.promptZh || q.prompt,
+        a: { letter: q.a.letter, title: q.a.titleZh || q.a.title, text: q.a.textZh || q.a.text },
+        b: { letter: q.b.letter, title: q.b.titleZh || q.b.title, text: q.b.textZh || q.b.text }
+      };
     }
-    function schoolLoc(i) {
-      const q = SCHOOL_QUIZ[i];
-      const z = MejorI18n.DATA.school[i];
-      if (!zh() || !z) return q;
-      return { prompt: z.prompt, a: Object.assign({}, q.a, z.a), b: Object.assign({}, q.b, z.b) };
+    function novaLead(i) {
+      const pack = zh() ? (MejorI18n.DATA.novaLead || []) : NOVA_LEAD;
+      return pack[i] || NOVA_LEAD[i] || "";
     }
-    function novaLead(i) { return zh() ? MejorI18n.DATA.novaLead[i] : NOVA_LEAD[i]; }
     function uniEvidence(id, fallback) { return zh() ? (MejorI18n.DATA.evidence[id] || fallback) : fallback; }
     function countryLabel(c) { return t("country." + c); }
     function uniIntro(id) {
@@ -1719,7 +1740,7 @@
       if (off) cls.push("off");
       if (sector !== "ALL" && uni.country !== sector) cls.push("dim");
       const taught = offer ? offer.faculty : t("unis.none");
-      return `<span class="${cls.join(" ")}" role="button" data-uni="${uniId}" data-faculty="${esc(offer ? offer.faculty : "")}" data-off="${off ? "1" : "0"}" tabindex="0">${esc(uni.short)} · #${uni.qs} ${countryLabel(uni.country)} — ${esc(taught)}</span>`;
+      return `<span class="${cls.join(" ")}" role="button" data-uni="${uniId}" data-station="${esc(m.id)}" data-faculty="${esc(offer ? offer.faculty : "")}" data-off="${off ? "1" : "0"}" tabindex="0">${esc(uni.short)} · #${uni.qs} ${countryLabel(uni.country)} — ${esc(taught)}</span>`;
     }
     function allChips(m) {
       return Object.keys(UNIVERSITIES).map((id) => chipHtml(m, id)).join("");
@@ -1730,13 +1751,33 @@
       const tip = document.getElementById("uniTip");
       if (!uni || !tip) return;
       const off = el.dataset.off === "1";
-      const teachLine = off
-        ? `<p class="why off"><b>${esc(t("uni.teaches"))}.</b> ${esc(t("unis.none.tip"))}</p>`
-        : `<p class="why"><b>${esc(t("uni.teaches"))}.</b> ${esc(el.dataset.faculty || "")}</p>`;
+      const stationId = el.dataset.station || lockedId || "";
+      const map = (window.MejorCatalog && MejorCatalog.stationOf) || {};
+      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+      const seen = {};
+      const hits = [];
+      facs.forEach((f) => {
+        (f.majors || []).forEach((mj) => {
+          if (map[mj.name] !== stationId || seen[mj.name]) return;
+          seen[mj.name] = true;
+          hits.push(mj);
+        });
+      });
+      let body;
+      if (off) {
+        body = `<p class="why off"><b>${esc(t("unis.none"))}.</b> ${esc(t("unis.none.tip"))}</p>`;
+      } else {
+        const teach = el.dataset.faculty ? `<p class="why"><b>${esc(t("uni.teaches"))}.</b> ${esc(el.dataset.faculty)}</p>` : "";
+        const majHtml = hits.length
+          ? `<ul class="maj-list">${hits.map((mj) =>
+              `<li><b>${esc(mj.name)}</b><span>${esc(zh() ? (mj.kidZh || mj.kid) : mj.kid)}</span></li>`
+            ).join("")}</ul>`
+          : "";
+        body = `${teach}${majHtml}`;
+      }
       tip.innerHTML = `<b>${esc(uni.name)}</b>
         <p>${esc(uniIntro(id))}</p>
-        <p class="why"><b>${esc(t("uni.why"))}.</b> ${esc(uniEvidence(id, uni.evidence))}</p>
-        ${teachLine}`;
+        ${body}`;
     }
     function placeUniTip(el) {
       const tip = document.getElementById("uniTip");
@@ -1745,12 +1786,15 @@
       const r = el.getBoundingClientRect();
       const tw = tip.offsetWidth;
       const th = tip.offsetHeight;
-      let left = r.left;
-      let top = r.top - th - 10;
-      if (top < 8) top = r.bottom + 10;
-      if (left + tw > window.innerWidth - 8) left = window.innerWidth - tw - 8;
-      if (left < 8) left = 8;
-      if (top + th > window.innerHeight - 8) top = Math.max(8, window.innerHeight - th - 8);
+      const pad = 8;
+      const gap = 10;
+      let left = r.right + gap;
+      if (left + tw > window.innerWidth - pad) left = r.left - tw - gap;
+      if (left < pad) left = pad;
+      if (left + tw > window.innerWidth - pad) left = Math.max(pad, window.innerWidth - tw - pad);
+      let top = r.top;
+      if (top + th > window.innerHeight - pad) top = window.innerHeight - th - pad;
+      if (top < pad) top = pad;
       tip.style.left = left + "px";
       tip.style.top = top + "px";
     }
@@ -1784,7 +1828,7 @@
         if (!hoverPointer(e) || uniTipPinned) return;
         const from = e.target.closest && e.target.closest("[data-uni]");
         const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("[data-uni]");
-        if (from && !to) hideUniTip();
+        if (from && !to && !(e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("#uniTip"))) hideUniTip();
       });
       document.addEventListener("pointerup", (e) => {
         const el = e.target.closest && e.target.closest("[data-uni]");
@@ -1812,7 +1856,8 @@
         const to = e.relatedTarget && e.relatedTarget.closest && e.relatedTarget.closest("[data-uni]");
         if (!to) hideUniTip();
       });
-      window.addEventListener("scroll", () => {
+      window.addEventListener("scroll", (e) => {
+        if (e.target && e.target.closest && e.target.closest("#uniTip")) return;
         if (uniTipChip && uniTipChip.isConnected) placeUniTip(uniTipChip);
         else if (uniTipChip) hideUniTip();
       }, { capture: true, passive: true });
@@ -1886,6 +1931,7 @@
     });
 
     function placeStop(star, match) {
+      if (!star) return;
       let scale = 1;
       if (selected.size) {
         if (match >= 70) scale = 1.12;
@@ -1982,13 +2028,15 @@
 
     function scoreQuiz() {
       const tally = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
-      quizAnswers.forEach((letter) => { tally[letter] += 1; });
+      quizAnswers.forEach((letter) => {
+        if (tally[letter] != null) tally[letter] += 1;
+      });
       const code =
         pickLetter(tally.E, tally.I, "E", "I") +
         pickLetter(tally.S, tally.N, "S", "N") +
         pickLetter(tally.T, tally.F, "T", "F") +
         pickLetter(tally.J, tally.P, "J", "P");
-      return { code, tally, profile: PATHS[code] };
+      return { code, tally, profile: PATHS[code] || PATHS.ISTJ };
     }
 
     function bump(map, ids, w) {
@@ -2029,6 +2077,7 @@
     }
 
     function resetScan() {
+      QUIZ = (window.MejorQuiz && MejorQuiz.pick) ? MejorQuiz.pick(QUIZ_N) : [];
       quizIndex = 0;
       quizAnswers = [];
       schoolIndex = 0;
@@ -2087,9 +2136,14 @@
       }
 
       if (quizScreen === "q") {
+        if (!QUIZ.length) {
+          quizScreen = "like";
+          renderQuiz();
+          return;
+        }
         const q = quizLoc(quizIndex);
         quizCard.innerHTML = `
-          ${novaTalk("think", novaLead(quizIndex), t("quiz.personalityN") + (quizIndex + 1) + t("of") + QUIZ.length + t("quiz.noWrong"))}
+          ${novaTalk("think", novaLead(quizIndex), t("quiz.qN") + (quizIndex + 1) + t("of") + QUIZ.length + t("quiz.noWrong"))}
           <div class="quiz-progress"><span style="width:${scanProgress(quizIndex)}%"></span></div>
           <h2>${q.prompt}</h2>
           <div class="choices">
@@ -2103,7 +2157,7 @@
         const answer = (letter) => {
           quizAnswers[quizIndex] = letter;
           quizIndex += 1;
-          quizScreen = quizIndex >= QUIZ.length ? "schoolq" : "q";
+          quizScreen = quizIndex >= QUIZ.length ? "like" : "q";
           renderQuiz();
         };
         document.getElementById("choiceA").onclick = () => answer(q.a.letter);
@@ -2114,45 +2168,10 @@
         return;
       }
 
-      if (quizScreen === "schoolq") {
-        const q = schoolLoc(schoolIndex);
-        const step = QUIZ.length + schoolIndex;
-        quizCard.innerHTML = `
-          ${novaTalk("think", schoolIndex === 0 ? t("school.lock") : t("school.more"),
-            t("school.n") + (schoolIndex + 1) + t("of") + SCHOOL_QUIZ.length)}
-          <div class="quiz-progress"><span style="width:${scanProgress(step)}%"></span></div>
-          <h2>${q.prompt}</h2>
-          <div class="choices">
-            <button class="choice" id="choiceA" type="button"><b>A · ${q.a.title}</b>${q.a.text}</button>
-            <button class="choice" id="choiceB" type="button"><b>B · ${q.b.title}</b>${q.b.text}</button>
-          </div>
-          <div class="modal-actions">
-            <button class="ghost" id="backQBtn" type="button">${t("back")}</button>
-            <button class="ghost" id="skipQuizBtn" type="button">${t("skip.q")}</button>
-          </div>`;
-        const answer = (side) => {
-          schoolAnswers[schoolIndex] = side;
-          schoolIndex += 1;
-          quizScreen = schoolIndex >= SCHOOL_QUIZ.length ? "like" : "schoolq";
-          renderQuiz();
-        };
-        document.getElementById("choiceA").onclick = () => answer(q.a);
-        document.getElementById("choiceB").onclick = () => answer(q.b);
-        document.getElementById("backQBtn").onclick = () => {
-          if (schoolIndex === 0) {
-            quizIndex = QUIZ.length - 1;
-            quizScreen = "q";
-          } else schoolIndex -= 1;
-          renderQuiz();
-        };
-        document.getElementById("skipQuizBtn").onclick = hideQuiz;
-        return;
-      }
-
       if (quizScreen === "like" || quizScreen === "strong") {
         const isLike = quizScreen === "like";
         const picked = isLike ? likedSubjects : strongSubjects;
-        const step = QUIZ.length + SCHOOL_QUIZ.length + (isLike ? 0 : 1);
+        const step = QUIZ_N + (isLike ? 0 : 1);
         quizCard.innerHTML = `
           ${novaTalk("listen", isLike ? t("like.lead") : t("strong.lead"), isLike ? t("like.meta") : t("strong.meta"))}
           <div class="quiz-progress"><span style="width:${scanProgress(step)}%"></span></div>
@@ -2174,8 +2193,8 @@
         };
         document.getElementById("backQBtn").onclick = () => {
           if (isLike) {
-            schoolIndex = SCHOOL_QUIZ.length - 1;
-            quizScreen = "schoolq";
+            quizIndex = Math.max(0, QUIZ.length - 1);
+            quizScreen = "q";
           } else quizScreen = "like";
           renderQuiz();
         };
@@ -2257,6 +2276,7 @@
     function moveStars(rank) {
       rank.forEach((row) => {
         const star = document.getElementById("star-" + row.m.id);
+        if (!star) return;
         placeStop(star, row.match);
         star.classList.toggle("hot", selected.size > 0 && row.match >= 70);
         star.classList.toggle("mid", selected.size > 0 && row.match >= 40 && row.match < 70);
@@ -2313,11 +2333,28 @@
       });
     }
 
-    function extraFacts(loc) {
+    function specificMajorsHtml(stationId) {
+      const list = (window.MejorCatalog && MejorCatalog.majorsForStation)
+        ? MejorCatalog.majorsForStation(stationId)
+        : [];
+      if (!list.length) return "";
+      const items = list.map((mj) => {
+        const line = zh() ? (mj.kidZh || mj.kid) : mj.kid;
+        return `<li><b>${esc(mj.name)}</b><span>${esc(line)}</span></li>`;
+      }).join("");
+      return `<div class="fact specific" data-nova-stop="specific">
+          <b>${t("fact.specific")}</b>
+          <p class="specific-note">${t("fact.specific.p")}</p>
+          <ul class="maj-list">${items}</ul>
+        </div>`;
+    }
+
+    function extraFacts(loc, stationId) {
       return `
         <div class="facts" data-nova-stop="facts" style="margin-top:8px">
           ${loc.now ? `<div class="fact now" data-nova-stop="now"><b>${t("fact.now")}</b>${loc.now}</div>` : ""}
           ${loc.mean ? `<div class="fact"><b>${t("fact.mean")}</b>${loc.mean}</div>` : ""}
+          ${stationId ? specificMajorsHtml(stationId) : ""}
           <div class="fact"><b>${t("fact.study")}</b>${loc.learn}</div>
           <div class="fact"><b>${t("fact.need")}</b>${loc.need}</div>
           ${loc.unlike ? `<div class="fact"><b>${t("fact.unlike")}</b>${loc.unlike}</div>` : ""}
@@ -2334,7 +2371,7 @@
       const loc = majorLoc(m);
       const chips = allChips(m);
       return `
-        ${extraFacts(loc)}
+        ${extraFacts(loc, m.id)}
         ${uniNotesHtml()}
         ${sectorButtons()}
         <div class="chips">${chips}</div>`;
@@ -2380,7 +2417,7 @@
         <div class="lock-banner">${label} · ${t("lock.ticket")}</div>
         <h2 data-nova-stop="name">${loc.name}</h2>
         <div class="match-row" data-nova-stop="match">${ringSvg(match)}<p class="blurb">${loc.blurb}</p></div>
-        ${extraFacts(loc)}
+        ${extraFacts(loc, major.id)}
         ${uniNotesHtml()}
         ${sectorButtons()}
         <div class="chips">${allChips(major)}</div>`;
@@ -2446,6 +2483,7 @@
           document.querySelector("#briefing [data-nova-stop='match']"),
           document.querySelector("#briefing [data-nova-stop='now']") || document.querySelector("#briefing [data-nova-stop='facts']"),
           document.querySelector("#briefing [data-nova-stop='schools']"),
+          document.getElementById("searchMajor") || document.querySelector("[data-nova-stop='search']"),
           document.querySelector(".star:not(.lock)") || document.querySelector(".star.hot") || document.querySelector(".star")
         ];
         const i = Math.max(0, Math.min(novaTour, stops.length - 1));
@@ -2487,6 +2525,7 @@
           ["guide.match", "guide.where.match"],
           ["guide.facts", "guide.where.facts"],
           ["guide.schools", "guide.where.schools"],
+          ["guide.search", "guide.where.search"],
           ["guide.nextStation", "guide.where.next"],
           ["guide.luck", "guide.where.luck"]
         ];
@@ -2646,7 +2685,7 @@
       if (!tutorial.classList.contains("hide")) return;
       if (!lockedId || !selected.size) return;
       if (e.button != null && e.button !== 0) return;
-      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], #helpBtn, #retakeBtn, #clearBtn, #printStub, #scanBtn, .ticket-tools")) return;
+      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], #helpBtn, #retakeBtn, #clearBtn, #printStub, #scanBtn, .ticket-tools, #searchMajor, .search-btn")) return;
       if (e.target.closest(".star, .card[data-id], .like")) return;
       novaTour = Math.min(novaTour + 1, NOVA_OPEN_STEPS - 1);
       updateNovaGuide();

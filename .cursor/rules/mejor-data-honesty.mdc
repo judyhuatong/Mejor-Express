@@ -1,0 +1,34 @@
+---
+description: Keep Mejor copy, map stations, and official titles in sync. Do not invent majors.
+alwaysApply: true
+---
+
+# Mejor data honesty
+
+Live counts come from data, not from memory. As of Aug 2026: **4 lines, 25 stations, 15 universities, 139 official UG titles**.
+
+## Copy must match the map
+
+- Ticket / tagline / meta / gloss must use **25 stations**, never leftover “14 stations” or “21 subjects”.
+- Explorer hardcoded `MAJORS` is only 14; `catalog.js` `EXTRA` adds the rest. Count stations from `LINES` stops after `MejorCatalog.apply`, not from the first array.
+- If you add or remove a station, update EN + ZH i18n **and** the HTML fallback text in the same change.
+
+```html
+<!-- BAD -->
+<p data-i18n="tagline">Four lines. Fourteen stations.</p>
+<!-- GOOD -->
+<p data-i18n="tagline">Four lines. Twenty-five stations.</p>
+```
+
+## Official names only
+
+- Do not invent major titles. Use names from university pages.
+- Skip Year Abroad / MSci twins and most joint honours unless asked.
+- Attach titles only to faculty names that already exist in `catalog.js`.
+- Every catalog title needs a `search-facts.js` card plus 3 EN + 3 ZH examples in `search-examples.js`.
+
+## i18n and JS-painted UI
+
+- `MejorI18n.apply()` sets `textContent` on `[data-i18n]`. Never nest HTML inside those nodes.
+- Language toggle must also refresh JS-painted bits: star names, quiz, search example chips, search results.
+- `unisFor` prefers a faculty that actually lists the official title (`named[0]`) over a tagged-only faculty.

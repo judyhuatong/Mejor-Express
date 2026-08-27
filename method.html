@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="How Mejor’s match score, university set, and faculty names were made. Honest limits, sources, and privacy." />
+  <meta name="description" content="How Mejor’s match score, university set, and official major names were made. Honest limits, sources, and privacy." />
   <meta name="theme-color" content="#1c2822" />
   <title>Mejor · How this was made</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
@@ -42,7 +42,9 @@
     html[lang="zh-Hans"] .lang-btn,
     html[lang="zh-Hans"] .kicker,
     html[lang="zh-Hans"] footer,
-    html[lang="zh-Hans"] .play {
+    html[lang="zh-Hans"] .play,
+    html[lang="zh-Hans"] .search-btn,
+    html[lang="zh-Hans"] nav a.search-btn {
       letter-spacing: 0.04em;
       text-transform: none;
     }
@@ -89,6 +91,21 @@
       transition: background 0.15s ease;
     }
     nav a.ghost:hover { background: rgba(239, 228, 204, 0.08); }
+    nav a.search-btn {
+      color: var(--desk);
+      background: #efe4cc;
+      border: 1.5px solid #efe4cc;
+      padding: 13px 22px;
+      min-height: 48px;
+      font-weight: 800;
+      font-size: 1.02rem;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      border-radius: 2px;
+      box-shadow: 0 3px 0 #c4b79a;
+    }
+    nav a.search-btn:hover { filter: brightness(1.06); }
     .paper {
       position: relative;
       background: var(--ivory);
@@ -146,6 +163,19 @@
       transition: filter 0.15s ease, background 0.15s ease;
     }
     .play { background: var(--red); color: #f4ead6; border-color: var(--red); }
+    .search-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 16px 28px;
+      min-height: 52px;
+      text-decoration: none; font-weight: 800; font-size: 1.12rem;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      border: 1.5px solid var(--logic); color: #f4ead6;
+      background: var(--logic);
+      border-radius: 2px;
+      box-shadow: 0 4px 0 #1e3f36, 0 10px 22px rgba(47, 93, 80, 0.32);
+      transition: filter 0.15s ease;
+    }
+    .search-btn:hover { filter: brightness(1.1); }
     .ghost-btn { background: transparent; }
     .play:hover { filter: brightness(1.08); }
     .ghost-btn:hover { background: rgba(26,26,24,0.05); }
@@ -167,6 +197,7 @@
       <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
       <div class="nav-end">
         <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <a class="search-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
       </div>
@@ -192,7 +223,7 @@
       </article>
       <article>
         <b data-i18n="method.schools.t">Where the schools come from</b>
-        <p data-i18n="method.schools.p">Fifteen universities from the QS World University Rankings 2026 Top 100, plus notes on Chinese-student presence (HESA / SEVIS / Go8). Faculty names come from each university’s official structure. We do not invent a faculty. If a school does not officially teach a major here, it still appears, faded. Example: UIUC has no medical school in this set.</p>
+        <p data-i18n="method.schools.p">The same 15 universities (QS 2026 Top 100, plus Chinese-student notes). Tap a school to see official faculty names, then official major / subject names under each one, with a one-line meaning for age 14. We do not invent a faculty. We do not copy every course variant (UCL has 400+ titles, including Year Abroad twins). If a school does not teach a subject, it stays faded. Example: UIUC has no medical school.</p>
       </article>
       <article>
         <b data-i18n="method.abroad.t">Overseas schools, not “best for you”</b>
@@ -204,7 +235,7 @@
       </article>
       <article>
         <b data-i18n="method.nova.t">What Nova is</b>
-        <p data-i18n="method.nova.p">Nova asks an MBTI-style set of questions, then school likes vs strengths. It is not an official MBTI test and not a final label. You can skip it and choose likes yourself. You can change likes on the map at any time.</p>
+        <p data-i18n="method.nova.p">Nova asks 20 school questions drawn from a bank of 200 (how you work in class, not personality), then subjects you like versus subjects you’re strong at. The four-letter working-style code is a class label, not an official MBTI test. You can skip and choose likes yourself. You can change likes on the map at any time.</p>
       </article>
       <article>
         <b data-i18n="method.not.t">What this is not</b>
@@ -217,13 +248,14 @@
 
       <div class="cta">
         <a class="play" href="explorer.html?skip=1" data-i18n="method.cta">Open the line map</a>
+        <a class="search-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
         <a class="ghost-btn" href="index.html" data-i18n="nav.home">Home</a>
       </div>
     </main>
 
     <footer>
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p data-i18n="updated">Updated 15 Aug 2026</p>
+      <p data-i18n="updated">Updated 27 Aug 2026</p>
     </footer>
   </div>
   <script src="i18n.js"></script>

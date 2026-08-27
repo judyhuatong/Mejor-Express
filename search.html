@@ -1,0 +1,561 @@
+<!DOCTYPE html>
+<html lang="en" data-title="title.search" data-desc="meta.search">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Search a university major even if you misspell it. Precise definition, what not to mix it up with, and which of 15 schools teach it." />
+  <meta name="theme-color" content="#1c2822" />
+  <title>Mejor · Search a major</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script>
+    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;600;700&family=Source+Sans+3:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --desk: #1c2822;
+      --ivory: #f4ead6;
+      --ink: #1a1a18;
+      --red: #b42318;
+      --muted: #5c564c;
+      --logic: #2f5d50;
+      --line: #c4b79a;
+      --serif: "Fraunces", Georgia, "Times New Roman", serif;
+      --sans: "Source Sans 3", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; min-height: 100%; }
+    html { -webkit-text-size-adjust: 100%; }
+    body {
+      font-family: var(--sans);
+      color: var(--ink);
+      -webkit-font-smoothing: antialiased;
+      background:
+        repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
+        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+      min-height: 100vh;
+    }
+    ::selection { background: #d5e6df; color: var(--ink); }
+    html[lang="zh-Hans"] body { font-family: "Source Sans 3", "Microsoft YaHei", "PingFang SC", sans-serif; }
+    html[lang="zh-Hans"] nav a.ghost,
+    html[lang="zh-Hans"] .lang-btn,
+    html[lang="zh-Hans"] .kicker,
+    html[lang="zh-Hans"] footer,
+    html[lang="zh-Hans"] .play,
+    html[lang="zh-Hans"] .chip,
+    html[lang="zh-Hans"] .type-tag {
+      letter-spacing: 0.04em;
+      text-transform: none;
+    }
+    .skip {
+      position: absolute; left: 16px; top: -48px; z-index: 80;
+      background: var(--ivory); color: var(--ink);
+      padding: 8px 12px; font-weight: 700; text-decoration: none;
+      border: 1.5px solid var(--ink);
+    }
+    .skip:focus { top: 12px; }
+    :focus-visible { outline: 2px solid #efe4cc; outline-offset: 3px; }
+    .wrap { max-width: 880px; margin: 0 auto; padding: 28px 18px 72px; }
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 28px; color: #efe4cc;
+    }
+    .nav-end { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .lang-btn {
+      appearance: none; cursor: pointer; font: inherit;
+      color: #efe4cc; background: transparent;
+      border: 1px solid rgba(239, 228, 204, 0.45);
+      padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.06em;
+      transition: background 0.15s ease;
+    }
+    .lang-btn:hover { background: rgba(239, 228, 204, 0.08); }
+    .logo {
+      display: flex; align-items: center; gap: 10px;
+      text-decoration: none; color: #efe4cc;
+      font-weight: 600; letter-spacing: 0.16em; font-size: 0.78rem;
+    }
+    .mark {
+      width: 28px; height: 28px;
+      border: 1.5px solid #efe4cc;
+      transform: rotate(45deg);
+      display: grid; place-items: center;
+    }
+    .mark span { transform: rotate(-45deg); display: block; font-size: 0.72rem; font-weight: 700; }
+    nav a.ghost {
+      color: #efe4cc; text-decoration: none;
+      border: 1px solid rgba(239, 228, 204, 0.45);
+      padding: 8px 14px; font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      transition: background 0.15s ease;
+    }
+    nav a.ghost:hover { background: rgba(239, 228, 204, 0.08); }
+    .paper {
+      position: relative;
+      background: var(--ivory);
+      padding: 28px 32px 28px 28px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+      overflow: hidden;
+    }
+    .paper::after {
+      content: "";
+      position: absolute;
+      top: 0; right: 0;
+      border-style: solid;
+      border-width: 0 22px 22px 0;
+      border-color: transparent var(--desk) transparent transparent;
+      filter: drop-shadow(-1.5px 1.5px 0 #c4b79a);
+      pointer-events: none;
+    }
+    .kicker {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--logic); font-weight: 700; margin: 0 0 8px;
+    }
+    h1 {
+      font-family: var(--serif);
+      font-size: clamp(1.8rem, 4vw, 2.5rem);
+      margin: 0 0 10px; font-weight: 500; line-height: 1.12;
+    }
+    .lead { margin: 0 0 18px; font-size: 1.05rem; line-height: 1.55; color: var(--muted); }
+    #q {
+      width: 100%;
+      font: inherit;
+      font-size: 1.12rem;
+      padding: 14px 16px;
+      border: 1.5px solid var(--ink);
+      background: #fff;
+      color: var(--ink);
+      border-radius: 2px;
+    }
+    .hint { margin: 8px 0 0; font-size: 0.86rem; color: var(--muted); }
+    .chips { display: flex; flex-wrap: wrap; gap: 8px; margin: 14px 0 0; }
+    .chip {
+      appearance: none; cursor: pointer; font: inherit;
+      background: #fff; border: 1px solid var(--line);
+      padding: 6px 10px; font-size: 0.82rem; font-weight: 600;
+      color: var(--ink);
+    }
+    .chip:hover { border-color: var(--ink); }
+    .layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr);
+      gap: 16px;
+      margin-top: 20px;
+    }
+    @media (min-width: 800px) {
+      .layout { grid-template-columns: 280px minmax(0, 1fr); align-items: start; }
+    }
+    .results { display: grid; gap: 6px; }
+    .hit {
+      text-align: left;
+      width: 100%;
+      font: inherit;
+      cursor: pointer;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 10px 12px;
+      border-radius: 2px;
+    }
+    .hit:hover, .hit.on { border-color: var(--logic); background: #e7efe9; }
+    .hit b { display: block; font-size: 0.95rem; }
+    .hit span { display: block; font-size: 0.78rem; color: var(--muted); margin-top: 2px; }
+    .type-tag {
+      font-size: 0.68rem; letter-spacing: 0.08em; text-transform: uppercase;
+      font-weight: 700; color: var(--logic);
+    }
+    .card h2 {
+      font-family: var(--serif);
+      font-size: 1.55rem;
+      margin: 0 0 6px; font-weight: 600;
+    }
+    .fact {
+      background: #fff;
+      border: 1px solid var(--line);
+      border-radius: 2px;
+      padding: 12px 14px;
+      margin: 0 0 8px;
+    }
+    .fact b {
+      display: block;
+      font-size: 0.72rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: var(--logic);
+      margin-bottom: 4px;
+    }
+    html[lang="zh-Hans"] .fact b { letter-spacing: 0.04em; text-transform: none; }
+    .fact p { margin: 0; line-height: 1.55; }
+    .fact p + p { margin-top: 8px; }
+    .fact ul.ex {
+      margin: 8px 0 0;
+      padding: 0 0 0 1.15em;
+    }
+    .fact ul.ex li {
+      margin: 0 0 8px;
+      line-height: 1.45;
+    }
+    .fact ul.ex li:last-child { margin-bottom: 0; }
+    .fact.examples { border-left: 6px solid var(--logic); }
+    .fact.warn { border-color: #c48a2a; }
+    .schools { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 6px; }
+    .school {
+      font-size: 0.78rem;
+      border: 1px solid var(--line);
+      padding: 4px 8px;
+      background: #fff;
+    }
+    .cta { margin-top: 14px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .play, .ghost-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 11px 16px;
+      text-decoration: none; font-weight: 700; font-size: 0.88rem;
+      letter-spacing: 0.08em; text-transform: uppercase;
+      border: 1.5px solid var(--ink); color: var(--ink);
+      border-radius: 2px;
+    }
+    .play { background: var(--red); color: #f4ead6; border-color: var(--red); }
+    .ghost-btn { background: transparent; }
+    .empty { color: var(--muted); margin: 0; }
+    footer {
+      margin-top: 28px;
+      color: rgba(239, 228, 204, 0.7);
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    footer p { margin: 0 0 8px; }
+    footer a { color: #efe4cc; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#q" data-i18n="skip">Skip to content</a>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
+      <div class="nav-end">
+        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
+        <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
+      </div>
+    </nav>
+
+    <main class="paper">
+      <p class="kicker" data-i18n="search.kicker">Search station</p>
+      <h1 data-i18n="search.h1">Don’t know the name? Look it up.</h1>
+      <p class="lead" data-i18n="search.lead">Type a major even if you misspell it. Example: “chanical engineering” still finds Mechanical Engineering. You get a longer meaning, clear examples, what not to mix it up with, and which of these 15 schools teach it.</p>
+
+      <label class="kicker" for="q" data-i18n="search.label">Search</label>
+      <input id="q" type="search" autocomplete="off" spellcheck="false" />
+      <p class="hint" data-i18n="search.hint">Typos are OK. Short names work: AI, mech eng, 心理学.</p>
+      <div class="chips" id="examples"></div>
+
+      <div class="layout">
+        <div>
+          <p class="kicker" id="resultLabel" data-i18n="search.results">Matches</p>
+          <div class="results" id="results"></div>
+        </div>
+        <div id="detail"></div>
+      </div>
+    </main>
+
+    <footer>
+      <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
+      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="search.limit">Not every Year Abroad twin. Not a full prospectus.</span></p>
+    </footer>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="catalog.js"></script>
+  <script src="catalog-majors.js"></script>
+  <script src="search-facts.js"></script>
+  <script src="search-examples.js"></script>
+  <script>
+    const UNI = {
+      ucl: "UCL", melbourne: "Melbourne", unsw: "UNSW", sydney: "Sydney",
+      toronto: "Toronto", edinburgh: "Edinburgh", manchester: "Manchester",
+      kcl: "King’s", columbia: "Columbia", ubc: "UBC", nyu: "NYU",
+      uiuc: "UIUC", glasgow: "Glasgow", southampton: "Southampton", sheffield: "Sheffield"
+    };
+    function exampleChips() {
+      return zh()
+        ? ["机械工程", "人工智能", "心理学", "法学"]
+        : ["Mechanical Engineering", "Artificial Intelligence", "Psychology", "Law"];
+    }
+
+    function t(key) { return MejorI18n.t(key); }
+    function zh() { return MejorI18n.getLang() === "zh"; }
+    function esc(s) {
+      return String(s || "").replace(/[&<>"']/g, (c) =>
+        ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c])
+      );
+    }
+    function norm(s) {
+      return String(s || "").toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").trim();
+    }
+    function lev(a, b) {
+      if (a === b) return 0;
+      if (!a) return b.length;
+      if (!b) return a.length;
+      if (Math.abs(a.length - b.length) > 4) return 99;
+      const m = [];
+      for (let i = 0; i <= b.length; i++) m[i] = [i];
+      for (let j = 0; j <= a.length; j++) m[0][j] = j;
+      for (let i = 1; i <= b.length; i++) {
+        for (let j = 1; j <= a.length; j++) {
+          m[i][j] = Math.min(
+            m[i - 1][j] + 1,
+            m[i][j - 1] + 1,
+            m[i - 1][j - 1] + (b[i - 1] === a[j - 1] ? 0 : 1)
+          );
+        }
+      }
+      return m[b.length][a.length];
+    }
+    function tokenHit(q, h) {
+      if (!q || !h) return false;
+      if (q === h) return true;
+      if (q.length <= 2 || h.length <= 2) return false;
+      if (h.includes(q)) return true;
+      if (q.length >= 4 && h.length >= 4 && q.includes(h)) return true;
+      const allow = Math.max(1, Math.floor(Math.min(q.length, h.length) / 4));
+      return lev(q, h) <= allow;
+    }
+    function compact(s) { return norm(s).replace(/ /g, ""); }
+    function fillerGone(s) {
+      return norm(s).replace(/\b(pretend|example|what|is|the|a|an|for|like|please)\b/g, " ");
+    }
+
+    const index = [];
+    function buildIndex() {
+      index.length = 0;
+      const facts = (window.MejorSearchFacts && MejorSearchFacts.majors) || {};
+      const stations = (window.MejorSearchFacts && MejorSearchFacts.stations) || {};
+      const cat = window.MejorCatalog;
+      Object.keys(stations).forEach((id) => {
+        const st = stations[id];
+        index.push({
+          kind: "station",
+          id,
+          name: st.name,
+          nameZh: st.nameZh,
+          aliases: st.aliases || [],
+          hay: [st.name, st.nameZh].concat(st.aliases || []).join(" ")
+        });
+      });
+      if (!cat || !cat.majorsForStation) return;
+      Object.keys(stations).forEach((id) => {
+        (cat.majorsForStation(id) || []).forEach((mj) => {
+          const f = facts[mj.name] || {};
+          index.push({
+            kind: "major",
+            id,
+            name: mj.name,
+            kid: mj.kid,
+            kidZh: mj.kidZh,
+            unis: mj.unis || [],
+            aliases: f.aliases || [],
+            facts: f,
+            hay: [mj.name, mj.kid, mj.kidZh].concat(f.aliases || []).join(" ")
+          });
+        });
+      });
+      const seen = {};
+      index.forEach((r) => { if (r.kind === "major") seen[r.name] = true; });
+      Object.keys(facts).forEach((name) => {
+        if (seen[name]) return;
+        const sid = cat.stationOf && cat.stationOf[name];
+        if (!sid) return;
+        const f = facts[name];
+        index.push({
+          kind: "major",
+          id: sid,
+          name,
+          kid: "",
+          kidZh: "",
+          unis: [],
+          aliases: f.aliases || [],
+          facts: f,
+          hay: [name].concat(f.aliases || []).join(" ")
+        });
+      });
+    }
+
+    function score(query, rec) {
+      const q = fillerGone(query);
+      if (!q) return 0;
+      const name = norm(rec.name);
+      const nameZh = norm(rec.nameZh || "");
+      const hay = norm(rec.hay);
+      if (name === q || nameZh === q) return 100;
+      if ((rec.aliases || []).some((a) => norm(a) === q)) return 96;
+      if (name.startsWith(q) || nameZh.startsWith(q)) return 92;
+      if (hay.includes(q)) return 86;
+      const close = lev(compact(q), compact(rec.name));
+      if (close <= 3) return 90 - close;
+      const qt = q.split(/\s+/).filter(Boolean);
+      const ht = hay.split(/\s+/).filter(Boolean);
+      if (!qt.length) return 0;
+      let hits = 0;
+      let extra = 0;
+      qt.forEach((tok) => {
+        if (ht.some((h) => tokenHit(tok, h))) hits++;
+        if (tok.length >= 5 && ht.some((h) => h.includes(tok))) extra += 8;
+      });
+      return Math.min(94, Math.round((hits / qt.length) * 78) + extra);
+    }
+
+    function search(query) {
+      if (!norm(query)) return [];
+      return index
+        .map((rec) => ({ rec, s: score(query, rec), d: lev(compact(fillerGone(query)), compact(rec.name)) }))
+        .filter((x) => x.s >= 48)
+        .sort((a, b) => b.s - a.s || a.d - b.d || a.rec.kind.localeCompare(b.rec.kind) || a.rec.name.localeCompare(b.rec.name))
+        .slice(0, 12);
+    }
+
+    let selected = null;
+    function pickKey(rec) { return rec.kind + ":" + rec.name + ":" + rec.id; }
+
+    function renderResults(rows) {
+      const box = document.getElementById("results");
+      if (!rows.length) {
+        box.innerHTML = `<p class="empty">${esc(t("search.none"))}</p>`;
+        return;
+      }
+      box.innerHTML = rows.map(({ rec }) => {
+        const on = selected && pickKey(selected) === pickKey(rec) ? " on" : "";
+        const kind = rec.kind === "station" ? t("search.station") : t("search.major");
+        const sub = rec.kind === "station"
+          ? (zh() ? rec.name : rec.nameZh)
+          : (zh() ? rec.kidZh : rec.kid);
+        return `<button type="button" class="hit${on}" data-key="${esc(pickKey(rec))}">
+          <span class="type-tag">${esc(kind)}</span>
+          <b>${esc(zh() && rec.nameZh ? rec.nameZh : rec.name)}</b>
+          <span>${esc(sub || "")}</span>
+        </button>`;
+      }).join("");
+      box.querySelectorAll(".hit").forEach((btn, i) => {
+        btn.addEventListener("click", () => {
+          selected = rows[i].rec;
+          showDetail(selected);
+          renderResults(rows);
+        });
+      });
+    }
+
+    function factBlock(labelKey, text) {
+      if (!text) return "";
+      const paras = String(text).split(/\n\n+/).filter(Boolean);
+      return `<div class="fact"><b>${esc(t(labelKey))}</b>${paras.map((p) => `<p>${esc(p)}</p>`).join("")}</div>`;
+    }
+    function exampleBlock(list) {
+      if (!list || !list.length) return "";
+      return `<div class="fact examples"><b>${esc(t("search.examples"))}</b><ul class="ex">${list.map((e) => `<li>${esc(e)}</li>`).join("")}</ul></div>`;
+    }
+
+    function showDetail(rec) {
+      const el = document.getElementById("detail");
+      if (!rec) {
+        el.innerHTML = `<p class="empty">${esc(t("search.empty"))}</p>`;
+        return;
+      }
+      const st = MejorSearchFacts.stations[rec.id] || {};
+      const stName = zh() ? (st.nameZh || st.name) : st.name;
+      if (rec.kind === "station") {
+        const majors = (MejorCatalog.majorsForStation(rec.id) || []).map((m) => m.name);
+        el.innerHTML = `
+          <span class="type-tag">${esc(t("search.station"))}</span>
+          <h2>${esc(zh() ? rec.nameZh : rec.name)}</h2>
+          ${factBlock("search.precise", zh()
+            ? "地图上的大站点，不是一张录取通知书。点开后可以看到下面这些官方专业名。\n\n例如：Computer Science 站点下面可能有人工智能、网络安全、软件工程；Engineering 站点下面可能有机械、土木、海事工程。"
+            : "A broad station on the map — not an offer letter. Open it to see the official major names under it.\n\nExample: the Computer Science station may list Artificial Intelligence, Cyber Security, and Software Engineering. The Engineering station may list Mechanical, Civil, and Maritime Engineering.")}
+          ${factBlock("search.under", majors.join(" · "))}
+          <div class="cta">
+            <a class="play" href="explorer.html?skip=1#${esc(rec.id)}">${esc(t("search.open"))}</a>
+          </div>`;
+        return;
+      }
+      const f = rec.facts || {};
+      const precise = zh() ? (f.preciseZh || rec.kidZh) : (f.precise || rec.kid);
+      const unlike = zh() ? f.unlikeZh : f.unlike;
+      const study = zh() ? f.studyZh : f.study;
+      const path = zh() ? f.pathZh : f.path;
+      const examples = zh() ? (f.examplesZh || f.examples) : (f.examples || f.examplesZh);
+      const simple = zh() ? rec.kidZh : rec.kid;
+      const schools = (rec.unis || []).map((id) => UNI[id] || id);
+      el.innerHTML = `
+        <span class="type-tag">${esc(t("search.major"))} · ${esc(stName || rec.id)}</span>
+        <h2>${esc(rec.name)}</h2>
+        ${factBlock("search.simple", simple)}
+        ${factBlock("search.precise", precise)}
+        ${exampleBlock(examples)}
+        ${factBlock("search.unlike", unlike)}
+        ${factBlock("search.study", study)}
+        ${factBlock("search.path", path)}
+        <div class="fact ${schools.length ? "" : "warn"}">
+          <b>${esc(t("search.schools"))}</b>
+          ${schools.length
+            ? `<p>${esc(t("search.schools.n").replace("{n}", String(schools.length)))}</p><div class="schools">${schools.map((s) => `<span class="school">${esc(s)}</span>`).join("")}</div>`
+            : `<p>${esc(t("search.schools.none"))}</p>`}
+        </div>
+        <div class="cta">
+          <a class="play" href="explorer.html?skip=1#${esc(rec.id)}">${esc(t("search.open"))}</a>
+        </div>`;
+    }
+
+    function run() {
+      const q = document.getElementById("q").value;
+      const rows = search(q);
+      if (q.trim() && rows.length) {
+        const keep = selected && rows.some((r) => pickKey(r.rec) === pickKey(selected));
+        if (!keep) selected = rows[0].rec;
+      } else if (!q.trim()) {
+        selected = null;
+      }
+      renderResults(q.trim() ? rows : []);
+      showDetail(q.trim() ? selected : null);
+      const url = new URL(location.href);
+      if (q.trim()) url.searchParams.set("q", q.trim());
+      else url.searchParams.delete("q");
+      history.replaceState(null, "", url);
+    }
+
+    function paintExamples() {
+      document.getElementById("examples").innerHTML = exampleChips().map((x) =>
+        `<button type="button" class="chip">${esc(x)}</button>`
+      ).join("");
+      document.querySelectorAll("#examples .chip").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          document.getElementById("q").value = btn.textContent;
+          run();
+          document.getElementById("q").focus();
+        });
+      });
+    }
+
+    function ready() {
+      MejorI18n.apply();
+      MejorI18n.bindToggles();
+      document.getElementById("q").placeholder = t("search.placeholder");
+      buildIndex();
+      paintExamples();
+      const start = new URLSearchParams(location.search).get("q") || "";
+      document.getElementById("q").value = start;
+      document.getElementById("q").addEventListener("input", run);
+      document.addEventListener("mejor-lang", () => {
+        MejorI18n.apply();
+        document.getElementById("q").placeholder = t("search.placeholder");
+        paintExamples();
+        run();
+      });
+      if (start) run();
+      else showDetail(null);
+      document.getElementById("q").focus();
+    }
+    ready();
+  </script>
+</body>
+</html>
