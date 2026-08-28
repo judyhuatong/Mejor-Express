@@ -159,7 +159,7 @@
     const results = document.getElementById("results");
 
     function t(key) { return MejorI18n.t(key); }
-    function zh() { return MejorI18n.lang() === "zh"; }
+    function zh() { return MejorI18n.getLang() === "zh"; }
     function esc(s) {
       return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
     }
@@ -182,7 +182,7 @@
     function searchBlob(id) {
       const uni = UNI[id];
       const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
-      const bits = [uni.name, uni.short, uni.country, uniIntro(id), uni.evidence];
+      const bits = [id, uni.name, uni.short, uni.country, uniIntro(id), uni.evidence];
       facs.forEach((f) => {
         bits.push(f.name, f.kid, f.kidZh);
         (f.majors || []).forEach((m) => bits.push(m.name, m.kid, m.kidZh));

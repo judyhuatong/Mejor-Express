@@ -206,7 +206,7 @@
     .skip:focus { top: 12px; }
     :focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
     .lang-btn:focus-visible, nav a.ghost:focus-visible, nav a.search-btn:focus-visible,
-    .play:focus-visible, .ghost-btn:focus-visible, .search-btn:focus-visible {
+    .play:focus-visible, .ghost-btn:focus-visible, .search-btn:focus-visible, .uni-search-btn:focus-visible {
       outline: 2px solid var(--world); outline-offset: 3px;
     }
 
@@ -340,6 +340,27 @@
       font-weight: 500;
     }
     .ghost-btn:hover { background: rgba(255, 255, 255, 0.06); }
+    .cta .uni-search-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      border-radius: 999px;
+      min-height: 52px;
+      min-width: min(100%, 280px);
+      padding: 12px 24px;
+      font: inherit;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: #f4ead6;
+      color: var(--ink);
+      border: 0;
+      box-shadow: 0 4px 18px rgba(0, 0, 0, 0.22);
+    }
+    .cta .uni-search-btn:hover { filter: brightness(1.06); }
+    html[lang="zh-Hans"] .cta .uni-search-btn { letter-spacing: 0.04em; text-transform: none; }
 
     footer {
       text-align: center;
@@ -354,7 +375,7 @@
       .wrap { padding: 16px 16px 28px; }
       nav { flex-direction: column; align-items: flex-start; }
       .cta { flex-direction: column; }
-      .play, .ghost-btn, .cta .search-btn { width: 100%; }
+      .play, .ghost-btn, .cta .search-btn, .cta .uni-search-btn { width: 100%; }
     }
     @media (prefers-reduced-motion: reduce) {
       .blob, .starfield, .space-nebula, .stage-map { animation: none; }
@@ -399,6 +420,7 @@
         <button class="lang-btn" type="button" data-lang-toggle>中文</button>
         <button class="lang-btn" type="button" data-nova-toggle>Turn Nova off</button>
         <a class="search-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
+        <a class="ghost" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
         <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
       </div>
@@ -411,6 +433,7 @@
         <div class="cta">
           <a class="play" id="startNova" href="explorer.html?nova=1" data-i18n="cta.play">Start with Nova</a>
           <a class="search-btn" id="searchMajor" href="search.html" data-i18n="nav.search">Search for a major</a>
+          <a class="uni-search-btn" id="searchUnis" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
           <a class="ghost-btn" href="explorer.html?skip=1" data-i18n="cta.skip">Skip to the line map</a>
         </div>
       </div>
@@ -418,7 +441,7 @@
 
     <footer>
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
+      <p><a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
     </footer>
   </div>
 
