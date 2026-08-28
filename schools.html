@@ -222,21 +222,30 @@
       </article>`;
     }
     function render() {
-      const q = (input.value || "").trim().toLowerCase();
-      const ids = Object.keys(UNI).sort((a, b) => UNI[a].qs - UNI[b].qs);
-      const hits = q ? ids.filter((id) => searchBlob(id).includes(q)) : ids;
-      if (!hits.length) {
-        results.innerHTML = `<p class="empty">${esc(t("schools.none"))}</p>`;
-        return;
-      }
-      results.innerHTML = hits.map(cardHtml).join("");
-      results.querySelectorAll(".uni-head").forEach((btn) => {
-        btn.addEventListener("click", () => {
-          const card = btn.closest(".uni-card");
-          const open = card.classList.toggle("open");
-          btn.setAttribute("aria-expanded", open ? "true" : "false");
+      try {
+        const q = (input.value || "").trim().toLowerCase();
+        const ids = Object.keys(UNI).sort((a, b) => UNI[a].qs - UNI[b].qs);
+        if (!ids.length) {
+          results.innerHTML = `<p class="empty">${esc(t("schools.loadFail"))}</p>`;
+          return;
+        }
+        const hits = q ? ids.filter((id) => searchBlob(id).includes(q)) : ids;
+        if (!hits.length) {
+          results.innerHTML = `<p class="empty">${esc(t("schools.none"))}</p>`;
+          return;
+        }
+        results.innerHTML = hits.map(cardHtml).join("");
+        results.querySelectorAll(".uni-head").forEach((btn) => {
+          btn.addEventListener("click", () => {
+            const card = btn.closest(".uni-card");
+            const open = card.classList.toggle("open");
+            btn.setAttribute("aria-expanded", open ? "true" : "false");
+          });
         });
-      });
+      } catch (err) {
+        console.error("Mejor schools search failed:", err);
+        results.innerHTML = `<p class="empty">${esc(t("schools.loadFail"))}</p>`;
+      }
     }
     input.addEventListener("input", render);
     function refreshPlaceholders() {
@@ -247,6 +256,7 @@
       render();
     });
     MejorI18n.apply();
+    MejorI18n.bindToggles();
     refreshPlaceholders();
     render();
   </script>
