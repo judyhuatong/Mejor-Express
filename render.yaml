@@ -1,0 +1,11 @@
+# One-click deploy on Render (https://render.com)
+# New Web Service → Connect repo → Render reads this file.
+services:
+  - type: web
+    name: mejor-express
+    runtime: python
+    buildCommand: pip install -r backend/requirements.txt
+    startCommand: python backend/server.py
+    envVars:
+      - key: PYTHON_VERSION
+        value: "3.12.8"

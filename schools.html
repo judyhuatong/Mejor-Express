@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en" data-title="title.schools" data-desc="meta.schools">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Search 15 QS Top-100 overseas universities popular with Chinese international students. Official faculties and undergraduate major names." />
+  <meta name="theme-color" content="#1c2822" />
+  <title>Mejor · Search universities</title>
+  <link rel="icon" href="favicon.svg" type="image/svg+xml" />
+  <script>
+    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --desk: #1c2822;
+      --ivory: #f4ead6;
+      --ink: #1a1a18;
+      --red: #b42318;
+      --muted: #5c564c;
+      --logic: #2f5d50;
+      --line: #c4b79a;
+      --sans: "Manrope", "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    }
+    * { box-sizing: border-box; }
+    html, body, button, input { font-family: var(--sans); margin: 0; min-height: 100%; }
+    body {
+      color: var(--ink);
+      background:
+        repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
+        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+    }
+    .wrap { max-width: 920px; margin: 0 auto; padding: 28px 18px 72px; }
+    nav {
+      display: flex; justify-content: space-between; align-items: center;
+      gap: 12px; margin-bottom: 28px; color: #efe4cc; flex-wrap: wrap;
+    }
+    .nav-end { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .logo, nav a.ghost, .lang-btn {
+      color: #efe4cc; text-decoration: none; font-weight: 600; font-size: 0.85rem;
+      letter-spacing: 0.06em; text-transform: uppercase;
+    }
+    .logo { display: flex; align-items: center; gap: 10px; font-size: 0.78rem; }
+    .mark {
+      width: 28px; height: 28px; border: 1.5px solid #efe4cc;
+      transform: rotate(45deg); display: grid; place-items: center;
+    }
+    .mark span { transform: rotate(-45deg); font-size: 0.72rem; font-weight: 700; }
+    nav a.ghost, .lang-btn {
+      border: 1px solid rgba(239, 228, 204, 0.45); padding: 8px 14px; background: transparent;
+      cursor: pointer; font: inherit;
+    }
+    .paper {
+      background: var(--ivory); padding: 28px 32px 28px 28px;
+      box-shadow: 0 18px 40px rgba(0,0,0,0.28);
+    }
+    .kicker {
+      font-size: 0.72rem; letter-spacing: 0.18em; text-transform: uppercase;
+      color: var(--logic); font-weight: 700; margin: 0 0 8px;
+    }
+    h1 { margin: 0 0 12px; font-size: clamp(1.55rem, 4vw, 2rem); line-height: 1.15; }
+    .lead { margin: 0 0 20px; line-height: 1.55; max-width: 52em; }
+    .field { margin-bottom: 10px; }
+    .field input {
+      width: 100%; padding: 14px 16px; font-size: 1.05rem;
+      border: 1.5px solid var(--ink); background: #fff; border-radius: 2px;
+    }
+    .hint { margin: 0 0 18px; color: var(--muted); font-size: 0.92rem; line-height: 1.45; }
+    .results { display: flex; flex-direction: column; gap: 12px; }
+    .uni-card {
+      border: 1.5px solid var(--line); background: #fff; border-radius: 2px;
+    }
+    .uni-head {
+      width: 100%; text-align: left; background: #fff; border: 0;
+      padding: 16px 18px; cursor: pointer; font: inherit; color: inherit;
+    }
+    .uni-head:hover { background: #faf6ee; }
+    .uni-head b { display: block; font-size: 1.08rem; margin-bottom: 4px; }
+    .uni-meta { display: flex; flex-wrap: wrap; gap: 8px 14px; font-size: 0.82rem; color: var(--muted); }
+    .uni-meta .qs { color: var(--logic); font-weight: 700; }
+    .uni-intro { margin: 8px 0 0; font-size: 0.92rem; line-height: 1.45; color: var(--ink); }
+    .uni-body {
+      display: none; padding: 0 18px 16px; border-top: 1px solid var(--line);
+    }
+    .uni-card.open .uni-body { display: block; }
+    .fac {
+      margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+    }
+    .fac:first-child { border-top: 0; margin-top: 12px; padding-top: 0; }
+    .fac b { display: block; font-size: 0.92rem; margin-bottom: 4px; }
+    .fac p { margin: 0 0 8px; font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
+    .maj-list { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
+    .maj-list li {
+      font-size: 0.78rem; border: 1px solid var(--line); padding: 4px 8px; background: #faf6ee;
+    }
+    .empty { color: var(--muted); margin: 0; }
+    .cta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
+    .play, .ghost-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      padding: 11px 16px; text-decoration: none; font-weight: 700; font-size: 0.88rem;
+      letter-spacing: 0.08em; text-transform: uppercase; border-radius: 2px;
+      border: 1.5px solid var(--ink); color: var(--ink);
+    }
+    .play { background: var(--red); color: #f4ead6; border-color: var(--red); }
+    footer { margin-top: 28px; color: rgba(239, 228, 204, 0.7); font-size: 0.8rem; }
+    footer a { color: #efe4cc; }
+    html[lang="zh-Hans"] .kicker, html[lang="zh-Hans"] nav a.ghost, html[lang="zh-Hans"] .lang-btn,
+    html[lang="zh-Hans"] .play, html[lang="zh-Hans"] .ghost-btn { letter-spacing: 0.04em; text-transform: none; }
+  </style>
+</head>
+<body>
+  <a class="skip" href="#q" style="position:absolute;left:-9999px" data-i18n="skip">Skip to content</a>
+  <div class="wrap">
+    <nav>
+      <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
+      <div class="nav-end">
+        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
+        <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
+        <a class="ghost" href="search.html" data-i18n="nav.search">Search for a major</a>
+        <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
+      </div>
+    </nav>
+
+    <main class="paper">
+      <p class="kicker" data-i18n="schools.kicker">University search</p>
+      <h1 data-i18n="schools.h1">Browse the 15 schools</h1>
+      <p class="lead" data-i18n="schools.lead">Overseas Top-100 universities many Chinese international students pick. Search by name or country, then open a school to see official faculties and major names — not invented, not a ranking.</p>
+
+      <div class="field">
+        <label class="kicker" for="q" data-i18n="schools.label">Search universities</label>
+        <input id="q" type="search" autocomplete="off" spellcheck="false" placeholder="Try UCL, Melbourne, Toronto, King’s, or 伦敦" />
+      </div>
+      <p class="hint" data-i18n="schools.hint">Short names work: NYU, UIUC, UNSW. You can also type a faculty or major name.</p>
+
+      <p class="kicker" data-i18n="schools.results">Schools</p>
+      <div class="results" id="results"></div>
+
+      <div class="cta">
+        <a class="play" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
+        <a class="ghost-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
+      </div>
+    </main>
+
+    <footer>
+      <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
+    </footer>
+  </div>
+
+  <script src="i18n.js"></script>
+  <script src="universities.js"></script>
+  <script src="catalog.js"></script>
+  <script src="catalog-majors.js"></script>
+  <script>
+    const UNI = window.MejorUniversities || {};
+    const input = document.getElementById("q");
+    const results = document.getElementById("results");
+
+    function t(key) { return MejorI18n.t(key); }
+    function zh() { return MejorI18n.lang() === "zh"; }
+    function esc(s) {
+      return String(s || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+    function uniIntro(id) {
+      const uni = UNI[id];
+      if (!uni) return "";
+      if (zh() && MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id]) return MejorI18n.DATA.uniIntro[id];
+      return uni.intro;
+    }
+    function countryLabel(c) {
+      const map = { UK: "country.UK", Australia: "country.Australia", Canada: "country.Canada", USA: "country.USA" };
+      return map[c] ? t(map[c]) : c;
+    }
+    function majorCount(id) {
+      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+      let n = 0;
+      facs.forEach((f) => { n += (f.majors || []).length; });
+      return n;
+    }
+    function searchBlob(id) {
+      const uni = UNI[id];
+      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+      const bits = [uni.name, uni.short, uni.country, uniIntro(id), uni.evidence];
+      facs.forEach((f) => {
+        bits.push(f.name, f.kid, f.kidZh);
+        (f.majors || []).forEach((m) => bits.push(m.name, m.kid, m.kidZh));
+      });
+      return bits.join(" ").toLowerCase();
+    }
+    function facultyHtml(fac) {
+      const kid = zh() ? (fac.kidZh || fac.kid) : fac.kid;
+      const majors = (fac.majors || []).map((m) =>
+        `<li title="${esc(zh() ? (m.kidZh || m.kid) : m.kid)}">${esc(m.name)}</li>`
+      ).join("");
+      return `<article class="fac">
+        <b>${esc(fac.name)}</b>
+        <p>${esc(kid)}</p>
+        ${majors ? `<ul class="maj-list">${majors}</ul>` : ""}
+      </article>`;
+    }
+    function cardHtml(id) {
+      const uni = UNI[id];
+      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+      const n = majorCount(id);
+      return `<article class="uni-card" data-id="${esc(id)}">
+        <button type="button" class="uni-head" aria-expanded="false">
+          <b>${esc(uni.name)}</b>
+          <div class="uni-meta">
+            <span class="qs">${esc(t("schools.qs"))} #${uni.qs}</span>
+            <span>${esc(countryLabel(uni.country))}</span>
+            <span>${esc(t("schools.majors.n").replace("{n}", String(n)))}</span>
+          </div>
+          <p class="uni-intro">${esc(uniIntro(id))}</p>
+          <p class="uni-meta" style="margin-top:8px"><span>${esc(t("schools.evidence"))}: ${esc(uni.evidence)}</span></p>
+        </button>
+        <div class="uni-body">
+          <p class="kicker" style="margin-top:12px">${esc(t("schools.faculties"))}</p>
+          ${facs.map(facultyHtml).join("")}
+        </div>
+      </article>`;
+    }
+    function render() {
+      const q = (input.value || "").trim().toLowerCase();
+      const ids = Object.keys(UNI).sort((a, b) => UNI[a].qs - UNI[b].qs);
+      const hits = q ? ids.filter((id) => searchBlob(id).includes(q)) : ids;
+      if (!hits.length) {
+        results.innerHTML = `<p class="empty">${esc(t("schools.none"))}</p>`;
+        return;
+      }
+      results.innerHTML = hits.map(cardHtml).join("");
+      results.querySelectorAll(".uni-head").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const card = btn.closest(".uni-card");
+          const open = card.classList.toggle("open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+        });
+      });
+    }
+    input.addEventListener("input", render);
+    function refreshPlaceholders() {
+      input.placeholder = t("schools.placeholder");
+    }
+    document.addEventListener("mejor-lang", () => {
+      refreshPlaceholders();
+      render();
+    });
+    MejorI18n.apply();
+    refreshPlaceholders();
+    render();
+  </script>
+</body>
+</html>

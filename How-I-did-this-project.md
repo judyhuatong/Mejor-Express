@@ -11,7 +11,7 @@ This is a review of **how** I made the product, not a second user manual.
 
 ## 1. What I was trying to make
 
-A first look at **university majors** for a student about **16** (age 14–18).
+A first look at **university majors** for students aged **14–16**.
 
 They already know what they like — drawing, numbers, helping people. They cannot yet name a major. At night someone asks: “What will you study?” They freeze.
 
@@ -138,7 +138,7 @@ I would **not** add more universities just to look bigger. Honesty of the 15 mat
 
 我是探头三。产品叫 Mejor express，也叫专业探索器。
 
-我先写清：给谁用、在什么时候用、痛点是什么、用完带走什么。用户是大概十六岁的高中生。他们知道喜欢什么，但说不出大学专业名字。价值是带走两三个名字，知道为什么亮，知道今年可以试什么。
+我先写清：给谁用、在什么时候用、痛点是什么、用完带走什么。用户是 14–16 岁的高中生。他们知道喜欢什么，但说不出大学专业名字。价值是带走两三个名字，知道为什么亮，知道今年可以试什么。
 
 然后我一层一层做：先能讲清的百分比，再做四条线，再放 15 所很多中国学生会去的海外大学。地图上是 **25 个站点**。站点下面是 **139 个官方专业名**。我没有自己编专业名字。学校名字变淡，是这份名单里官方不开，不是网页坏了。
 

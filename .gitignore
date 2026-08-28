@@ -2,3 +2,7 @@
 Thumbs.db
 desktop.ini
 _brief_extract.txt
+__pycache__/
+*.py[cod]
+.venv/
+venv/

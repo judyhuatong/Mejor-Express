@@ -197,6 +197,57 @@
       box-shadow: 0 3px 0 #1e3f36, 0 8px 18px rgba(47, 93, 80, 0.28);
     }
     a.search-btn:hover { filter: brightness(1.08); }
+    .uni-search-band {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px 20px;
+      margin-bottom: 14px;
+      padding: 18px 20px;
+      border: 1.5px solid var(--ink);
+      border-radius: var(--radius);
+      background: var(--panel);
+      box-shadow: var(--shadow);
+    }
+    .uni-search-band b {
+      display: block;
+      font-family: var(--serif);
+      font-size: 1.12rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+    }
+    .uni-search-band p {
+      margin: 0;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      color: var(--muted);
+      max-width: 36em;
+    }
+    a.uni-search-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      flex: 0 0 auto;
+      min-width: min(100%, 300px);
+      min-height: 56px;
+      padding: 16px 28px;
+      background: var(--ink);
+      color: #fbf8f3;
+      border: 1.5px solid var(--ink);
+      border-radius: 2px;
+      font: inherit;
+      font-weight: 800;
+      font-size: 1.12rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      text-decoration: none;
+      text-align: center;
+      box-shadow: 0 4px 0 #0c1110, 0 10px 22px rgba(12, 17, 16, 0.22);
+      transition: filter 0.15s var(--ease), transform 0.15s var(--ease);
+    }
+    a.uni-search-btn:hover { filter: brightness(1.12); transform: translateY(-1px); }
+    html[lang="zh-Hans"] a.uni-search-btn { letter-spacing: 0.04em; text-transform: none; }
     button.ghost, button.play {
       appearance: none;
       border: 1px solid var(--line);
@@ -242,10 +293,10 @@
     }
     .match-key i {
       display: inline-block;
-      width: 16px; height: 16px;
+      width: 14px; height: 14px;
       margin-right: 8px;
       vertical-align: -2px;
-      transform: rotate(45deg);
+      border-radius: 999px;
     }
     .match-key .hot { background: #2f5d50; }
     .match-key .mid { background: #e0a33a; }
@@ -338,13 +389,16 @@
 
     .stage {
       display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(280px, 0.8fr);
+      grid-template-columns: minmax(0, 1.65fr) minmax(240px, 0.75fr);
       gap: 14px;
       margin-bottom: 14px;
+      align-items: start;
     }
     .radar-wrap {
       position: relative;
-      min-height: 760px;
+      align-self: start;
+      height: auto;
+      width: 100%;
       border-radius: 2px;
       border: 1.5px solid var(--ink);
       background: var(--panel);
@@ -354,26 +408,24 @@
     }
     .metro {
       position: relative;
-      flex: 1;
+      flex: none;
       width: 100%;
       min-width: 0;
-      min-height: 0;
       display: flex;
       flex-direction: column;
-      justify-content: stretch;
-      gap: 14px;
-      padding: 20px 16px 16px;
+      justify-content: flex-start;
+      gap: 8px;
+      padding: 12px 12px 10px;
       overflow: visible;
     }
     .line-row {
       display: grid;
-      grid-template-columns: minmax(0, 168px) minmax(0, 1fr);
-      gap: 14px;
-      align-items: center;
-      flex: 1;
-      min-height: 0;
+      grid-template-columns: 1fr;
+      gap: 6px;
+      align-items: stretch;
+      flex: 0 0 auto;
       min-width: 0;
-      padding: 14px 14px 12px;
+      padding: 10px 12px 8px;
       overflow: visible;
       border: 1px solid var(--line);
       border-left: 5px solid var(--ink);
@@ -384,10 +436,16 @@
     .line-row[data-line="care"] { border-left-color: #2a7a8c; }
     .line-row[data-line="world"] { border-left-color: #c48a2a; }
     .line-row[data-line="make"] { border-left-color: #c45c3a; }
+    .line-meta {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: baseline;
+      gap: 4px 10px;
+    }
     .line-meta b {
-      display: block;
+      display: inline;
       font-family: var(--serif);
-      font-size: 1.45rem;
+      font-size: 1.2rem;
       letter-spacing: 0.04em;
       text-transform: uppercase;
       color: var(--ink);
@@ -399,11 +457,11 @@
     .line-row[data-line="world"] .line-meta b { color: #c48a2a; }
     .line-row[data-line="make"] .line-meta b { color: #c45c3a; }
     .line-meta span {
-      display: block;
-      margin-top: 6px;
-      font-size: 0.92rem;
+      display: inline;
+      margin: 0;
+      font-size: 0.88rem;
       color: var(--muted);
-      line-height: 1.4;
+      line-height: 1.35;
       font-weight: 500;
       text-transform: none;
       letter-spacing: 0;
@@ -411,36 +469,39 @@
     html[lang="zh-Hans"] .line-meta b {
       letter-spacing: 0.04em;
       text-transform: none;
-      font-size: 1.35rem;
+      font-size: 1.12rem;
     }
     .rail {
       position: relative;
       display: flex;
       flex-wrap: nowrap;
       align-items: flex-start;
-      justify-content: space-evenly;
-      gap: 4px 6px;
+      justify-content: space-between;
+      gap: 2px 3px;
       min-width: 0;
-      min-height: 0;
-      padding: 8px 10px 6px;
-      overflow-x: auto;
-      overflow-y: visible;
-      overscroll-behavior-x: contain;
-      scrollbar-width: thin;
+      padding: 0 2px;
+      overflow: visible;
     }
     .rail::before {
       content: "";
       position: absolute;
-      left: 8px; right: 8px; top: 46px;
+      left: clamp(19px, 2.1vw, 24px);
+      right: clamp(19px, 2.1vw, 24px);
+      top: calc(2px + clamp(38px, 4.2vw, 48px) / 2);
+      transform: translateY(-50%);
       height: 4px;
       border-radius: 99px;
       z-index: 0;
       background: #d7d0c5;
+      pointer-events: none;
     }
     .line-row[data-line="logic"] .rail::before { background: #b7d0c6; }
     .line-row[data-line="care"] .rail::before { background: #b5d0d6; }
     .line-row[data-line="world"] .rail::before { background: #ead7b0; }
     .line-row[data-line="make"] .rail::before { background: #e8c4b8; }
+    .rail.dense .star .name {
+      font-size: 0.62rem;
+    }
     .star {
       appearance: none;
       background: none;
@@ -449,40 +510,60 @@
       font: inherit;
       position: relative;
       z-index: 1;
-      flex: 0 0 auto;
-      width: 84px;
-      max-width: 96px;
-      min-width: 72px;
+      flex: 1 1 0;
+      min-width: 0;
+      max-width: none;
+      width: auto;
       margin: 0;
-      padding: 18px 6px 0;
+      padding: 2px 1px 4px;
       transition: opacity 0.35s;
       cursor: pointer;
       text-align: center;
       pointer-events: auto;
       overflow: visible;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 9px;
     }
     .star .planet {
-      width: 40px; height: 40px; margin: 0 auto;
-      display: grid; place-items: center;
+      position: relative;
+      z-index: 1;
+      width: clamp(38px, 4.2vw, 48px);
+      height: clamp(38px, 4.2vw, 48px);
+      flex: none;
+      display: grid;
+      place-items: center;
       background: #fff;
       border: 2px solid var(--ink);
-      font-size: 0.78rem; font-weight: 700;
+      border-radius: 999px;
+      font-size: 0.78rem;
+      font-weight: 700;
       color: var(--ink);
-      transform: rotate(45deg) scale(var(--s, 1));
-      transform-origin: center;
-      transition: transform 0.35s var(--ease), background 0.35s, color 0.35s, border-color 0.35s;
+      transform: scale(var(--s, 1));
+      transform-origin: center top;
+      transition: transform 0.35s var(--ease), background 0.35s, color 0.35s, border-color 0.35s, box-shadow 0.35s;
     }
-    .star .planet span { transform: rotate(-45deg); display: block; }
+    .star .planet span { display: block; line-height: 1; }
     .star .name {
       display: block;
-      margin: 14px 0 0;
-      font-size: 0.72rem;
-      line-height: 1.25;
+      width: 100%;
+      margin: 0;
+      padding: 0 2px;
+      font-size: 0.68rem;
+      line-height: 1.28;
       color: var(--ink);
       font-weight: 600;
-      overflow-wrap: anywhere;
+      hyphens: none;
+      word-break: normal;
+      overflow-wrap: break-word;
     }
-    .star.hot .planet { background: #2f5d50; color: #fbf8f3; border-color: #2f5d50; }
+    .star.hot .planet {
+      background: #2f5d50;
+      color: #fbf8f3;
+      border-color: #2f5d50;
+      box-shadow: 0 0 0 3px rgba(47, 93, 80, 0.18);
+    }
     .star.mid .planet { background: #e0a33a; color: #1c2430; border-color: #e0a33a; }
     .star.lock .planet { box-shadow: 0 0 0 3px #1c2430; }
     .star.hot .name { color: #2f5d50; }
@@ -492,7 +573,10 @@
     .star:focus-visible,
     .star.lock { z-index: 8; }
     .star:hover .planet,
-    .star:focus-visible .planet { transform: rotate(45deg) scale(calc(var(--s, 1) * 1.08)); }
+    .star:focus-visible .planet {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(28, 36, 48, 0.14);
+    }
     .fare {
       width: 52px; height: 52px; flex: none;
       display: grid; place-items: center;
@@ -508,7 +592,7 @@
     .fare.mid { background: #e0a33a; color: #1c2430; }
     .fare.low { color: var(--muted); }
 
-    .briefing-shell { min-width: 0; min-height: 0; }
+    .briefing-shell { min-width: 0; min-height: 0; align-self: start; height: auto; }
     .briefing {
       position: relative;
       background:
@@ -516,10 +600,11 @@
       border: 1.5px solid var(--ink);
       border-radius: 2px;
       padding: 20px 22px 18px 26px;
-      min-height: 720px;
+      min-height: 0;
+      max-height: min(78vh, 680px);
+      overflow-y: auto;
       display: flex; flex-direction: column; gap: 10px;
       box-shadow: var(--shadow);
-      overflow: hidden;
     }
     .briefing::after {
       content: "";
@@ -672,7 +757,7 @@
     #uniTip .why { margin: 0 0 6px; color: var(--muted); font-size: 0.8rem; }
     #uniTip .why b { display: inline; font-family: var(--sans); font-size: 0.8rem; color: var(--lime); }
     #uniTip .why.off b { color: #c45c3a; }
-    .idle { color: var(--ink); margin: auto 0; text-align: left; line-height: 1.5; }
+    .idle { color: var(--ink); margin: 0; text-align: left; line-height: 1.5; }
     .idle b { display: block; font-family: var(--serif); font-size: 1.15rem; margin-bottom: 8px; }
     .idle p { margin: 0 0 8px; color: var(--muted); }
     .idle p:last-child { margin-bottom: 0; color: var(--ink); }
@@ -915,9 +1000,10 @@
 
     @media (max-width: 860px) {
       .stage { grid-template-columns: 1fr; }
-      .radar-wrap, .briefing, .briefing-shell { min-height: 640px; }
+      .radar-wrap, .briefing, .briefing-shell { min-height: 0; }
       .line-row { grid-template-columns: 1fr; padding: 12px; }
-      .rail { overflow-x: auto; overflow-y: visible; }
+      .line-meta { margin-bottom: 4px; }
+      .rail { overflow: visible; }
       .like-grid { grid-template-columns: repeat(2, 1fr); }
       .hud { grid-template-columns: 1fr; }
       .hud-stats { justify-content: flex-start; }
@@ -988,8 +1074,16 @@
     <aside class="note">
       <b data-i18n="note.kicker">Which schools are these?</b>
       <p data-i18n="note">These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities.</p>
-      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="method.html" data-i18n="nav.method">How this was made</a></p>
+      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a></p>
     </aside>
+
+    <section class="uni-search-band">
+      <div>
+        <b data-i18n="schools.band.t">Search the 15 universities</b>
+        <p data-i18n="schools.band.p">Official faculties and major names at overseas Top-100 schools popular with Chinese international students.</p>
+      </div>
+      <a class="uni-search-btn" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
+    </section>
 
     <section class="likes">
       <div class="likes-head">
@@ -1033,7 +1127,7 @@
       <aside class="briefing" id="briefing">
         <div class="idle" id="briefIdle">
           <b data-i18n="brief.idleT">Open a station to see the useful bit</b>
-          <p data-i18n="brief.idle">Tap a diamond on the lines, or a ticket in the list below.</p>
+          <p data-i18n="brief.idle">Tap a station on the lines, or a ticket in the list below.</p>
           <p data-i18n="brief.idle2">You’ll get: what you can try this year, what the major means, what not to mix it up with, and universities that actually teach it. First look, not a verdict.</p>
         </div>
         <div id="briefBody" hidden></div>
@@ -1049,7 +1143,7 @@
 
     <footer class="site-foot">
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
+      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
     </footer>
   </div>
 
@@ -1068,6 +1162,7 @@
   <button class="nova-wake" type="button" data-nova-wake hidden>Ask Nova</button>
 
   <script src="i18n.js"></script>
+  <script src="universities.js"></script>
   <script src="catalog.js"></script>
   <script src="catalog-majors.js"></script>
   <script src="quiz-bank.js"></script>
@@ -1085,23 +1180,7 @@
       { id: "data", label: "Data & patterns", ico: "📊", hint: "Charts, stats, hidden patterns" }
     ];
 
-    const UNIVERSITIES = {
-      ucl: { short: "UCL", name: "University College London", country: "UK", qs: 9, evidence: "#1 Chinese headcount in the UK (HESA)", intro: "In central London. Known for medicine, architecture (The Bartlett), and education (IOE). A very common UK pick for Chinese students." },
-      melbourne: { short: "Melbourne", name: "University of Melbourne", country: "Australia", qs: 19, evidence: "Go8 cluster: 86% of new Chinese students in Australia", intro: "A Group of Eight university in Australia, strong across many subjects. Often on the shortlist for study in Australia." },
-      unsw: { short: "UNSW", name: "UNSW Sydney", country: "Australia", qs: 20, evidence: "Go8 cluster", intro: "In Sydney. Especially known for engineering and business. Also in Australia’s Group of Eight." },
-      sydney: { short: "Sydney", name: "University of Sydney", country: "Australia", qs: 25, evidence: "Go8 cluster", intro: "One of Australia’s oldest universities. Strong in medicine, law, and arts, with a city campus in Sydney." },
-      toronto: { short: "Toronto", name: "University of Toronto", country: "Canada", qs: 29, evidence: "Often named Canada’s top Chinese-student destination", intro: "Canada’s largest research university, downtown Toronto. Often named a top Canadian choice for Chinese students." },
-      edinburgh: { short: "Edinburgh", name: "University of Edinburgh", country: "UK", qs: 34, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "In Scotland’s capital. Historic, with well-known medicine, informatics, and arts." },
-      manchester: { short: "Manchester", name: "University of Manchester", country: "UK", qs: 35, evidence: "~50% of students are mainland Chinese (HESA)", intro: "A large campus in northern England. Big Chinese-student community; strong in science and engineering." },
-      kcl: { short: "King’s", name: "King’s College London", country: "UK", qs: 31, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "In London, by the Thames. Known for health, law, war studies, and humanities, with hospitals nearby." },
-      columbia: { short: "Columbia", name: "Columbia University", country: "USA", qs: 38, evidence: "~5,035 Chinese students; 3rd in the US (SEVIS)", intro: "An Ivy League school in New York City. Competitive; known for journalism, world affairs, and medicine." },
-      ubc: { short: "UBC", name: "University of British Columbia", country: "Canada", qs: 40, evidence: "Often named a top Chinese-student destination in Canada", intro: "In Vancouver, by mountains and ocean. Strong in science, and a frequent Canadian destination for Chinese students." },
-      nyu: { short: "NYU", name: "New York University", country: "USA", qs: 55, evidence: "Highest Chinese concentration among major US schools in this set", intro: "Based in New York City. Known for arts (Tisch) and business (Stern). In this set, it has the highest share of Chinese students among the US schools." },
-      uiuc: { short: "UIUC", name: "University of Illinois Urbana-Champaign", country: "USA", qs: 70, evidence: "Top 5 US by total foreign-student population (DHS)", intro: "A large US public campus in Illinois. Famous for engineering and computer science. It has no medical school in this set." },
-      glasgow: { short: "Glasgow", name: "University of Glasgow", country: "UK", qs: 79, evidence: "Top 5 UK by Chinese headcount (HESA)", intro: "A historic Scottish university. Strong in medicine, law, and arts, and among the UK schools with many Chinese students." },
-      southampton: { short: "Southampton", name: "University of Southampton", country: "UK", qs: 87, evidence: "60%+ of students are mainland Chinese (HESA)", intro: "On England’s south coast. Known for engineering and ocean science, with a high share of students from mainland China." },
-      sheffield: { short: "Sheffield", name: "University of Sheffield", country: "UK", qs: 92, evidence: "~58% Chinese concentration (HESA)", intro: "In northern England. Known for engineering, architecture, and journalism, with a high share of Chinese students." }
-    };
+    const UNIVERSITIES = window.MejorUniversities || {};
 
     const MAJORS = [
       {
@@ -1927,28 +2006,29 @@
 
     LINES.forEach((line) => {
       const rail = document.querySelector('[data-rail="' + line.id + '"]');
+      if (rail) {
+        rail.setAttribute("data-stops", String(line.stops.length));
+        if (line.stops.length >= 6) rail.classList.add("dense");
+      }
       line.stops.forEach((id) => {
         const major = MAJORS.find((m) => m.id === id);
         if (!major || !rail) return;
+        const label = majorLoc(major).name;
         const star = document.createElement("button");
         star.type = "button";
         star.className = "star";
         star.id = "star-" + major.id;
-        star.innerHTML = `<span class="planet"><span>${major.code}</span></span><span class="name">${majorLoc(major).name}</span>`;
+        star.title = label;
+        star.setAttribute("aria-label", label);
+        star.innerHTML = `<span class="planet"><span>${major.code}</span></span><span class="name">${label}</span>`;
         star.addEventListener("click", () => lockMajor(major.id));
         rail.appendChild(star);
       });
     });
 
-    function placeStop(star, match) {
+    function placeStop(star) {
       if (!star) return;
-      let scale = 1;
-      if (selected.size) {
-        if (match >= 70) scale = 1.12;
-        else if (match >= 40) scale = 1.04;
-        else scale = 0.92;
-      }
-      star.style.setProperty("--s", String(scale));
+      star.style.setProperty("--s", "1");
     }
 
     /* Match = how many of YOUR likes this major covers. 2 of 2 likes = 100%. Easy to explain in class. */
@@ -2287,7 +2367,7 @@
       rank.forEach((row) => {
         const star = document.getElementById("star-" + row.m.id);
         if (!star) return;
-        placeStop(star, row.match);
+        placeStop(star);
         star.classList.toggle("hot", selected.size > 0 && row.match >= 70);
         star.classList.toggle("mid", selected.size > 0 && row.match >= 40 && row.match < 70);
         star.classList.toggle("dim", selected.size > 0 && row.match < 40);
@@ -2641,8 +2721,11 @@
       MAJORS.forEach((m) => {
         const star = document.getElementById("star-" + m.id);
         if (!star) return;
+        const label = majorLoc(m).name;
+        star.title = label;
+        star.setAttribute("aria-label", label);
         const name = star.querySelector(".name");
-        if (name) name.textContent = majorLoc(m).name;
+        if (name) name.textContent = label;
       });
       renderTypeChip();
       setWorkingStyle(pathType);
