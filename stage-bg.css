@@ -1,0 +1,149 @@
+/* Shared home-screen space background (index, search, schools). */
+.stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, #121a18 0%, #0c1110 72%);
+}
+.space-nebula {
+  position: absolute;
+  inset: -30%;
+  background:
+    radial-gradient(ellipse 42% 38% at 18% 58%, rgba(61, 143, 120, 0.18), transparent 72%),
+    radial-gradient(ellipse 38% 34% at 82% 28%, rgba(90, 163, 176, 0.16), transparent 70%),
+    radial-gradient(ellipse 30% 28% at 52% 12%, rgba(212, 168, 90, 0.12), transparent 68%);
+  animation: nebulaDrift 45s ease-in-out infinite;
+}
+.starfield {
+  position: absolute;
+  inset: 0;
+  background-repeat: repeat;
+  will-change: background-position;
+}
+.starfield-far {
+  opacity: 0.35;
+  background-image:
+    radial-gradient(1px 1px at 25px 40px, rgba(255,255,255,0.55), transparent),
+    radial-gradient(1px 1px at 110px 95px, rgba(255,255,255,0.45), transparent),
+    radial-gradient(1px 1px at 180px 30px, rgba(212,240,234,0.4), transparent),
+    radial-gradient(1px 1px at 70px 160px, rgba(255,255,255,0.5), transparent);
+  background-size: 240px 240px;
+  animation: spaceScrollFar 90s linear infinite;
+}
+.starfield-mid {
+  opacity: 0.55;
+  background-image:
+    radial-gradient(1.2px 1.2px at 40px 55px, rgba(255,255,255,0.75), transparent),
+    radial-gradient(1.5px 1.5px at 130px 20px, rgba(255,255,255,0.85), transparent),
+    radial-gradient(1px 1px at 90px 130px, rgba(232,255,248,0.7), transparent),
+    radial-gradient(2px 2px at 165px 110px, rgba(255,255,255,0.9), transparent),
+    radial-gradient(1px 1px at 15px 175px, rgba(255,255,255,0.65), transparent);
+  background-size: 180px 180px;
+  animation: spaceScrollMid 50s linear infinite;
+}
+.starfield-near {
+  opacity: 0.75;
+  background-image:
+    radial-gradient(2px 2px at 30px 25px, rgba(255,255,255,0.95), transparent),
+    radial-gradient(1.5px 1.5px at 95px 70px, rgba(255,255,255,0.85), transparent),
+    radial-gradient(2.5px 2.5px at 140px 45px, rgba(255,255,255,1), transparent),
+    radial-gradient(1.5px 1.5px at 55px 120px, rgba(212,240,234,0.9), transparent);
+  background-size: 120px 120px;
+  animation: spaceScrollNear 24s linear infinite;
+}
+.blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(72px);
+  opacity: 0.42;
+  will-change: transform;
+}
+.blob.logic {
+  width: 42vw; height: 42vw; left: -8vw; top: 28%; background: #3d8f78;
+  animation: spaceOrbitA 32s linear infinite;
+}
+.blob.care {
+  width: 36vw; height: 36vw; right: -10vw; top: -8%; background: #5aa3b0;
+  animation: spaceOrbitB 40s linear infinite;
+}
+.blob.world {
+  width: 28vw; height: 28vw; left: 38%; top: -12%; background: #d4a85a;
+  animation: spaceOrbitC 36s linear infinite;
+}
+.blob.make {
+  width: 32vw; height: 32vw; right: 8%; bottom: -12%; background: #d07a62;
+  animation: spaceOrbitD 44s linear infinite;
+}
+.stage-map {
+  position: absolute;
+  inset: -8%;
+  width: 116%;
+  height: 116%;
+  opacity: 0.5;
+  animation: mapFloat 60s linear infinite;
+  will-change: transform;
+}
+.stage-vignette {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 50% 42% at 50% 46%, rgba(12, 17, 16, 0.2) 0%, rgba(12, 17, 16, 0.72) 100%);
+}
+@keyframes spaceScrollFar {
+  from { background-position: 0 0; }
+  to { background-position: 240px 240px; }
+}
+@keyframes spaceScrollMid {
+  from { background-position: 0 0; }
+  to { background-position: -180px 270px; }
+}
+@keyframes spaceScrollNear {
+  from { background-position: 0 0; }
+  to { background-position: -120px 180px; }
+}
+@keyframes nebulaDrift {
+  0% { transform: translate3d(0, 0, 0) scale(1); }
+  33% { transform: translate3d(3%, -2%, 0) scale(1.04); }
+  66% { transform: translate3d(-2%, 3%, 0) scale(1.02); }
+  100% { transform: translate3d(0, 0, 0) scale(1); }
+}
+@keyframes spaceOrbitA {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(8%, -6%, 0); }
+  50% { transform: translate3d(4%, 8%, 0); }
+  75% { transform: translate3d(-6%, 4%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes spaceOrbitB {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-7%, 5%, 0); }
+  50% { transform: translate3d(5%, 9%, 0); }
+  75% { transform: translate3d(8%, -4%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes spaceOrbitC {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(5%, 6%, 0); }
+  50% { transform: translate3d(-4%, -5%, 0); }
+  75% { transform: translate3d(6%, -3%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes spaceOrbitD {
+  0% { transform: translate3d(0, 0, 0); }
+  25% { transform: translate3d(-5%, -7%, 0); }
+  50% { transform: translate3d(7%, 3%, 0); }
+  75% { transform: translate3d(-3%, 6%, 0); }
+  100% { transform: translate3d(0, 0, 0); }
+}
+@keyframes mapFloat {
+  0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+  50% { transform: translate3d(-3%, 2%, 0) rotate(0.6deg); }
+  100% { transform: translate3d(0, 0, 0) rotate(0deg); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .blob, .starfield, .space-nebula, .stage-map { animation: none; }
+  .blob { filter: blur(64px); }
+}

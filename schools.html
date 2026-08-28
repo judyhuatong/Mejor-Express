@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Search 15 QS Top-100 overseas universities popular with Chinese international students. Official faculties and undergraduate major names." />
-  <meta name="theme-color" content="#1c2822" />
+  <meta name="theme-color" content="#0c1110" />
   <title>Mejor · Search universities</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
@@ -12,7 +12,8 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="stage-bg.css" />
   <style>
     :root {
       --desk: #1c2822;
@@ -22,17 +23,17 @@
       --muted: #5c564c;
       --logic: #2f5d50;
       --line: #c4b79a;
-      --sans: "Manrope", "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      --sans: "Manrope", "Noto Sans SC", sans-serif;
     }
     * { box-sizing: border-box; }
     html, body, button, input { font-family: var(--sans); margin: 0; min-height: 100%; }
     body {
       color: var(--ink);
-      background:
-        repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
-        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+      background: #0c1110;
+      min-height: 100vh;
     }
-    .wrap { max-width: 920px; margin: 0 auto; padding: 28px 18px 72px; }
+    ::selection { background: #3d8f78; color: #fff; }
+    .wrap { position: relative; z-index: 1; max-width: 920px; margin: 0 auto; padding: 28px 18px 72px; }
     nav {
       display: flex; justify-content: space-between; align-items: center;
       gap: 12px; margin-bottom: 28px; color: #efe4cc; flex-wrap: wrap;
@@ -82,19 +83,51 @@
     .uni-meta .qs { color: var(--logic); font-weight: 700; }
     .uni-intro { margin: 8px 0 0; font-size: 0.92rem; line-height: 1.45; color: var(--ink); }
     .uni-body {
-      display: none; padding: 0 18px 16px; border-top: 1px solid var(--line);
+      display: none; padding: 16px 18px 18px; border-top: 1px solid var(--line);
+      background: #faf6ee;
     }
     .uni-card.open .uni-body { display: block; }
+    .uni-card.search-hit .uni-body { display: block; }
+    .uni-section { margin-top: 16px; }
+    .uni-section:first-child { margin-top: 0; }
+    .uni-section p { margin: 0; line-height: 1.5; font-size: 0.92rem; }
+    .uni-section .evidence {
+      margin-top: 8px; padding: 10px 12px; background: #fff;
+      border: 1px solid var(--line); font-size: 0.88rem; line-height: 1.45;
+    }
+    .chip-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 8px; }
+    .chip {
+      font-size: 0.78rem; font-weight: 600; padding: 5px 10px;
+      border: 1px solid var(--line); background: #fff; border-radius: 999px;
+    }
+    .line-badge {
+      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em;
+      text-transform: uppercase; padding: 5px 10px; border-radius: 999px; color: #fff;
+    }
+    .line-badge.logic { background: #2f5d50; }
+    .line-badge.care { background: #3d8f78; }
+    .line-badge.world { background: #b8862a; }
+    .line-badge.make { background: #c45c4a; }
+    .uni-stats {
+      display: flex; flex-wrap: wrap; gap: 8px 16px; margin-top: 8px;
+      font-size: 0.82rem; color: var(--muted); font-weight: 600;
+    }
     .fac {
-      margin-top: 14px; padding-top: 12px; border-top: 1px dashed var(--line);
+      margin-top: 14px; padding: 12px 14px; border: 1px solid var(--line);
+      background: #fff; border-radius: 2px;
     }
-    .fac:first-child { border-top: 0; margin-top: 12px; padding-top: 0; }
-    .fac b { display: block; font-size: 0.92rem; margin-bottom: 4px; }
-    .fac p { margin: 0 0 8px; font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
-    .maj-list { margin: 0; padding: 0; list-style: none; display: flex; flex-wrap: wrap; gap: 6px; }
-    .maj-list li {
-      font-size: 0.78rem; border: 1px solid var(--line); padding: 4px 8px; background: #faf6ee;
+    .fac:first-of-type { margin-top: 10px; }
+    .fac b { display: block; font-size: 0.95rem; margin-bottom: 6px; }
+    .fac .fac-kid { margin: 0 0 10px; font-size: 0.85rem; color: var(--muted); line-height: 1.4; }
+    .maj-detail { margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 8px; }
+    .maj-detail li {
+      font-size: 0.84rem; line-height: 1.4; padding-top: 8px; border-top: 1px dashed var(--line);
     }
+    .maj-detail li:first-child { border-top: 0; padding-top: 0; }
+    .maj-detail b { display: block; font-size: 0.86rem; margin-bottom: 2px; }
+    .maj-detail span { color: var(--muted); font-size: 0.82rem; }
+    .maj-empty { margin: 0; font-size: 0.82rem; color: var(--muted); }
+    .head-toggle { font-size: 0.78rem; color: var(--logic); margin-top: 8px; font-weight: 600; }
     .empty { color: var(--muted); margin: 0; }
     .cta { margin-top: 18px; display: flex; flex-wrap: wrap; gap: 10px; }
     .play, .ghost-btn {
@@ -111,6 +144,33 @@
   </style>
 </head>
 <body>
+  <div class="stage" aria-hidden="true">
+    <div class="space-nebula"></div>
+    <div class="starfield starfield-far"></div>
+    <div class="starfield starfield-mid"></div>
+    <div class="starfield starfield-near"></div>
+    <div class="blob logic"></div>
+    <div class="blob care"></div>
+    <div class="blob world"></div>
+    <div class="blob make"></div>
+    <svg class="stage-map" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 210 L 320 210 L 480 340 L 1240 340" fill="none" stroke="#5aa3b0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M-20 470 L 260 470 L 420 360 L 1240 360" fill="none" stroke="#3d8f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 220 -20 L 220 280 L 640 280 L 640 820" fill="none" stroke="#d4a85a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 980 -20 L 980 520 L 760 520 L 760 820" fill="none" stroke="#d07a62" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#f3f6f4">
+        <circle cx="320" cy="210" r="5"/>
+        <circle cx="480" cy="340" r="5"/>
+        <circle cx="260" cy="470" r="5"/>
+        <circle cx="420" cy="360" r="5"/>
+        <circle cx="220" cy="280" r="5"/>
+        <circle cx="640" cy="280" r="5"/>
+        <circle cx="980" cy="520" r="5"/>
+        <circle cx="760" cy="520" r="5"/>
+      </g>
+    </svg>
+    <div class="stage-vignette"></div>
+  </div>
   <a class="skip" href="#q" style="position:absolute;left:-9999px" data-i18n="skip">Skip to content</a>
   <div class="wrap">
     <nav>
@@ -127,7 +187,7 @@
     <main class="paper">
       <p class="kicker" data-i18n="schools.kicker">University search</p>
       <h1 data-i18n="schools.h1">Browse the 15 schools</h1>
-      <p class="lead" data-i18n="schools.lead">Overseas Top-100 universities many Chinese international students pick. Search by name or country, then open a school to see official faculties and major names — not invented, not a ranking.</p>
+      <p class="lead" data-i18n="schools.lead">Overseas Top-100 universities many Chinese international students pick. Search by name or country — each result shows an overview, strengths, faculties, and official major names.</p>
 
       <div class="field">
         <label class="kicker" for="q" data-i18n="schools.label">Search universities</label>
@@ -157,6 +217,12 @@
     const UNI = window.MejorUniversities || {};
     const input = document.getElementById("q");
     const results = document.getElementById("results");
+    const LINE_STOPS = {
+      logic: ["stem", "cs", "eng", "chem", "env"],
+      care: ["med", "nurse", "dent", "vet", "pharm", "bio", "ph", "psy", "edu"],
+      world: ["biz", "econ", "law", "ir", "lang", "hist", "social"],
+      make: ["arch", "art", "music", "sport"]
+    };
 
     function t(key) { return MejorI18n.t(key); }
     function zh() { return MejorI18n.getLang() === "zh"; }
@@ -169,21 +235,45 @@
       if (zh() && MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id]) return MejorI18n.DATA.uniIntro[id];
       return uni.intro;
     }
+    function uniEvidence(id) {
+      const uni = UNI[id];
+      if (!uni) return "";
+      if (zh() && MejorI18n.DATA.evidence && MejorI18n.DATA.evidence[id]) return MejorI18n.DATA.evidence[id];
+      return uni.evidence;
+    }
     function countryLabel(c) {
       const map = { UK: "country.UK", Australia: "country.Australia", Canada: "country.Canada", USA: "country.USA" };
       return map[c] ? t(map[c]) : c;
     }
+    function subjectLabel(id) {
+      const key = "schools.subj." + id;
+      const label = t(key);
+      return label === key ? id : label;
+    }
+    function faculties(id) {
+      return (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+    }
     function majorCount(id) {
-      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
       let n = 0;
-      facs.forEach((f) => { n += (f.majors || []).length; });
+      faculties(id).forEach((f) => { n += (f.majors || []).length; });
       return n;
+    }
+    function strengthSubjects(id) {
+      const counts = {};
+      faculties(id).forEach((f) => {
+        (f.subjects || []).forEach((sid) => { counts[sid] = (counts[sid] || 0) + 1; });
+      });
+      return Object.keys(counts).sort((a, b) => counts[b] - counts[a] || subjectLabel(a).localeCompare(subjectLabel(b)));
+    }
+    function linesFor(id) {
+      const subjects = new Set(strengthSubjects(id));
+      return Object.keys(LINE_STOPS).filter((line) => LINE_STOPS[line].some((sid) => subjects.has(sid)));
     }
     function searchBlob(id) {
       const uni = UNI[id];
-      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
-      const bits = [id, uni.name, uni.short, uni.country, uniIntro(id), uni.evidence];
-      facs.forEach((f) => {
+      if (!uni) return "";
+      const bits = [id, uni.name, uni.short, uni.country, countryLabel(uni.country), uniIntro(id), uniEvidence(id)];
+      faculties(id).forEach((f) => {
         bits.push(f.name, f.kid, f.kidZh);
         (f.majors || []).forEach((m) => bits.push(m.name, m.kid, m.kidZh));
       });
@@ -191,35 +281,79 @@
     }
     function facultyHtml(fac) {
       const kid = zh() ? (fac.kidZh || fac.kid) : fac.kid;
-      const majors = (fac.majors || []).map((m) =>
-        `<li title="${esc(zh() ? (m.kidZh || m.kid) : m.kid)}">${esc(m.name)}</li>`
-      ).join("");
+      const majors = fac.majors || [];
+      const majHtml = majors.length
+        ? `<ul class="maj-detail">${majors.map((m) =>
+            `<li><b>${esc(m.name)}</b><span>${esc(zh() ? (m.kidZh || m.kid) : m.kid)}</span></li>`
+          ).join("")}</ul>`
+        : `<p class="maj-empty">—</p>`;
       return `<article class="fac">
         <b>${esc(fac.name)}</b>
-        <p>${esc(kid)}</p>
-        ${majors ? `<ul class="maj-list">${majors}</ul>` : ""}
+        <p class="fac-kid">${esc(kid)}</p>
+        ${majHtml}
       </article>`;
     }
-    function cardHtml(id) {
+    function cardHtml(id, expanded) {
       const uni = UNI[id];
-      const facs = (window.MejorCatalog && MejorCatalog.faculties[id]) || [];
+      const facs = faculties(id);
       const n = majorCount(id);
-      return `<article class="uni-card" data-id="${esc(id)}">
-        <button type="button" class="uni-head" aria-expanded="false">
+      const strengths = strengthSubjects(id);
+      const lines = linesFor(id);
+      const openClass = expanded ? " search-hit" : "";
+      return `<article class="uni-card${openClass}" data-id="${esc(id)}">
+        <button type="button" class="uni-head" aria-expanded="${expanded ? "true" : "false"}">
           <b>${esc(uni.name)}</b>
           <div class="uni-meta">
             <span class="qs">${esc(t("schools.qs"))} #${uni.qs}</span>
             <span>${esc(countryLabel(uni.country))}</span>
             <span>${esc(t("schools.majors.n").replace("{n}", String(n)))}</span>
+            <span>${esc(t("schools.stats.fac").replace("{n}", String(facs.length)))}</span>
           </div>
           <p class="uni-intro">${esc(uniIntro(id))}</p>
-          <p class="uni-meta" style="margin-top:8px"><span>${esc(t("schools.evidence"))}: ${esc(uni.evidence)}</span></p>
+          <p class="head-toggle">${expanded ? "▾" : "▸"} ${esc(t("schools.faculties"))}</p>
         </button>
         <div class="uni-body">
-          <p class="kicker" style="margin-top:12px">${esc(t("schools.faculties"))}</p>
-          ${facs.map(facultyHtml).join("")}
+          <section class="uni-section">
+            <p class="kicker">${esc(t("schools.overview"))}</p>
+            <p>${esc(uniIntro(id))}</p>
+            <p class="evidence"><b>${esc(t("schools.evidence"))}:</b> ${esc(uniEvidence(id))}</p>
+          </section>
+          <section class="uni-section">
+            <p class="kicker">${esc(t("schools.shortName"))}</p>
+            <p>${esc(uni.short)} · ${esc(uni.name)} · ${esc(countryLabel(uni.country))}</p>
+          </section>
+          <section class="uni-section">
+            <p class="kicker">${esc(t("schools.strengths"))}</p>
+            <div class="chip-row">${strengths.map((sid) => `<span class="chip">${esc(subjectLabel(sid))}</span>`).join("")}</div>
+          </section>
+          <section class="uni-section">
+            <p class="kicker">${esc(t("schools.lines"))}</p>
+            <div class="chip-row">${lines.map((line) =>
+              `<span class="line-badge ${line}">${esc(t("line." + line))} · ${esc(t("line." + line + "Def"))}</span>`
+            ).join("")}</div>
+          </section>
+          <section class="uni-section">
+            <p class="kicker">${esc(t("schools.faculties"))}</p>
+            <div class="uni-stats">
+              <span>${esc(t("schools.stats.fac").replace("{n}", String(facs.length)))}</span>
+              <span>${esc(t("schools.majors.n").replace("{n}", String(n)))}</span>
+            </div>
+            ${facs.map(facultyHtml).join("")}
+          </section>
         </div>
       </article>`;
+    }
+    function bindCards() {
+      results.querySelectorAll(".uni-head").forEach((btn) => {
+        btn.addEventListener("click", () => {
+          const card = btn.closest(".uni-card");
+          if (card.classList.contains("search-hit")) return;
+          const open = card.classList.toggle("open");
+          btn.setAttribute("aria-expanded", open ? "true" : "false");
+          const toggle = btn.querySelector(".head-toggle");
+          if (toggle) toggle.textContent = (open ? "▾ " : "▸ ") + t("schools.faculties");
+        });
+      });
     }
     function render() {
       try {
@@ -234,14 +368,13 @@
           results.innerHTML = `<p class="empty">${esc(t("schools.none"))}</p>`;
           return;
         }
-        results.innerHTML = hits.map(cardHtml).join("");
-        results.querySelectorAll(".uni-head").forEach((btn) => {
-          btn.addEventListener("click", () => {
-            const card = btn.closest(".uni-card");
-            const open = card.classList.toggle("open");
-            btn.setAttribute("aria-expanded", open ? "true" : "false");
-          });
-        });
+        const expanded = !!q;
+        results.innerHTML = hits.map((id) => cardHtml(id, expanded)).join("");
+        bindCards();
+        if (expanded && hits.length === 1) {
+          const card = results.querySelector(".uni-card");
+          if (card) card.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
       } catch (err) {
         console.error("Mejor schools search failed:", err);
         results.innerHTML = `<p class="empty">${esc(t("schools.loadFail"))}</p>`;

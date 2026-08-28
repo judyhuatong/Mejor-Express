@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="Search a university major even if you misspell it. Precise definition, what not to mix it up with, and which of 15 schools teach it." />
-  <meta name="theme-color" content="#1c2822" />
+  <meta name="theme-color" content="#0c1110" />
   <title>Mejor · Search a major</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
@@ -12,7 +12,8 @@
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Noto+Sans+SC:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="stage-bg.css" />
   <style>
     :root {
       --desk: #1c2822;
@@ -22,8 +23,8 @@
       --muted: #5c564c;
       --logic: #2f5d50;
       --line: #c4b79a;
-      --serif: "Manrope", "PingFang SC", "Microsoft YaHei", sans-serif;
-      --sans: "Manrope", "PingFang SC", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+      --serif: "Manrope", "Noto Sans SC", sans-serif;
+      --sans: "Manrope", "Noto Sans SC", sans-serif;
     }
     * { box-sizing: border-box; }
     html, body, button, input, select, textarea { font-family: var(--sans); }
@@ -33,13 +34,10 @@
       font-family: var(--sans);
       color: var(--ink);
       -webkit-font-smoothing: antialiased;
-      background:
-        repeating-linear-gradient(90deg, transparent 0 46px, rgba(244, 234, 214, 0.04) 46px 48px),
-        radial-gradient(ellipse at 50% 0%, #2a3a32, var(--desk) 62%);
+      background: #0c1110;
       min-height: 100vh;
     }
-    ::selection { background: #d5e6df; color: var(--ink); }
-    html[lang="zh-Hans"] body { font-family: "Manrope", "Microsoft YaHei", "PingFang SC", sans-serif; }
+    ::selection { background: #3d8f78; color: #fff; }
     html[lang="zh-Hans"] nav a.ghost,
     html[lang="zh-Hans"] .lang-btn,
     html[lang="zh-Hans"] .kicker,
@@ -58,7 +56,7 @@
     }
     .skip:focus { top: 12px; }
     :focus-visible { outline: 2px solid #efe4cc; outline-offset: 3px; }
-    .wrap { max-width: 880px; margin: 0 auto; padding: 28px 18px 72px; }
+    .wrap { position: relative; z-index: 1; max-width: 880px; margin: 0 auto; padding: 28px 18px 72px; }
     nav {
       display: flex; justify-content: space-between; align-items: center;
       gap: 12px; margin-bottom: 28px; color: #efe4cc;
@@ -106,7 +104,7 @@
       top: 0; right: 0;
       border-style: solid;
       border-width: 0 22px 22px 0;
-      border-color: transparent var(--desk) transparent transparent;
+      border-color: transparent #0c1110 transparent transparent;
       filter: drop-shadow(-1.5px 1.5px 0 #c4b79a);
       pointer-events: none;
     }
@@ -249,6 +247,33 @@
   </style>
 </head>
 <body>
+  <div class="stage" aria-hidden="true">
+    <div class="space-nebula"></div>
+    <div class="starfield starfield-far"></div>
+    <div class="starfield starfield-mid"></div>
+    <div class="starfield starfield-near"></div>
+    <div class="blob logic"></div>
+    <div class="blob care"></div>
+    <div class="blob world"></div>
+    <div class="blob make"></div>
+    <svg class="stage-map" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
+      <path d="M-20 210 L 320 210 L 480 340 L 1240 340" fill="none" stroke="#5aa3b0" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M-20 470 L 260 470 L 420 360 L 1240 360" fill="none" stroke="#3d8f78" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 220 -20 L 220 280 L 640 280 L 640 820" fill="none" stroke="#d4a85a" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <path d="M 980 -20 L 980 520 L 760 520 L 760 820" fill="none" stroke="#d07a62" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+      <g fill="#f3f6f4">
+        <circle cx="320" cy="210" r="5"/>
+        <circle cx="480" cy="340" r="5"/>
+        <circle cx="260" cy="470" r="5"/>
+        <circle cx="420" cy="360" r="5"/>
+        <circle cx="220" cy="280" r="5"/>
+        <circle cx="640" cy="280" r="5"/>
+        <circle cx="980" cy="520" r="5"/>
+        <circle cx="760" cy="520" r="5"/>
+      </g>
+    </svg>
+    <div class="stage-vignette"></div>
+  </div>
   <a class="skip" href="#q" data-i18n="skip">Skip to content</a>
   <div class="wrap">
     <nav>
@@ -257,6 +282,7 @@
         <button class="lang-btn" type="button" data-lang-toggle>中文</button>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
+        <a class="ghost" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
         <a class="ghost" href="method.html" data-i18n="nav.method">How this was made</a>
       </div>
     </nav>
