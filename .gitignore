@@ -8,3 +8,5 @@ __pycache__/
 venv/
 .env
 .env.local
+.wrangler
+node_modules
