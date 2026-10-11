@@ -1,0 +1,16 @@
+.git
+.github
+.cursor
+.wrangler
+backend
+node_modules
+**/*.md
+**/*.docx
+.env
+.env.*
+.gitignore
+.assetsignore
+Procfile
+render.yaml
+runtime.txt
+wrangler.jsonc

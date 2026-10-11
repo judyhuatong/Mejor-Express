@@ -9,3 +9,9 @@ services:
     envVars:
       - key: PYTHON_VERSION
         value: "3.12.8"
+      - key: MOONSHOT_BASE_URL
+        value: "https://api.moonshot.cn/v1"
+      - key: MOONSHOT_MODEL
+        value: "kimi-k2.6"
+      - key: MOONSHOT_API_KEY
+        sync: false
