@@ -8,7 +8,7 @@
     "not_found_handling": "none"
   },
   "routes": [
-    { "pattern": "mejorexpress.com", "custom_domain": true },
-    { "pattern": "www.mejorexpress.com", "custom_domain": true }
+    { "pattern": "mejorexpress.com/*", "zone_name": "mejorexpress.com" },
+    { "pattern": "www.mejorexpress.com/*", "zone_name": "mejorexpress.com" }
   ]
 }
