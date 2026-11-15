@@ -1,4 +1,5 @@
-/* Official faculties for the same 15 universities. Checked against university pages, Aug 2026.
+/* Official faculties for the same 15 universities. Names checked against university pages, Aug 2026.
+   QS ranks live in universities.js and were updated to the 2027 list on 15 Nov 2026.
    Faculty names stay official English. Kid lines are for age 14.
    Official major / subject names live in catalog-majors.js (not every Year Abroad twin). */
 (function (global) {
@@ -357,6 +358,6 @@
     extraFacts: EXTRA_FACTS,
     unisFor: unisFor,
     apply: apply,
-    updated: "Aug 2026"
+    updated: "names Aug 2026; QS 2027"
   };
 })(typeof window !== "undefined" ? window : this);

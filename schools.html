@@ -3,12 +3,12 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <meta name="description" content="Search 15 QS Top-100 overseas universities popular with Chinese international students. Official faculties and undergraduate major names." />
+  <meta name="description" content="Search 15 overseas universities popular with Chinese international students. QS 2027: 14 are in the Top 100, and Southampton is 111th. Official faculties and undergraduate major names." />
   <meta name="theme-color" content="#0c1110" />
   <title>Mejor · Search universities</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
-    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+    try { var _ml = localStorage.getItem("mejor-lang"); var _map = { zh: "zh-Hans", nl: "nl", fr: "fr", de: "de", es: "es" }; if (_map[_ml]) document.documentElement.lang = _map[_ml]; } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -176,7 +176,7 @@
     <nav>
       <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
       <div class="nav-end">
-        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <button class="lang-btn" type="button" data-lang-toggle>LANGUAGE</button>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
         <a class="ghost" href="search.html" data-i18n="nav.search">Search for a major</a>
@@ -187,7 +187,7 @@
     <main class="paper">
       <p class="kicker" data-i18n="schools.kicker">University search</p>
       <h1 data-i18n="schools.h1">Browse the 15 schools</h1>
-      <p class="lead" data-i18n="schools.lead">Overseas Top-100 universities many Chinese international students pick. Search by name or country — each result shows an overview, strengths, faculties, and official major names.</p>
+      <p class="lead" data-i18n="schools.lead">Overseas universities many Chinese international students pick. In QS 2027, 14 of these 15 are in the Top 100. Southampton is 111th. Search by name or country — each result shows an overview, strengths, faculties, and official major names.</p>
 
       <div class="field">
         <label class="kicker" for="q" data-i18n="schools.label">Search universities</label>
@@ -210,6 +210,8 @@
   </div>
 
   <script src="i18n.js"></script>
+  <script src="i18n-langs.js"></script>
+  <script src="i18n-lines.js"></script>
   <script src="universities.js"></script>
   <script src="catalog.js"></script>
   <script src="catalog-majors.js"></script>
@@ -232,14 +234,14 @@
     function uniIntro(id) {
       const uni = UNI[id];
       if (!uni) return "";
-      if (zh() && MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id]) return MejorI18n.DATA.uniIntro[id];
-      return uni.intro;
+      const zhText = MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id];
+      return MejorI18n.line(uni.intro, zhText);
     }
     function uniEvidence(id) {
       const uni = UNI[id];
       if (!uni) return "";
-      if (zh() && MejorI18n.DATA.evidence && MejorI18n.DATA.evidence[id]) return MejorI18n.DATA.evidence[id];
-      return uni.evidence;
+      const zhText = MejorI18n.DATA.evidence && MejorI18n.DATA.evidence[id];
+      return MejorI18n.line(uni.evidence, zhText);
     }
     function countryLabel(c) {
       const map = { UK: "country.UK", Australia: "country.Australia", Canada: "country.Canada", USA: "country.USA" };
@@ -274,17 +276,17 @@
       if (!uni) return "";
       const bits = [id, uni.name, uni.short, uni.country, countryLabel(uni.country), uniIntro(id), uniEvidence(id)];
       faculties(id).forEach((f) => {
-        bits.push(f.name, f.kid, f.kidZh);
-        (f.majors || []).forEach((m) => bits.push(m.name, m.kid, m.kidZh));
+        bits.push(f.name, f.kid, f.kidZh, MejorI18n.line(f.kid, f.kidZh));
+        (f.majors || []).forEach((m) => bits.push(m.name, m.kid, m.kidZh, MejorI18n.line(m.kid, m.kidZh)));
       });
       return bits.join(" ").toLowerCase();
     }
     function facultyHtml(fac) {
-      const kid = zh() ? (fac.kidZh || fac.kid) : fac.kid;
+      const kid = MejorI18n.line(fac.kid, fac.kidZh);
       const majors = fac.majors || [];
       const majHtml = majors.length
         ? `<ul class="maj-detail">${majors.map((m) =>
-            `<li><b>${esc(m.name)}</b><span>${esc(zh() ? (m.kidZh || m.kid) : m.kid)}</span></li>`
+            `<li><b>${esc(m.name)}</b><span>${esc(MejorI18n.line(m.kid, m.kidZh))}</span></li>`
           ).join("")}</ul>`
         : `<p class="maj-empty">—</p>`;
       return `<article class="fac">
