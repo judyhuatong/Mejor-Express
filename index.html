@@ -8,7 +8,7 @@
   <title>Mejor express</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
-    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+    try { var _ml = localStorage.getItem("mejor-lang"); var _map = { zh: "zh-Hans", nl: "nl", fr: "fr", de: "de", es: "es" }; if (_map[_ml]) document.documentElement.lang = _map[_ml]; } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -422,7 +422,7 @@
     <nav>
       <a class="logo" href="index.html"><span class="mark"><span>M</span></span> Mejor express</a>
       <div class="nav-end">
-        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <button class="lang-btn" type="button" data-lang-toggle>LANGUAGE</button>
         <button class="lang-btn" type="button" data-nova-toggle>Turn Nova off</button>
         <a class="search-btn" href="search.html" data-i18n="nav.search">Search for a major</a>
         <a class="ghost" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
@@ -448,7 +448,7 @@
 
     <footer>
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
+      <p><a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 15 Nov 2026</span></p>
     </footer>
   </div>
 
@@ -480,6 +480,8 @@
   <button class="nova-wake" type="button" data-nova-wake hidden data-i18n="nova.wake">Ask Nova</button>
 
   <script src="i18n.js"></script>
+  <script src="i18n-langs.js"></script>
+  <script src="i18n-lines.js"></script>
   <script>
     var HOME_TOUR_LAST = 4;
     var homeTour = 0;
@@ -523,7 +525,7 @@
     document.addEventListener("pointerup", function (e) {
       if (!MejorNova.isOn()) return;
       if (e.button != null && e.button !== 0) return;
-      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle]")) return;
+      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], .lang-wrap")) return;
       if (homeTour >= HOME_TOUR_LAST) return;
       if (e.target.closest("#startNova, #searchMajor, #searchUnis, .cta a, nav a")) return;
       if (e.target.closest("#novaFlyer")) return;

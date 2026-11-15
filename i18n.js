@@ -72,7 +72,7 @@
       "brief.idle": "Tap a station on the lines, or a ticket in the list below.",
       "brief.idle2": "You’ll get: what you can try this year, what the major means, what not to mix it up with, and universities that actually teach it. First look, not a verdict.",
       "list.h2": "Station list",
-      note: "These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities.",
+      note: "These are overseas universities many Chinese students actually attend — not a world “best” list, and not mainland universities. Ranks are QS 2027. Southampton is 111th and still in this set.",
       "note.kicker": "Which schools are these?",
       "nova.name": "Nova · guide",
       "quiz.hello": "Hello. I’m Nova, your guide for this explorer.",
@@ -131,7 +131,7 @@
       "unis.top": "All 15 schools. Faded names do not officially teach this major.",
       "unis.set": "Tap a school name. Faded = this school does not officially teach this major here.",
       "unis.line": "Hover a school for a short look. Faded = this school does not teach this major.",
-      "catalog.t": "Official faculties and subjects (Aug 2026)",
+      "catalog.t": "Official faculties and subjects (names Aug 2026, QS ranks 2027)",
       "catalog.note": "Official names. We skip twins like “with Year Abroad” — same subject, extra years. Not every joint-honours mix.",
       "catalog.subjects": "Subjects",
       "unis.qs.t": "QS number",
@@ -164,7 +164,7 @@
       "meta.explorer": "Pick likes, see matching majors light on four lines, and open a station to read what it means and which universities teach it.",
       "meta.method": "How Mejor’s match score, university set, and official major names were made. Honest limits, sources, and privacy.",
       "meta.search": "Search a university major even if you misspell it. Precise definition, what not to mix it up with, and which of 15 schools teach it.",
-      "meta.schools": "Search 15 QS Top-100 overseas universities popular with Chinese international students. Official faculties and undergraduate major names.",
+      "meta.schools": "Search 15 overseas universities popular with Chinese international students. QS 2027: 14 are in the Top 100, and Southampton is 111th. Official faculties and undergraduate major names.",
       "nav.method": "How this was made",
       "search.kicker": "Search station",
       "search.h1": "Don’t know the name? Look it up.",
@@ -191,7 +191,7 @@
       "search.limit": "Not every Year Abroad twin. Not a full prospectus.",
       "schools.kicker": "University search",
       "schools.h1": "Browse the 15 schools",
-      "schools.lead": "Overseas Top-100 universities many Chinese international students pick. Search by name or country — each result shows an overview, strengths, faculties, and official major names.",
+      "schools.lead": "Overseas universities many Chinese international students pick. In QS 2027, 14 of these 15 are in the Top 100. Southampton is 111th. Search by name or country — each result shows an overview, strengths, faculties, and official major names.",
       "schools.label": "Search universities",
       "schools.placeholder": "Try UCL, Melbourne, Toronto, King’s, or 伦敦",
       "schools.hint": "Short names work: NYU, UIUC, UNSW. You can also type a faculty or major name.",
@@ -200,7 +200,7 @@
       "schools.loadFail": "Could not load the school list. Refresh the page, or open via python backend/server.py — not as a raw file.",
       "schools.faculties": "Official faculties",
       "schools.majors.n": "{n} official majors in this set",
-      "schools.qs": "QS 2026",
+      "schools.qs": "QS 2027",
       "schools.evidence": "Why Chinese students pick it",
       "schools.overview": "Overview",
       "schools.strengths": "Strengths in this set",
@@ -233,9 +233,9 @@
       "schools.subj.music": "Music",
       "schools.subj.sport": "Sport & Movement",
       "schools.band.t": "Search the 15 universities",
-      "schools.band.p": "Official faculties and major names at overseas Top-100 schools popular with Chinese international students.",
+      "schools.band.p": "Official faculties and major names at 15 overseas schools popular with Chinese international students. QS 2027: 14 are in the Top 100. Southampton is 111th.",
       skip: "Skip to content",
-      updated: "Updated 27 Aug 2026",
+      updated: "Updated 15 Nov 2026",
       "foot.legal": "Mejor Express · a first look, not a verdict. Saved only on this computer.",
       "stub.from": "Your likes",
       "stub.look": "Worth a closer look",
@@ -256,9 +256,9 @@
       "method.backend.t": "Where the backend is",
       "method.backend.p": "FastAPI backend (backend/server.py): serves the site and JSON API. Docs at /api/docs. Routes: /api/v1/stats, /api/v1/majors, /api/v1/majors/{slug}, /api/v1/universities, /api/v1/search, /api/v1/quiz/draw. Catalog loads once at startup. No login database. Your likes stay only in this browser.",
       "method.schools.t": "Where the schools come from",
-      "method.schools.p": "The same 15 universities (QS 2026 Top 100, plus Chinese-student notes). Tap a school to see official faculty names, then official major / subject names under each one, with a one-line meaning for age 14. We do not invent a faculty. We do not copy every course variant (UCL has 400+ titles, including Year Abroad twins). If a school does not teach a subject, it stays faded. Example: UIUC has no medical school.",
+      "method.schools.p": "The same 15 universities. QS ranks are the 2027 list. Official faculty and major names were checked in Aug 2026 and are not re-copied from every new prospectus. Tap a school to see official faculty names, then official major / subject names under each one, with a one-line meaning for age 14. We do not invent a faculty. We do not copy every course variant (UCL has 400+ titles, including Year Abroad twins). If a school does not teach a subject, it stays faded. Example: UIUC has no medical school.",
       "method.abroad.t": "Overseas schools, not “best for you”",
-      "method.abroad.p": "The 15 universities are overseas schools in the QS 2026 Top 100 that many Chinese students actually attend (UK, Australia, Canada, USA). This is not a ranking of which school is best for you, and it is not a list of universities in mainland China.",
+      "method.abroad.p": "The 15 universities are overseas schools that many Chinese students actually attend (UK, Australia, Canada, USA). In QS 2027, 14 are in the Top 100. Southampton is 111th and stays because of that student community, not because it is still in the Top 100. This is not a ranking of which school is best for you, and it is not a list of universities in mainland China.",
       "method.next.t": "What to do after Mejor",
       "method.next.p": "Keep two or three major names. Tell a parent or teacher. Open a university page from the school names if you want a closer look. Then try one small thing this year. Mejor is a first look, not a decision.",
       "method.nova.t": "What Nova is",
@@ -389,7 +389,7 @@
       "brief.idle": "点线路上的站点，或下面列表里的车票。",
       "brief.idle2": "你会看到：今年可以试什么、这个专业是什么、别和邻近专业搞混、以及真正开设它的大学。初探，不是定论。",
       "list.h2": "站点列表",
-      note: "这些是很多中国学生实际会去的海外大学——不是“最适合你”的世界排名，也不是内地高校名单。",
+      note: "这些是很多中国学生实际会去的海外大学——不是“最适合你”的世界排名，也不是内地高校名单。排名是 QS 2027。南安普顿是第 111 名，仍留在这份名单里。",
       "note.kicker": "这些是哪些学校？",
       "nova.name": "Nova · 向导",
       "quiz.hello": "你好。我是 Nova，这次探索的向导。",
@@ -448,7 +448,7 @@
       "unis.top": "15 所学校都会出现。变淡的校名表示官方不开设这个专业。",
       "unis.set": "点一下校名。变淡 = 这所学校在这里官方不开设这个专业。",
       "unis.line": "把鼠标放到校名上看一眼。变淡 = 这所学校不开这个专业。",
-      "catalog.t": "官方学院和专业（2026年8月）",
+      "catalog.t": "官方学院和专业（名称核对于 2026年8月，QS 排名为 2027）",
       "catalog.note": "官方名称。我们不抄“海外一年”这类双胞胎课程——同一专业，只是多一年。也不列每一个联合学位组合。",
       "catalog.subjects": "专业",
       "unis.qs.t": "QS 数字",
@@ -477,7 +477,7 @@
       "meta.explorer": "选出兴趣，看匹配专业在四条线路上亮起来，打开站点读它是什么、哪些大学真正教。",
       "meta.method": "Mejor 的匹配百分比、学校名单和官方专业名称是怎么来的。诚实的界限、来源和隐私。",
       "meta.search": "就算拼错也能搜大学专业。更准确的定义、别和谁搞混，以及这 15 所学校里谁教。",
-      "meta.schools": "搜索 15 所 QS 前 100 海外大学——很多中国留学生会选。官方学院与本科专业名称。",
+      "meta.schools": "搜索 15 所很多中国留学生会选的海外大学。QS 2027：其中 14 所在前 100，南安普顿是第 111 名。官方学院与本科专业名称。",
       "nav.method": "这是怎么做的",
       "search.kicker": "搜索站",
       "search.h1": "不知道名字？搜一下。",
@@ -504,7 +504,7 @@
       "search.limit": "不列每一个海外一年双胞胎。也不是完整招生手册。",
       "schools.kicker": "大学搜索",
       "schools.h1": "浏览这 15 所学校",
-      "schools.lead": "QS 前 100 里、很多中国留学生会选的海外大学。按名字或国家搜索——每个结果包含简介、强项、学院和官方专业名称。",
+      "schools.lead": "很多中国留学生会选的海外大学。QS 2027 里，这 15 所中有 14 所在前 100。南安普顿是第 111 名。按名字或国家搜索——每个结果包含简介、强项、学院和官方专业名称。",
       "schools.label": "搜索大学",
       "schools.placeholder": "试试 UCL、Melbourne、Toronto、King’s，或伦敦",
       "schools.hint": "简称也可以：NYU、UIUC、UNSW。也可以输入学院或专业名。",
@@ -513,7 +513,7 @@
       "schools.loadFail": "学校列表加载失败。请刷新页面，或通过 python backend/server.py 打开——不要直接双击 html 文件。",
       "schools.faculties": "官方学院",
       "schools.majors.n": "这份名单里有 {n} 个官方专业",
-      "schools.qs": "QS 2026",
+      "schools.qs": "QS 2027",
       "schools.evidence": "为什么很多中国学生选它",
       "schools.overview": "学校简介",
       "schools.strengths": "这份名单里的强项",
@@ -546,9 +546,9 @@
       "schools.subj.music": "音乐",
       "schools.subj.sport": "运动与体育",
       "schools.band.t": "搜索这 15 所大学",
-      "schools.band.p": "QS 前 100 海外大学里，很多中国留学生会选的学校——官方学院与专业名称。",
+      "schools.band.p": "15 所很多中国留学生会选的海外大学——官方学院与专业名称。QS 2027：14 所在前 100。南安普顿是第 111 名。",
       skip: "跳到正文",
-      updated: "更新于 2026年8月27日",
+      updated: "更新于 2026年11月15日",
       "foot.legal": "Mejor Express · 初探，不是定论。只保存在这台电脑上。",
       "stub.from": "你的兴趣",
       "stub.look": "值得再看",
@@ -569,9 +569,9 @@
       "method.backend.t": "后端在哪",
       "method.backend.p": "FastAPI 后端（backend/server.py）：同时提供网页和 JSON API。文档在 /api/docs。接口：/api/v1/stats、/api/v1/majors、/api/v1/majors/{slug}、/api/v1/universities、/api/v1/search、/api/v1/quiz/draw。启动时加载一次目录。没有登录数据库。你点的兴趣仍只存在浏览器里。",
       "method.schools.t": "学校从哪来",
-      "method.schools.p": "还是这 15 所大学（QS 2026 前 100，加上中国学生情况）。点学校可以看到官方学院，再看到每个学院下面的官方专业名称，并用一句话给 14 岁解释。我们不编造学院。我们也不抄每一个课程变体（UCL 有 400 多个名称，包括“海外一年”双胞胎）。如果某校不开某专业，它仍变淡。例如：这里的 UIUC 没有医学院。",
+      "method.schools.p": "还是这 15 所大学。QS 排名用的是 2027 名单。官方学院和专业名称核对于 2026年8月，没有从每份新招生简章里重抄。点学校可以看到官方学院，再看到每个学院下面的官方专业名称，并用一句话给 14 岁解释。我们不编造学院。我们也不抄每一个课程变体（UCL 有 400 多个名称，包括“海外一年”双胞胎）。如果某校不开某专业，它仍变淡。例如：这里的 UIUC 没有医学院。",
       "method.abroad.t": "海外学校，不是“最适合你”",
-      "method.abroad.p": "这 15 所大学是 QS 2026 世界排名前 100 里、很多中国学生实际会去的海外学校（英国、澳大利亚、加拿大、美国）。这不是“哪所学校最适合你”的排名，也不是中国内地高校名单。",
+      "method.abroad.p": "这 15 所大学是很多中国学生实际会去的海外学校（英国、澳大利亚、加拿大、美国）。QS 2027 里，14 所在前 100。南安普顿是第 111 名，留在名单里是因为学生群体，不是因为它还在前 100。这不是“哪所学校最适合你”的排名，也不是中国内地高校名单。",
       "method.next.t": "看完 Mejor 之后做什么",
       "method.next.p": "留下两三个专业名字。告诉家长或老师。如果想再看，可以从校名打开大学介绍。然后今年试一件小事。Mejor 是初探，不是决定。",
       "method.nova.t": "Nova 是什么",
@@ -900,21 +900,21 @@
       ESFP: { name: "舞台能量", blurb: "你让一个房间活起来。表演、人和快乐都是真本事。" }
     },
     evidence: {
-      ucl: "英国中国学生人数第 1（HESA）",
-      melbourne: "澳洲八校联盟（Go8）：澳大利亚新入学中国学生约 86% 进入该联盟",
-      unsw: "澳洲八校联盟（Go8）",
-      sydney: "澳洲八校联盟（Go8）",
-      toronto: "常被列为加拿大最受中国学生欢迎的学校之一",
-      edinburgh: "英国中国学生人数前 5（HESA）",
-      manchester: "约 50% 学生来自中国大陆（HESA）",
-      kcl: "英国中国学生人数前 5（HESA）",
-      columbia: "约 5,035 名中国学生；在美国排第 3（SEVIS）",
-      ubc: "常被列为加拿大受中国学生欢迎的学校之一",
+      ucl: "常是英国中国学生人数最多的学校（HESA）",
+      melbourne: "澳洲八校联盟。澳大利亚多数新入学的中国学生会进八校联盟",
+      unsw: "澳洲八校联盟",
+      sydney: "澳洲八校联盟",
+      toronto: "常被列为中国学生在加拿大的热门选择",
+      edinburgh: "英国中国学生人数很多的学校之一（HESA）",
+      manchester: "来自中国大陆的学生群体很大（HESA）",
+      kcl: "英国中国学生人数很多的学校之一（HESA）",
+      columbia: "在纽约，中国学生群体很大（SEVIS）",
+      ubc: "常被列为中国学生在加拿大的热门选择",
       nyu: "这组美国学校里，中国学生占比最高",
-      uiuc: "美国国际学生总数前 5（DHS）",
-      glasgow: "英国中国学生人数前 5（HESA）",
-      southampton: "60% 以上学生来自中国大陆（HESA）",
-      sheffield: "中国学生约占 58%（HESA）"
+      uiuc: "美国国际学生很多的大型公立校园（DHS）",
+      glasgow: "英国中国学生人数很多的学校之一（HESA）",
+      southampton: "QS 2027 第 111 名，不在前 100。仍留下，是因为很多中国大陆学生在这里读书（HESA）",
+      sheffield: "来自中国的学生群体很大（HESA）"
     },
     uniIntro: {
       ucl: "伦敦市中心。医学、建筑（巴特莱特学院）和教育（IOE）很有名，也是很多中国学生在英国的热门选择。",
@@ -930,7 +930,7 @@
       nyu: "校园主要在纽约。艺术（Tisch）和商科（Stern）有名；在这组美国学校里，中国学生占比最高。",
       uiuc: "美国伊利诺伊州的大型公立大学。工程和计算机科学很有名。这份名单里它没有医学院。",
       glasgow: "苏格兰历史很久的大学。医学、法律和文科不错，也是英国中国学生较多的学校之一。",
-      southampton: "在英格兰南岸。工程和海洋科学有名，中国大陆学生占比很高。",
+      southampton: "在英格兰南岸。工程和海洋科学有名。QS 2027 是第 111 名，已经不在前 100。仍留在这份名单里，是因为很多中国大陆学生在这里读书。",
       sheffield: "在英格兰北部。工程、建筑和新闻不错，中国学生占比也高。"
     },
     tagHints: {
@@ -1097,20 +1097,45 @@
     }
   };
 
+  var LANGS = ["en", "zh", "nl", "fr", "de", "es"];
+  var LANG_NAMES = [
+    ["en", "English"],
+    ["zh", "中文"],
+    ["nl", "Nederlands"],
+    ["fr", "Français"],
+    ["de", "Deutsch"],
+    ["es", "Español"]
+  ];
+
+  function htmlLang(lang) {
+    if (lang === "zh") return "zh-Hans";
+    return LANGS.indexOf(lang) >= 0 ? lang : "en";
+  }
+
   function getLang() {
     try {
-      return localStorage.getItem(KEY) === "zh" ? "zh" : "en";
+      var v = localStorage.getItem(KEY);
+      return LANGS.indexOf(v) >= 0 ? v : "en";
     } catch (e) {
       return "en";
     }
   }
 
   function setLang(lang) {
+    if (LANGS.indexOf(lang) < 0) lang = "en";
     try {
       localStorage.setItem(KEY, lang);
     } catch (e) {}
-    document.documentElement.lang = lang === "zh" ? "zh-Hans" : "en";
+    document.documentElement.lang = htmlLang(lang);
     document.documentElement.setAttribute("data-lang", lang);
+  }
+
+  function line(en, zh) {
+    var lang = getLang();
+    if (lang === "zh") return zh || en || "";
+    if (!en || lang === "en") return en || "";
+    var row = global.MejorLines && global.MejorLines[en];
+    return (row && row[lang]) || en;
   }
 
   function t(key) {
@@ -1136,23 +1161,81 @@
     var meta = document.querySelector('meta[name="description"]');
     if (meta && descKey) meta.setAttribute("content", t(descKey));
     document.querySelectorAll("[data-lang-toggle]").forEach(function (btn) {
-      var zh = getLang() === "zh";
-      btn.textContent = zh ? "English" : "中文";
-      btn.setAttribute("aria-label", zh ? "Switch to English" : "切换到中文");
-    });
-  }
-
-  function bindToggles() {
-    document.querySelectorAll("[data-lang-toggle]").forEach(function (btn) {
-      btn.addEventListener("click", function () {
-        setLang(getLang() === "zh" ? "en" : "zh");
-        apply();
-        document.dispatchEvent(new CustomEvent("mejor-lang"));
+      btn.textContent = "LANGUAGE";
+      btn.setAttribute("aria-haspopup", "listbox");
+      btn.setAttribute("aria-label", "LANGUAGE");
+      var pop = btn.parentElement && btn.parentElement.querySelector(".lang-pop");
+      if (!pop) return;
+      var current = getLang();
+      pop.querySelectorAll("[data-lang]").forEach(function (item) {
+        var on = item.getAttribute("data-lang") === current;
+        item.setAttribute("aria-current", on ? "true" : "false");
       });
     });
   }
 
-  global.MejorI18n = { getLang: getLang, setLang: setLang, t: t, apply: apply, bindToggles: bindToggles, STR: STR, DATA: DATA };
+  function closeLangPops() {
+    document.querySelectorAll(".lang-pop").forEach(function (pop) {
+      pop.hidden = true;
+    });
+    document.querySelectorAll("[data-lang-toggle]").forEach(function (btn) {
+      btn.setAttribute("aria-expanded", "false");
+    });
+  }
+
+  function ensureLangMenu(btn) {
+    var parent = btn.parentElement;
+    if (parent && parent.classList.contains("lang-wrap")) return parent;
+    var wrap = document.createElement("span");
+    wrap.className = "lang-wrap";
+    btn.parentNode.insertBefore(wrap, btn);
+    wrap.appendChild(btn);
+    var list = document.createElement("div");
+    list.className = "lang-pop";
+    list.hidden = true;
+    list.setAttribute("role", "listbox");
+    LANG_NAMES.forEach(function (pair) {
+      var item = document.createElement("button");
+      item.type = "button";
+      item.setAttribute("data-lang", pair[0]);
+      item.textContent = pair[1];
+      list.appendChild(item);
+    });
+    wrap.appendChild(list);
+    return wrap;
+  }
+
+  function bindToggles() {
+    document.querySelectorAll("[data-lang-toggle]").forEach(function (btn) {
+      if (btn._langBound) return;
+      btn._langBound = true;
+      var wrap = ensureLangMenu(btn);
+      btn.setAttribute("aria-expanded", "false");
+      btn.addEventListener("click", function (e) {
+        e.stopPropagation();
+        var list = wrap.querySelector(".lang-pop");
+        var willOpen = list.hidden;
+        closeLangPops();
+        list.hidden = !willOpen;
+        btn.setAttribute("aria-expanded", willOpen ? "true" : "false");
+      });
+      wrap.querySelector(".lang-pop").addEventListener("click", function (e) {
+        var item = e.target.closest("[data-lang]");
+        if (!item) return;
+        e.stopPropagation();
+        setLang(item.getAttribute("data-lang"));
+        apply();
+        document.dispatchEvent(new CustomEvent("mejor-lang"));
+        closeLangPops();
+      });
+    });
+    if (!document.documentElement._langOutside) {
+      document.documentElement._langOutside = true;
+      document.addEventListener("click", closeLangPops);
+    }
+  }
+
+  global.MejorI18n = { getLang: getLang, setLang: setLang, t: t, line: line, apply: apply, bindToggles: bindToggles, STR: STR, DATA: DATA };
 
   var NOVA_KEY = "mejor-nova";
   function novaIsOn() {
@@ -1482,6 +1565,20 @@
       "@media (prefers-reduced-motion:reduce){.like .flip-inner{transition:none;}.like:hover .flip-inner{box-shadow:0 10px 22px rgba(28,36,48,.12);}}"
     ].join("");
     document.head.appendChild(css);
+  }
+
+  if (!document.getElementById("mejor-lang-css")) {
+    var langCss = document.createElement("style");
+    langCss.id = "mejor-lang-css";
+    langCss.textContent = [
+      ".lang-wrap{position:relative;display:inline-flex;z-index:130;}",
+      ".lang-pop{position:absolute;top:calc(100% + 6px);right:0;z-index:130;min-width:148px;max-height:70vh;overflow:auto;margin:0;padding:6px;display:flex;flex-direction:column;gap:2px;background:#fbf8f3;color:#1c2430;border:1.5px solid #1c2430;box-shadow:0 12px 28px rgba(16,14,10,.18);}",
+      ".lang-pop[hidden]{display:none;}",
+      ".lang-pop button{appearance:none;border:0;background:transparent;color:#1c2430;font:inherit;font-weight:650;font-size:.82rem;text-align:left;padding:8px 10px;cursor:pointer;}",
+      ".lang-pop button:hover,.lang-pop button:focus-visible{background:#efe6d4;}",
+      ".lang-pop button[aria-current='true']{background:#1c2430;color:#fbf8f3;}"
+    ].join("");
+    document.head.appendChild(langCss);
   }
 
   if (!document.getElementById("mejor-nova-css")) {

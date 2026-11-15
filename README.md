@@ -4,13 +4,13 @@
 
 ## Who it is for
 
-Mejor express is for 14–16 year-olds who already know what they like — but still feel stuck on which uni major to pick. Take Nova’s academic MBTI-style quiz: it matches your interests and strengths to 139 real major names at 15 Top-100 overseas unis that Chinese students often choose. You get a printable ticket, no sign-up, English or Chinese — just a first look, not a ranking or “this is your only path.”
+Mejor express is for 14–16 year-olds who already know what they like — but still feel stuck on which uni major to pick. Take Nova’s academic MBTI-style quiz: it matches your interests and strengths to 139 real major names at 15 overseas unis that Chinese students often choose (QS 2027: 14 in the Top 100, Southampton 111). You get a printable ticket, no sign-up, English or Chinese — just a first look, not a ranking or “this is your only path.”
 
 ## 中文
 
 Mejor express 给 14–16 岁的你：兴趣挺清楚，就是不知道大学该选什么专业。做 Nova 的学业向 MBTI 小测，它会按你的喜好和强项，帮你对上 15 所 QS 前 100、很多中国留学生会考虑的海外大学里的 139 个官方本科专业名。能打印一张小票，不用注册，中英都能用——只是先看看方向，不是排名，也不是替你定终身。
 
-**Live data (Aug 2026):** 4 lines · 25 stations · 15 universities · 139 official UG titles · 200 quiz items
+**Live data:** 4 lines · 25 stations · 15 universities · 139 official UG titles · 200 quiz items. Official names checked Aug 2026. QS ranks are the 2027 list (14 in the Top 100; Southampton is 111).
 ## 怎么打开
 
 - 本机（推荐，有后端）：`pip install -r backend/requirements.txt` 然后 `python backend/server.py` → http://127.0.0.1:3000 ，API 文档：http://127.0.0.1:3000/api/docs
@@ -86,4 +86,4 @@ match% = round(100 × 命中数 / 你选中的兴趣个数)
 | `讲解稿.md` | 60 秒 / 3 分钟 |
 | `群提交模板.md` | 第四周群提交 |
 
-学校：QS 2026 Top 100 中、很多中国学生会去的 15 所海外大学。学院名来自各校官方。不编造学院。
+学校：很多中国学生会去的 15 所海外大学。QS 排名是 2027 名单（14 所在前 100，南安普顿第 111）。学院名来自各校官方，核对于 2026年8月。不编造学院。

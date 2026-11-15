@@ -8,7 +8,7 @@
   <title>Mejor · Search a major</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
-    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+    try { var _ml = localStorage.getItem("mejor-lang"); var _map = { zh: "zh-Hans", nl: "nl", fr: "fr", de: "de", es: "es" }; if (_map[_ml]) document.documentElement.lang = _map[_ml]; } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -279,7 +279,7 @@
     <nav>
       <a class="logo" href="index.html"><span class="mark"><span>M</span></span> MEJOR EXPRESS</a>
       <div class="nav-end">
-        <button class="lang-btn" type="button" data-lang-toggle>中文</button>
+        <button class="lang-btn" type="button" data-lang-toggle>LANGUAGE</button>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <a class="ghost" href="explorer.html?skip=1" data-i18n="nav.open">Open the lines</a>
         <a class="ghost" href="schools.html" data-i18n="nav.searchUnis">Search universities</a>
@@ -315,6 +315,8 @@
   </div>
 
   <script src="i18n.js"></script>
+  <script src="i18n-langs.js"></script>
+  <script src="i18n-lines.js"></script>
   <script src="catalog.js"></script>
   <script src="catalog-majors.js"></script>
   <script src="search-facts.js"></script>
@@ -475,9 +477,10 @@
       box.innerHTML = rows.map(({ rec }) => {
         const on = selected && pickKey(selected) === pickKey(rec) ? " on" : "";
         const kind = rec.kind === "station" ? t("search.station") : t("search.major");
+        const stationGloss = MejorI18n.line(rec.name, rec.nameZh);
         const sub = rec.kind === "station"
-          ? (zh() ? rec.name : rec.nameZh)
-          : (zh() ? rec.kidZh : rec.kid);
+          ? (MejorI18n.getLang() === "zh" ? rec.name : (MejorI18n.getLang() === "en" ? rec.nameZh : (stationGloss === rec.name ? "" : stationGloss)))
+          : MejorI18n.line(rec.kid, rec.kidZh);
         return `<button type="button" class="hit${on}" data-key="${esc(pickKey(rec))}">
           <span class="type-tag">${esc(kind)}</span>
           <b>${esc(zh() && rec.nameZh ? rec.nameZh : rec.name)}</b>
@@ -510,15 +513,16 @@
         return;
       }
       const st = MejorSearchFacts.stations[rec.id] || {};
-      const stName = zh() ? (st.nameZh || st.name) : st.name;
+      const stName = MejorI18n.getLang() === "zh" ? (st.nameZh || st.name) : (MejorI18n.line(st.name || "", st.nameZh) || st.name);
       if (rec.kind === "station") {
         const majors = (MejorCatalog.majorsForStation(rec.id) || []).map((m) => m.name);
         el.innerHTML = `
           <span class="type-tag">${esc(t("search.station"))}</span>
-          <h2>${esc(zh() ? rec.nameZh : rec.name)}</h2>
-          ${factBlock("search.precise", zh()
-            ? "地图上的大站点，不是一张录取通知书。点开后可以看到下面这些官方专业名。\n\n例如：Computer Science 站点下面可能有人工智能、网络安全、软件工程；Engineering 站点下面可能有机械、土木、海事工程。"
-            : "A broad station on the map — not an offer letter. Open it to see the official major names under it.\n\nExample: the Computer Science station may list Artificial Intelligence, Cyber Security, and Software Engineering. The Engineering station may list Mechanical, Civil, and Maritime Engineering.")}
+          <h2>${esc(MejorI18n.getLang() === "zh" ? (rec.nameZh || rec.name) : (MejorI18n.line(rec.name, rec.nameZh) || rec.name))}</h2>
+          ${factBlock("search.precise", MejorI18n.line(
+            "A broad station on the map — not an offer letter. Open it to see the official major names under it.\n\nExample: the Computer Science station may list Artificial Intelligence, Cyber Security, and Software Engineering. The Engineering station may list Mechanical, Civil, and Maritime Engineering.",
+            "地图上的大站点，不是一张录取通知书。点开后可以看到下面这些官方专业名。\n\n例如：Computer Science 站点下面可能有人工智能、网络安全、软件工程；Engineering 站点下面可能有机械、土木、海事工程。"
+          ))}
           ${factBlock("search.under", majors.join(" · "))}
           <div class="cta">
             <a class="play" href="explorer.html?skip=1#${esc(rec.id)}">${esc(t("search.open"))}</a>
@@ -526,12 +530,17 @@
         return;
       }
       const f = rec.facts || {};
-      const precise = zh() ? (f.preciseZh || rec.kidZh) : (f.precise || rec.kid);
-      const unlike = zh() ? f.unlikeZh : f.unlike;
-      const study = zh() ? f.studyZh : f.study;
-      const path = zh() ? f.pathZh : f.path;
-      const examples = zh() ? (f.examplesZh || f.examples) : (f.examples || f.examplesZh);
-      const simple = zh() ? rec.kidZh : rec.kid;
+      const precise = MejorI18n.line(f.precise || rec.kid, f.preciseZh || rec.kidZh);
+      const unlike = MejorI18n.line(f.unlike, f.unlikeZh);
+      const study = MejorI18n.line(f.study, f.studyZh);
+      const path = MejorI18n.line(f.path, f.pathZh);
+      const rawExamples = (zh() ? (f.examplesZh || f.examples) : (f.examples || f.examplesZh)) || [];
+      const examples = rawExamples.map((item, i) => {
+        const en = (f.examples || [])[i] || item;
+        const zhItem = (f.examplesZh || [])[i] || "";
+        return zh() ? item : MejorI18n.line(en, zhItem);
+      });
+      const simple = MejorI18n.line(rec.kid, rec.kidZh);
       const schools = (rec.unis || []).map((id) => UNI[id] || id);
       el.innerHTML = `
         <span class="type-tag">${esc(t("search.major"))} · ${esc(stName || rec.id)}</span>

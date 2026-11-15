@@ -8,7 +8,7 @@
   <title>Mejor · Line map</title>
   <link rel="icon" href="favicon.svg" type="image/svg+xml" />
   <script>
-    try { if (localStorage.getItem("mejor-lang") === "zh") document.documentElement.lang = "zh-Hans"; } catch (e) {}
+    try { var _ml = localStorage.getItem("mejor-lang"); var _map = { zh: "zh-Hans", nl: "nl", fr: "fr", de: "de", es: "es" }; if (_map[_ml]) document.documentElement.lang = _map[_ml]; } catch (e) {}
   </script>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -1039,7 +1039,7 @@
         <div class="stat"><span data-i18n="stat.locked">Open station</span> <b id="lockedName">none</b></div>
       </div>
       <div class="hud-actions">
-        <button class="ghost" type="button" data-lang-toggle>中文</button>
+        <button class="ghost" type="button" data-lang-toggle>LANGUAGE</button>
         <a class="search-btn" id="searchMajor" href="search.html" data-i18n="nav.search" data-nova-stop="search">Search for a major</a>
         <a class="ghost" href="index.html" data-i18n="nav.home">Home</a>
         <button class="ghost" id="helpBtn" type="button" data-i18n="help">How it works</button>
@@ -1077,7 +1077,7 @@
     <section class="uni-search-band">
       <div>
         <b data-i18n="schools.band.t">Search the 15 universities</b>
-        <p data-i18n="schools.band.p">Official faculties and major names at overseas Top-100 schools popular with Chinese international students.</p>
+        <p data-i18n="schools.band.p">Official faculties and major names at 15 overseas schools popular with Chinese international students. QS 2027: 14 are in the Top 100. Southampton is 111th.</p>
       </div>
       <a class="uni-search-btn" id="searchUnis" href="schools.html" data-i18n="nav.searchUnis" data-nova-stop="searchUnis">Search universities</a>
     </section>
@@ -1140,7 +1140,7 @@
 
     <footer class="site-foot">
       <p data-i18n="foot.legal">Mejor Express · a first look, not a verdict. Saved only on this computer.</p>
-      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 27 Aug 2026</span></p>
+      <p><a href="search.html" data-i18n="nav.search">Search for a major</a> · <a href="schools.html" data-i18n="nav.searchUnis">Search universities</a> · <a href="method.html" data-i18n="nav.method">How this was made</a> · <span data-i18n="updated">Updated 15 Nov 2026</span></p>
     </footer>
   </div>
 
@@ -1159,6 +1159,8 @@
   <button class="nova-wake" type="button" data-nova-wake hidden>Ask Nova</button>
 
   <script src="i18n.js"></script>
+  <script src="i18n-langs.js"></script>
+  <script src="i18n-lines.js"></script>
   <script src="universities.js"></script>
   <script src="catalog.js"></script>
   <script src="catalog-majors.js"></script>
@@ -1749,29 +1751,41 @@
     function tagLabel(id) {
       const tag = typeof id === "string" ? TAGS.find((x) => x.id === id) : id;
       if (!tag) return "";
-      return zh() ? (MejorI18n.DATA.tags[tag.id] || tag.label) : tag.label;
+      const zhText = MejorI18n.DATA.tags && MejorI18n.DATA.tags[tag.id];
+      return MejorI18n.line(tag.label, zhText || "");
     }
     function subjectLabel(id) {
       const s = SUBJECTS.find((x) => x.id === id);
       if (!s) return id;
-      return zh() ? (MejorI18n.DATA.subjects[id] || s.label) : s.label;
+      const zhText = MejorI18n.DATA.subjects && MejorI18n.DATA.subjects[id];
+      return MejorI18n.line(s.label, zhText || "");
     }
     function tagHint(id) {
-      if (zh()) return (MejorI18n.DATA.tagHints && MejorI18n.DATA.tagHints[id]) || "";
       const tag = TAGS.find((x) => x.id === id);
-      return (tag && tag.hint) || "";
+      const en = (tag && tag.hint) || "";
+      const zhText = (MejorI18n.DATA.tagHints && MejorI18n.DATA.tagHints[id]) || "";
+      return MejorI18n.line(en, zhText);
     }
     function majorLoc(m) {
       const extra = MAJOR_EXTRA[m.id] || {};
-      const z = MejorI18n.DATA.majors[m.id];
+      const z = MejorI18n.DATA.majors[m.id] || {};
       const zExtra = (MejorI18n.DATA.extra && MejorI18n.DATA.extra[m.id]) || {};
-      if (zh()) return Object.assign({}, m, extra, z || {}, zExtra);
-      return Object.assign({}, m, extra);
+      const zhPack = Object.assign({}, z, zExtra);
+      if (zh()) return Object.assign({}, m, extra, zhPack);
+      const out = Object.assign({}, m, extra);
+      ["name", "blurb", "mean", "unlike", "now", "watch", "learn", "need", "future"].forEach((k) => {
+        if (out[k]) out[k] = MejorI18n.line(out[k], zhPack[k] || "");
+      });
+      return out;
     }
     function pathLoc(profile, code) {
-      const z = MejorI18n.DATA.paths[code];
-      if (!zh() || !z) return profile;
-      return Object.assign({}, profile, z);
+      const z = (MejorI18n.DATA.paths && MejorI18n.DATA.paths[code]) || {};
+      if (zh()) return Object.assign({}, profile, z);
+      const out = Object.assign({}, profile);
+      ["name", "blurb"].forEach((k) => {
+        if (out[k]) out[k] = MejorI18n.line(out[k], z[k] || "");
+      });
+      return out;
     }
     function setWorkingStyle(rec) {
       const el = document.getElementById("typeCode");
@@ -1794,25 +1808,28 @@
     function quizLoc(i) {
       const q = QUIZ[i];
       if (!q) return { prompt: "", a: { title: "", text: "" }, b: { title: "", text: "" } };
-      if (!zh()) return q;
       return {
         dim: q.dim,
-        prompt: q.promptZh || q.prompt,
-        a: { letter: q.a.letter, title: q.a.titleZh || q.a.title, text: q.a.textZh || q.a.text },
-        b: { letter: q.b.letter, title: q.b.titleZh || q.b.title, text: q.b.textZh || q.b.text }
+        prompt: MejorI18n.line(q.prompt, q.promptZh),
+        a: { letter: q.a.letter, title: MejorI18n.line(q.a.title, q.a.titleZh), text: MejorI18n.line(q.a.text, q.a.textZh) },
+        b: { letter: q.b.letter, title: MejorI18n.line(q.b.title, q.b.titleZh), text: MejorI18n.line(q.b.text, q.b.textZh) }
       };
     }
     function novaLead(i) {
-      const pack = zh() ? (MejorI18n.DATA.novaLead || []) : NOVA_LEAD;
-      return pack[i] || NOVA_LEAD[i] || "";
+      const en = NOVA_LEAD[i] || "";
+      const zhText = (MejorI18n.DATA.novaLead && MejorI18n.DATA.novaLead[i]) || "";
+      return MejorI18n.line(en, zhText);
     }
-    function uniEvidence(id, fallback) { return zh() ? (MejorI18n.DATA.evidence[id] || fallback) : fallback; }
+    function uniEvidence(id, fallback) {
+      const zhText = MejorI18n.DATA.evidence && MejorI18n.DATA.evidence[id];
+      return MejorI18n.line(fallback, zhText);
+    }
     function countryLabel(c) { return t("country." + c); }
     function uniIntro(id) {
       const uni = UNIVERSITIES[id];
       if (!uni) return "";
-      if (zh() && MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id]) return MejorI18n.DATA.uniIntro[id];
-      return uni.intro || "";
+      const zhText = MejorI18n.DATA.uniIntro && MejorI18n.DATA.uniIntro[id];
+      return MejorI18n.line(uni.intro || "", zhText);
     }
     function esc(s) {
       return String(s == null ? "" : s).replace(/[&<>"']/g, (c) =>
@@ -1857,7 +1874,7 @@
         const teach = el.dataset.faculty ? `<p class="why"><b>${esc(t("uni.teaches"))}.</b> ${esc(el.dataset.faculty)}</p>` : "";
         const majHtml = hits.length
           ? `<ul class="maj-list">${hits.map((mj) =>
-              `<li><b>${esc(mj.name)}</b><span>${esc(zh() ? (mj.kidZh || mj.kid) : mj.kid)}</span></li>`
+              `<li><b>${esc(mj.name)}</b><span>${esc(MejorI18n.line(mj.kid, mj.kidZh))}</span></li>`
             ).join("")}</ul>`
           : "";
         body = `${teach}${majHtml}`;
@@ -2427,7 +2444,7 @@
         : [];
       if (!list.length) return "";
       const items = list.map((mj) => {
-        const line = zh() ? (mj.kidZh || mj.kid) : mj.kid;
+        const line = MejorI18n.line(mj.kid, mj.kidZh);
         return `<li><b>${esc(mj.name)}</b><span>${esc(line)}</span></li>`;
       }).join("");
       return `<div class="fact specific" data-nova-stop="specific">
@@ -2790,7 +2807,7 @@
       const tourLast = lockedId ? STATION_TOUR_LAST : MAP_TOUR_LAST;
       if (novaTour >= tourLast) return;
       if (e.button != null && e.button !== 0) return;
-      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], #helpBtn, #retakeBtn, #clearBtn, #printStub, #scanBtn, .ticket-tools, #searchMajor, #searchUnis, .search-btn, .uni-search-btn")) return;
+      if (e.target.closest("[data-nova-toggle], [data-nova-wake], [data-lang-toggle], .lang-wrap, #helpBtn, #retakeBtn, #clearBtn, #printStub, #scanBtn, .ticket-tools, #searchMajor, #searchUnis, .search-btn, .uni-search-btn")) return;
       if (e.target.closest(".star, .card[data-id], .like, .chip, [data-uni]")) return;
       if (e.target.closest("#novaFlyer")) return;
       nextNovaTour();

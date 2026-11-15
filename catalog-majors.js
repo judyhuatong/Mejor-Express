@@ -1,5 +1,5 @@
 /* Official undergraduate subject / major names under each faculty.
-   Names follow university course/department lists (Aug 2026).
+   Names follow university course/department lists (checked Aug 2026, not re-copied Nov 2026).
    We do not copy every “with Year Abroad / MSci” twin — same subject, extra years.
    kid / kidZh = one line for age 14. */
 (function () {
